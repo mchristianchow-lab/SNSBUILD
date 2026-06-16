@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNS BUILD — Design Your Website</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Pre-load only fonts used in quick pairings + UI -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Oswald:wght@400;700&family=DM+Sans:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&family=Montserrat:wght@400;600;700&family=Raleway:wght@300;400;600&family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;600&family=Abril+Fatface&family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;600&family=Roboto:wght@300;400;500;700&family=Josefin+Sans:wght@300;400;600&family=Syne:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    @font-face{font-family:'Reikna';src:url('Reikna.ttf') format('truetype');font-weight:400 900;font-style:normal;font-display:swap}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --black:#07070A;--card:rgba(255,255,255,.028);--mid:#0F0F12;--dark-card:#141418;
+      --white:#FFFFFF;--off-white:#E8E8E8;--bone:#EDEAE4;
+      --muted:rgba(237,234,228,.48);--dim:rgba(237,234,228,.22);
+      --border:rgba(255,255,255,.07);--border-mid:rgba(255,255,255,.12);
+      --accent:#D8E46A;--accent-glow:rgba(216,228,106,.22);
+      --font:'Inter',sans-serif;--font-display:'Cormorant Garamond',serif;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--black);color:var(--bone);font-family:var(--font);-webkit-font-smoothing:antialiased}
+
+    nav{
+      background:rgba(7,7,10,.82);
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      padding:0 5%;display:flex;align-items:center;justify-content:space-between;
+      height:64px;position:sticky;top:0;z-index:100
+    }
+    .nav-brand{font-family:var(--font-display);font-size:2.2rem;color:var(--accent);letter-spacing:.1em;text-decoration:none}
+    .nav-tag{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:.14em}
+
+    .hero{padding:6rem 5% 4.5rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-30%;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse at 50% 0%,rgba(216,228,106,.065) 0%,transparent 65%);pointer-events:none}
+    .hero-eyebrow{font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--accent);margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;position:relative}
+    .hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--accent);flex-shrink:0}
+    .hero h1{
+      font-family:var(--font-display);font-size:clamp(3.5rem,9vw,8rem);line-height:.9;letter-spacing:-.01em;
+      margin-bottom:1.5rem;position:relative;
+      background:linear-gradient(150deg,#EDEAE4 40%,rgba(216,228,106,.65) 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+    }
+    .hero-sub{font-size:.95rem;color:var(--muted);line-height:1.85;max-width:480px;font-weight:300;position:relative}
+
+    .builder-wrap{display:grid;grid-template-columns:1fr 1fr;align-items:start}
+    @media(max-width:960px){.builder-wrap{grid-template-columns:1fr}.preview-col{display:none}}
+
+    .config-col{padding:3.5rem 5%;border-right:1px solid var(--border)}
+    .step-block{margin-bottom:3rem}
+    .step-label{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:var(--dim);margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem}
+    .step-label::after{content:'';flex:1;height:1px;background:var(--border)}
+    .step-label span{color:var(--accent)}
+
+    /* PALETTE TABS */
+    .pal-tabs{display:flex;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1px}
+    .pal-tab{flex:1;padding:.6rem .4rem;text-align:center;cursor:pointer;font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);background:var(--mid);border-bottom:2px solid transparent;transition:all .15s;user-select:none}
+    .pal-tab:hover{background:var(--dark-card);color:var(--muted)}
+    .pal-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--black)}
+
+    /* PALETTE GRID — 5 col × 4 rows = 20 per tab */
+    .palette-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-top:none}
+    .pal-tile{background:var(--mid);cursor:pointer;border:2px solid transparent;transition:border-color .15s;user-select:none;overflow:hidden}
+    .pal-tile:hover{filter:brightness(1.2)}
+    .pal-tile.active{border-color:var(--accent)}
+    .pal-bar{display:flex;height:30px}
+    .pal-bg-s{flex:2}.pal-ac-s{flex:1}
+    .pal-name{font-size:.48rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);display:block;padding:.3rem .4rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pal-tile.active .pal-name{color:var(--accent)}
+
+    /* COLOR FINE-TUNE */
+    .color-fine{margin-top:1px;border:1px solid var(--border);border-top:none;padding:1rem;background:var(--mid)}
+    .color-fine-label{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--dim);margin-bottom:.75rem;opacity:.6}
+    .cp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+    .cp-slot{display:flex;flex-direction:column;gap:.4rem}
+    .cp-swatch{position:relative;width:100%;aspect-ratio:1;cursor:pointer;border:1px solid rgba(255,255,255,.08);transition:border-color .15s}
+    .cp-swatch:hover{border-color:rgba(255,255,255,.3)}
+    .cp-swatch input[type=color]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:none;padding:0}
+    .cp-hex{width:100%;background:transparent;border:1px solid var(--border-mid);color:var(--muted);padding:.3rem .4rem;font-family:'IBM Plex Mono',monospace;font-size:.58rem;outline:none;text-align:center;transition:border-color .15s;border-radius:0}
+    .cp-hex:focus{border-color:var(--accent);color:var(--bone)}
+    .cp-name{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);text-align:center}
+    .cp-reset{font-size:.5rem;color:var(--dim);text-align:center;cursor:pointer;text-decoration:underline;text-underline-offset:2px;opacity:.5;margin-top:.2rem}
+    .cp-reset:hover{opacity:1;color:var(--accent)}
+
+    /* FULLSCREEN OVERLAY */
+    .fs-overlay{display:none;position:fixed;inset:0;z-index:500;background:#080808;flex-direction:column}
+    .fs-overlay.open{display:flex}
+    .fs-bar{display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:50px;border-bottom:1px solid var(--border);flex-shrink:0;background:#080808}
+    .fs-bar-left{display:flex;align-items:center;gap:1rem}
+    .fs-prev-dot{width:7px;height:7px;border-radius:50%;background:var(--border-mid)}
+    .fs-title{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.2em;color:var(--dim)}
+    .fs-close{background:none;border:1px solid rgba(216,228,106,.35);color:#D8E46A;padding:.35rem .9rem;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;font-family:var(--font)}
+    .fs-close:hover{background:rgba(216,228,106,.08);border-color:#D8E46A}
+    .fs-body{flex:1;overflow:hidden;display:grid;grid-template-columns:1fr 260px}
+    .fs-scroll{overflow-y:auto;padding:2rem;background:#0A0A0A}
+    .fs-brief{border-left:1px solid var(--border);overflow-y:auto;padding:1.25rem;background:#080808;display:flex;flex-direction:column;gap:1.25rem}
+    .fs-brief-section{border-bottom:1px solid var(--border);padding-bottom:1.1rem}
+    .fs-brief-section:last-child{border-bottom:none}
+    .fs-brief-label{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--dim);margin-bottom:.6rem;opacity:.6}
+    .fs-brief-val{font-size:.7rem;color:var(--bone);line-height:1.6}
+    .fs-brief-swatches{display:flex;gap:.4rem;margin-top:.4rem}
+    .fs-brief-swatch{width:22px;height:22px;border:1px solid rgba(255,255,255,.1);flex-shrink:0}
+    .fs-brief-sec-list{display:flex;flex-wrap:wrap;gap:.3rem}
+    .fs-brief-tag{font-size:.48rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .45rem;background:var(--mid);color:var(--muted);border:1px solid var(--border-mid)}
+
+    /* FULLSCREEN MOCK */
+    .fs-mock-inner{max-width:860px;margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+    .fm-nav{display:flex;align-items:center;justify-content:space-between;padding:.9rem 2rem;border-bottom:1px solid rgba(255,255,255,.07)}
+    .fm-nav-brand{font-size:1.2rem;letter-spacing:.12em;font-weight:700}
+    .fm-nav-links{display:flex;align-items:center;gap:2rem}
+    .fm-nav-link{font-size:.72rem;opacity:.45}
+    .fm-nav-btn{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1.1rem}
+    .fm-section{padding:4rem 2rem}
+    .fm-section.alt{padding:3rem 2rem}
+    .fm-eyebrow{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;display:block;margin-bottom:1rem}
+    .fm-h1{font-size:clamp(2.5rem,5vw,4.5rem);line-height:.95;display:block;margin-bottom:1.25rem}
+    .fm-h2{font-size:1.75rem;line-height:1.1;display:block;margin-bottom:1rem}
+    .fm-p{font-size:.9rem;line-height:1.8;opacity:.55;max-width:560px;display:block;margin-bottom:1.5rem}
+    .fm-btn{display:inline-block;padding:.75rem 2rem;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+    .fm-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
+    .fm-card{padding:1.5rem}
+    .fm-card-h{font-size:1rem;display:block;margin-bottom:.5rem}
+    .fm-card-p{font-size:.78rem;opacity:.4;line-height:1.65}
+    .fm-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;padding:0}
+    .fm-stat{padding:2rem;text-align:center}
+    .fm-stat-n{font-size:2.5rem;display:block;line-height:1;margin-bottom:.35rem}
+    .fm-stat-l{font-size:.62rem;opacity:.45;text-transform:uppercase;letter-spacing:.12em}
+    .fm-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+    .fm-reviews{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:2rem}
+    .fm-review{padding:1.25rem}
+    .fm-review-text{font-size:.82rem;line-height:1.7;opacity:.6;margin-bottom:.75rem;display:block;font-style:italic}
+    .fm-review-name{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.35}
+    .fm-footer{padding:2rem;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center}
+    .fm-footer-brand{font-size:.85rem;letter-spacing:.12em;font-weight:700;opacity:.3}
+    .fm-footer-links{display:flex;gap:1.5rem}
+    .fm-footer-link{font-size:.65rem;opacity:.25}
+
+    /* FONT SECTION */
+    .font-pairings-label{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--dim);margin-bottom:.6rem;opacity:.6}
+    .font-quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem}
+    .fq-tile{background:var(--mid);padding:.75rem .75rem .6rem;cursor:pointer;border:2px solid transparent;transition:all .15s;user-select:none}
+    .fq-tile:hover{background:var(--dark-card)}
+    .fq-tile.active{border-color:var(--accent);background:var(--black)}
+    .fq-heading{font-size:.9rem;color:var(--bone);line-height:1;display:block;margin-bottom:.2rem}
+    .fq-body{font-size:.55rem;color:var(--dim);line-height:1.4;display:block;margin-bottom:.35rem}
+    .fq-name{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);transition:color .15s}
+    .fq-tile.active .fq-name{color:var(--accent)}
+
+    /* FONT PREVIEW LIVE BOX */
+    .font-preview-box{background:var(--mid);border:1px solid var(--border-mid);margin-bottom:1.25rem;overflow:hidden}
+    .fpb-input-wrap{padding:.65rem .9rem;border-bottom:1px solid var(--border-mid)}
+    .fpb-input{width:100%;background:transparent;border:none;outline:none;font-size:.78rem;color:var(--muted);font-family:var(--font);letter-spacing:.04em}
+    .fpb-input::placeholder{color:var(--dim);opacity:.5}
+    .fpb-input:focus{color:var(--bone)}
+    .fpb-display{padding:.9rem 1rem 1rem}
+    .fpb-h{display:block;line-height:1;margin-bottom:.55rem;word-break:break-word}
+    .fpb-b{font-size:.78rem;color:var(--dim);line-height:1.65;display:block}
+
+    /* CUSTOM FONT PICKERS */
+    .fp-cols{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .fp-col-label{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);margin-bottom:.4rem}
+    .fp-wrap{border:1px solid var(--border-mid)}
+    .fp-search{width:100%;background:var(--mid);border:none;border-bottom:1px solid var(--border-mid);color:var(--bone);padding:.6rem .75rem;font-family:var(--font);font-size:.72rem;outline:none;display:block}
+    .fp-search::placeholder{color:var(--dim)}
+    .fp-search:focus{background:var(--dark-card)}
+    .fp-list{height:300px;overflow-y:auto;background:var(--black)}
+    .fp-list::-webkit-scrollbar{width:4px}
+    .fp-list::-webkit-scrollbar-track{background:transparent}
+    .fp-list::-webkit-scrollbar-thumb{background:var(--border-mid)}
+    .fp-group-hdr{font-size:.46rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--dim);padding:.55rem .75rem .3rem;opacity:.45;background:var(--black);position:sticky;top:0;z-index:1}
+    .fp-item{padding:.55rem .75rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s;min-height:36px}
+    .fp-item:hover{background:var(--mid)}
+    .fp-item.active{background:var(--dark-card);border-left:2px solid var(--accent)}
+    .fp-item-name{font-size:1rem;line-height:1;color:var(--bone);display:block}
+    .fp-item.active .fp-item-name{color:var(--accent)}
+    .fp-check{font-size:.55rem;color:var(--accent);flex-shrink:0;margin-left:.5rem;opacity:0}
+    .fp-item.active .fp-check{opacity:1}
+    .fp-selected-name{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);padding:.4rem .75rem;border-top:1px solid var(--border-mid);background:var(--mid);display:flex;align-items:center;gap:.4rem}
+    .fp-selected-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+    .photo-thumb{position:relative;aspect-ratio:1;overflow:hidden;border:1px solid var(--border-mid)}
+    .photo-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .photo-thumb-tag{position:absolute;top:.25rem;left:.25rem;font-size:.38rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;background:var(--accent);color:#000;padding:.12rem .3rem}
+    .photo-thumb-rm{position:absolute;top:.25rem;right:.25rem;width:18px;height:18px;background:rgba(0,0,0,.75);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:#fff;line-height:1;border:none;font-family:var(--font)}
+    .photo-thumb-rm:hover{background:rgba(200,0,0,.8)}
+    .asset-upload-btn{display:block;padding:.5rem .75rem;font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);background:var(--mid);border:1px solid rgba(216,228,106,.35);cursor:pointer;text-align:center;transition:all .15s;font-family:var(--font);user-select:none}
+    .asset-upload-btn:hover{border-color:var(--accent);background:rgba(216,228,106,.08)}
+    .asset-use-btn{padding:.3rem .6rem;font-size:.48rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);background:var(--mid);border:1px solid rgba(216,228,106,.35);cursor:pointer;transition:all .15s;font-family:var(--font)}
+    .asset-use-btn:hover{border-color:var(--accent);background:rgba(216,228,106,.08)}
+
+    /* VIBES — 3 col */
+    .vibe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+    .vibe-tile{background:var(--mid);padding:1rem;cursor:pointer;border:2px solid transparent;transition:background .15s,border-color .15s;user-select:none}
+    .vibe-tile:hover{background:var(--dark-card)}
+    .vibe-tile.active{border-color:var(--accent);background:var(--black)}
+    .vibe-thumb{width:100%;height:52px;background:var(--dark-card);margin-bottom:.65rem;overflow:hidden;position:relative;display:flex;flex-direction:column;padding:7px 8px;gap:4px}
+    .vibe-name{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);display:block;margin-bottom:.2rem;transition:color .15s}
+    .vibe-tile.active .vibe-name{color:var(--accent)}
+    .vibe-desc{font-size:.6rem;color:var(--dim);line-height:1.5}
+
+    /* DETAILS */
+    .detail-group{margin-bottom:1rem}
+    .detail-sublabel{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--dim);margin-bottom:.5rem;opacity:.6}
+    .detail-row{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .detail-tile{flex:1;background:var(--mid);padding:.8rem .6rem;cursor:pointer;border:2px solid transparent;text-align:center;transition:background .15s,border-color .15s;user-select:none}
+    .detail-tile:hover{background:var(--dark-card)}
+    .detail-tile.active{border-color:var(--accent);background:var(--black)}
+    .detail-icon{display:flex;align-items:center;justify-content:center;margin-bottom:.4rem;height:22px}
+    .detail-icon svg{width:22px;height:22px}
+    .detail-name{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);transition:color .15s}
+    .detail-tile.active .detail-name{color:var(--accent)}
+
+    /* HEADER */
+    .header-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+    .header-tile{background:var(--mid);padding:1rem;cursor:pointer;border:2px solid transparent;transition:background .15s,border-color .15s;user-select:none}
+    .header-tile:hover{background:var(--dark-card)}
+    .header-tile.active{border-color:var(--accent);background:var(--black)}
+    .header-thumb{height:52px;background:var(--dark-card);margin-bottom:.65rem;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:8px}
+    .header-name{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);display:block;transition:color .15s}
+    .header-tile.active .header-name{color:var(--accent)}
+
+    /* SECTIONS */
+    .sections-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .sec-check{background:var(--mid);padding:.8rem 1rem;cursor:pointer;display:flex;align-items:center;gap:.6rem;user-select:none;transition:background .15s}
+    .sec-check:hover{background:var(--dark-card)}
+    .sec-check.locked{opacity:.5;cursor:default}
+    .check-box{width:14px;height:14px;border:1.5px solid var(--dim);flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;font-weight:900}
+    .sec-check.active .check-box,.sec-check.locked .check-box{border-color:var(--accent);background:var(--accent);color:var(--black)}
+    .sec-label{font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);transition:color .15s}
+    .sec-check.active .sec-label{color:var(--off-white)}
+
+    /* FORM */
+    .form-stack{display:grid;gap:.9rem}
+    .field label{display:block;font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--dim);margin-bottom:.4rem}
+    .field input,.field select,.field textarea{width:100%;background:var(--mid);border:1px solid var(--border-mid);color:var(--bone);padding:.75rem 1rem;font-family:var(--font);font-size:.82rem;outline:none;transition:border-color .15s;-webkit-appearance:none;border-radius:0}
+    .field input::placeholder,.field textarea::placeholder{color:var(--dim)}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+    .field select option{background:var(--mid);color:var(--bone)}
+    .field textarea{resize:vertical;min-height:80px;line-height:1.6}
+    .submit-btn{width:100%;background:var(--accent);color:var(--black);border:none;padding:1rem 2rem;font-family:var(--font);font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;margin-top:.25rem;transition:background .15s}
+    .submit-btn:hover{background:#c6d25e}
+    .success{display:none;margin-top:1.5rem;padding:2rem;background:var(--mid);border:1px solid var(--border-mid);text-align:center}
+    .success.show{display:block}
+    .success-title{font-family:var(--font-display);font-size:2.2rem;color:var(--bone);letter-spacing:.06em;margin-bottom:.6rem}
+    .success-body{font-size:.8rem;color:var(--muted);line-height:1.75}
+
+    /* PREVIEW */
+    .preview-col{position:sticky;top:60px;height:calc(100vh - 60px);display:flex;flex-direction:column;overflow:hidden}
+    .preview-bar{padding:.65rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;flex-shrink:0;background:var(--black)}
+    .prev-dot{width:8px;height:8px;border-radius:50%;background:var(--border-mid)}
+    .prev-tag{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:rgba(237,234,228,.5);margin-left:auto}
+    .preview-scroll{flex:1;overflow-y:auto;background:#0E0E0E;padding:1.5rem}
+
+    .mock{overflow:hidden;border:1px solid rgba(255,255,255,.07);transition:all .25s}
+    .m-nav{display:flex;align-items:center;justify-content:space-between;padding:.5rem .85rem;border-bottom:1px solid rgba(255,255,255,.07)}
+    .m-nav-brand{font-size:.8rem;letter-spacing:.1em;font-weight:700}
+    .m-logo{height:26px;max-width:110px;object-fit:contain;display:none}
+    .m-nav-dots{display:flex;gap:5px}
+    .m-nav-dot{width:18px;height:2.5px;border-radius:1px;background:rgba(255,255,255,.12)}
+    .m-hero{padding:1.75rem .9rem 1.4rem;transition:padding .25s}
+    .m-eyebrow{font-size:.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;margin-bottom:.4rem;display:block}
+    .m-h1{font-size:1.7rem;line-height:1;margin-bottom:.45rem;letter-spacing:.02em;display:block}
+    .m-sub{font-size:.52rem;line-height:1.65;opacity:.5;max-width:85%;margin-bottom:.75rem;display:block}
+    .m-btn{display:inline-block;padding:.3rem .75rem;font-size:.46rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transition:all .2s;cursor:default}
+    .m-services{padding:1.1rem .9rem;border-top:1px solid rgba(255,255,255,.06)}
+    .m-sec-label{font-size:.38rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;margin-bottom:.6rem;display:block}
+    .m-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+    .m-card{padding:.55rem .5rem;transition:background .2s,border-radius .2s}
+    .m-card-h{font-size:.65rem;margin-bottom:.25rem;line-height:1;display:block}
+    .m-card-p{font-size:.4rem;line-height:1.6;opacity:.35}
+    .m-cta{padding:1rem .9rem;border-top:1px solid rgba(255,255,255,.06);text-align:center}
+    .m-cta-h{font-size:1rem;letter-spacing:.04em;margin-bottom:.5rem;display:block}
+    .m-footer{padding:.55rem .9rem;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center}
+    .m-footer-b{font-size:.42rem;font-weight:700;letter-spacing:.1em;opacity:.35}
+    .m-footer-links{display:flex;gap:.4rem}
+    .m-footer-link{width:16px;height:2px;background:rgba(255,255,255,.12);border-radius:1px}
+
+    .mock.head-center .m-hero{text-align:center}
+    .mock.head-center .m-sub{max-width:100%;margin-left:auto;margin-right:auto}
+    .mock.head-split .m-hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:.75rem}
+    .mock.head-split .m-eyebrow{grid-column:1/-1}
+    .mock.head-split .m-sub{max-width:100%;opacity:.4}
+    .mock.btn-outline .m-btn{background:transparent!important;border:1px solid currentColor}
+    .mock.btn-ghost .m-btn{background:transparent!important;border:none;padding-left:0;padding-right:0;text-decoration:underline;text-underline-offset:3px}
+    .mock.btn-pill .m-btn{border-radius:999px!important}
+    .mock.sp-compact .m-hero{padding:.9rem .9rem .7rem}
+    .mock.sp-compact .m-services{padding:.7rem .9rem}
+    .mock.sp-compact .m-cta{padding:.7rem .9rem}
+    .mock.sp-open .m-hero{padding:3rem .9rem 2.5rem}
+    .mock.sp-open .m-services{padding:1.75rem .9rem}
+    .mock.sp-open .m-cta{padding:1.6rem .9rem}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" style="font-family:var(--font-display);font-size:2.4rem;color:var(--accent);letter-spacing:.12em;text-decoration:none">SNS BUILD</a>
+  <div style="display:flex;align-items:center;gap:2rem">
+    <a href="index.html" style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);text-decoration:none;transition:color .15s" onmouseover="this.style.color='var(--bone)'" onmouseout="this.style.color='var(--dim)'">Home</a>
+    <a href="work.html" style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);text-decoration:none;transition:color .15s" onmouseover="this.style.color='var(--bone)'" onmouseout="this.style.color='var(--dim)'">Work</a>
+    <a href="pricing.html" style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);text-decoration:none;transition:color .15s" onmouseover="this.style.color='var(--bone)'" onmouseout="this.style.color='var(--dim)'">Pricing</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">No Agency. No Guesswork.</div>
+  <h1>Design<br>Your Site.</h1>
+  <p class="hero-sub">Choose every detail. We build it in a week. No revision rounds — every decision is already made before we start.</p>
+</div>
+
+<div class="builder-wrap">
+  <div class="config-col">
+
+    <!-- 01: PALETTE -->
+    <div class="step-block">
+      <div class="step-label"><span>01</span> Colour palette — <span style="color:var(--dim);font-size:.5rem;letter-spacing:.1em">100 options</span></div>
+      <div class="pal-tabs" id="pal-tabs"></div>
+      <div class="palette-grid" id="palette-grid"></div>
+      <div class="color-fine">
+        <div class="color-fine-label">Fine-tune — click any swatch to open colour wheel</div>
+        <div class="cp-row">
+          <div class="cp-slot">
+            <div class="cp-swatch" id="sw-bg"><input type="color" id="inp-bg" oninput="onColorPick('bg',this.value)"></div>
+            <input class="cp-hex" id="hex-bg" maxlength="7" oninput="onHexType('bg',this.value)">
+            <span class="cp-name">Background</span>
+            <span class="cp-reset" onclick="resetColor('bg')">Reset</span>
+          </div>
+          <div class="cp-slot">
+            <div class="cp-swatch" id="sw-tx"><input type="color" id="inp-tx" oninput="onColorPick('tx',this.value)"></div>
+            <input class="cp-hex" id="hex-tx" maxlength="7" oninput="onHexType('tx',this.value)">
+            <span class="cp-name">Text</span>
+            <span class="cp-reset" onclick="resetColor('tx')">Reset</span>
+          </div>
+          <div class="cp-slot">
+            <div class="cp-swatch" id="sw-ac1"><input type="color" id="inp-ac1" oninput="onColorPick('ac1',this.value)"></div>
+            <input class="cp-hex" id="hex-ac1" maxlength="7" oninput="onHexType('ac1',this.value)">
+            <span class="cp-name">Primary</span>
+            <span class="cp-reset" onclick="resetColor('ac1')">Reset</span>
+          </div>
+          <div class="cp-slot">
+            <div class="cp-swatch" id="sw-ac2"><input type="color" id="inp-ac2" oninput="onColorPick('ac2',this.value)"></div>
+            <input class="cp-hex" id="hex-ac2" maxlength="7" oninput="onHexType('ac2',this.value)">
+            <span class="cp-name">Secondary</span>
+            <span class="cp-reset" onclick="resetColor('ac2')">Reset</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02: FONT -->
+    <div class="step-block">
+      <div class="step-label"><span>02</span> Font pairing — <span style="color:var(--dim);font-size:.5rem;letter-spacing:.1em">1,000+ fonts</span></div>
+
+      <!-- Live preview with business name input -->
+      <div class="font-preview-box">
+        <div class="fpb-input-wrap">
+          <input class="fpb-input" id="fpb-input" placeholder="Type your business name to preview fonts…" oninput="onFpbInput(this.value)">
+        </div>
+        <div class="fpb-display">
+          <span class="fpb-h" id="fpb-h">Your Business Name</span>
+          <span class="fpb-b" id="fpb-b">Body text at reading size — clean, legible, and perfectly on-brand.</span>
+        </div>
+      </div>
+
+      <!-- Quick pairings -->
+      <div class="font-pairings-label">Quick pairings</div>
+      <div class="font-quick-grid" id="font-quick-grid"></div>
+
+      <!-- Custom pickers -->
+      <div class="font-custom-label" style="margin-top:1.25rem">Or pick individually</div>
+      <div class="fp-cols">
+        <div>
+          <div class="fp-col-label">Heading font</div>
+          <div class="fp-wrap">
+            <input class="fp-search" placeholder="Search heading fonts…" oninput="filterPicker('heading',this.value)">
+            <div class="fp-list" id="fp-heading"></div>
+            <div class="fp-selected-name"><div class="fp-selected-dot"></div><span id="fp-heading-sel">Reikna</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="fp-col-label">Body font</div>
+          <div class="fp-wrap">
+            <input class="fp-search" placeholder="Search body fonts…" oninput="filterPicker('body',this.value)">
+            <div class="fp-list" id="fp-body"></div>
+            <div class="fp-selected-name"><div class="fp-selected-dot"></div><span id="fp-body-sel">Inter</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav / header font -->
+      <div style="margin-top:.75rem">
+        <div class="fp-col-label">Nav / header font <span style="font-weight:400;opacity:.45;text-transform:none;letter-spacing:0">— the name in your top bar</span></div>
+        <div class="fp-wrap">
+          <input class="fp-search" placeholder="Search nav fonts…" oninput="filterPicker('nav',this.value)">
+          <div class="fp-list" id="fp-nav" style="height:200px"></div>
+          <div class="fp-selected-name"><div class="fp-selected-dot"></div><span id="fp-nav-sel">Reikna</span></div>
+        </div>
+      </div>
+
+      <!-- Brand assets -->
+      <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+        <div class="font-pairings-label">Brand assets</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+          <div>
+            <div class="fp-col-label">Logo</div>
+            <label class="asset-upload-btn" for="inp-logo">+ Upload logo</label>
+            <input type="file" id="inp-logo" accept="image/*" style="display:none" onchange="onLogoUpload(this.files[0])">
+            <div id="logo-status" style="display:none;margin-top:.6rem">
+              <img id="logo-preview" src="" alt="" style="height:36px;object-fit:contain;max-width:100%;display:block;margin-bottom:.4rem;border:1px solid var(--border-mid);padding:.3rem;background:rgba(255,255,255,.04)">
+              <span onclick="clearLogo()" style="font-size:.48rem;color:var(--dim);text-decoration:underline;cursor:pointer;text-underline-offset:2px">Remove logo</span>
+            </div>
+          </div>
+          <div>
+            <div class="fp-col-label">Custom font</div>
+            <label class="asset-upload-btn" for="inp-custom-font">+ Upload font file</label>
+            <input type="file" id="inp-custom-font" accept=".ttf,.woff,.woff2,.otf" style="display:none" onchange="onCustomFont(this.files[0])">
+            <div id="custom-font-status" style="display:none;margin-top:.6rem">
+              <div id="custom-font-label" style="font-size:.5rem;color:var(--muted);margin-bottom:.5rem;opacity:.7"></div>
+              <div style="display:flex;flex-wrap:wrap;gap:.3rem">
+                <button class="asset-use-btn" onclick="useCustomFont('heading')">Heading</button>
+                <button class="asset-use-btn" onclick="useCustomFont('body')">Body</button>
+                <button class="asset-use-btn" onclick="useCustomFont('nav')">Nav</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03: VIBE -->
+    <div class="step-block">
+      <div class="step-label"><span>03</span> Layout vibe</div>
+      <div class="vibe-grid" id="vibe-grid"></div>
+    </div>
+
+    <!-- 04: DETAILS -->
+    <div class="step-block">
+      <div class="step-label"><span>04</span> Style details</div>
+      <div class="detail-group">
+        <div class="detail-sublabel">Corner style</div>
+        <div class="detail-row" id="corner-row"></div>
+      </div>
+      <div class="detail-group">
+        <div class="detail-sublabel">Button style</div>
+        <div class="detail-row" id="btn-row"></div>
+      </div>
+      <div class="detail-group">
+        <div class="detail-sublabel">Spacing</div>
+        <div class="detail-row" id="spacing-row"></div>
+      </div>
+    </div>
+
+    <!-- 05: HEADER -->
+    <div class="step-block">
+      <div class="step-label"><span>05</span> Header layout</div>
+      <div class="header-grid" id="header-grid"></div>
+    </div>
+
+    <!-- 06: SECTIONS -->
+    <div class="step-block">
+      <div class="step-label"><span>06</span> Sections to include</div>
+      <div class="sections-grid" id="sections-grid"></div>
+    </div>
+
+    <!-- 07: PHOTOS -->
+    <div class="step-block">
+      <div class="step-label"><span>07</span> Photos <span style="color:var(--dim);font-size:.5rem;letter-spacing:.1em">optional</span></div>
+      <label class="asset-upload-btn" for="inp-photos" style="margin-bottom:.6rem">+ Upload photos</label>
+      <input type="file" id="inp-photos" accept="image/*" multiple style="display:none" onchange="onPhotosUpload(this.files)">
+      <div style="font-size:.48rem;color:var(--dim);opacity:.5;margin-bottom:.75rem">First photo → hero background &nbsp;·&nbsp; Rest → gallery section</div>
+      <div id="photo-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem"></div>
+    </div>
+
+    <!-- 08: FORM -->
+    <div class="step-block">
+      <div class="step-label"><span>08</span> Your details</div>
+      <div class="form-stack">
+        <div class="field"><label>Business Name</label><input type="text" id="f-name" placeholder="e.g. Raven Roofing" oninput="syncBrand();document.getElementById('fpb-input').value=this.value"></div>
+        <div class="field"><label>Industry</label>
+          <select id="f-industry">
+            <option value="">Select your industry</option>
+            <option>Home Services</option><option>Trades (plumbing, electrical, roofing)</option>
+            <option>Health & Wellness</option><option>Food & Hospitality</option>
+            <option>Retail / E-commerce</option><option>Professional Services</option>
+            <option>Fitness / Sport</option><option>Marine / Outdoor</option>
+            <option>Automotive / Detailing</option><option>Photography / Creative</option>
+            <option>Real Estate</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field"><label>What should visitors do on your site?</label><textarea id="f-goal" placeholder="e.g. Book a service, call for a quote, shop online..."></textarea></div>
+        <div class="field"><label>Your Email</label><input type="email" id="f-email" placeholder="you@yourbusiness.com"></div>
+        <button class="submit-btn" onclick="handleSubmit()">Get My Site →</button>
+      </div>
+      <div class="success" id="success">
+        <div class="success-title">You're In.</div>
+        <p class="success-body">Your site file just downloaded to your computer — that's your design, ready to build on.<br><br>Send us that file along with your real content (copy, photos, anything we're missing) and we'll have your site live within a week.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview-col">
+    <div class="preview-bar">
+      <div class="prev-dot"></div><div class="prev-dot"></div><div class="prev-dot"></div>
+      <div class="prev-tag">Live Preview</div>
+      <button onclick="openFullscreen()" style="margin-left:.75rem;background:none;border:1px solid rgba(216,228,106,.35);color:#D8E46A;padding:.3rem .7rem;font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;font-family:var(--font);transition:all .15s" onmouseover="this.style.background='rgba(216,228,106,.08)';this.style.borderColor='#D8E46A'" onmouseout="this.style.background='none';this.style.borderColor='rgba(216,228,106,.35)'">⛶ Expand Live</button>
+    </div>
+    <div class="preview-scroll">
+      <div class="mock" id="mock">
+        <div class="m-nav">
+          <img class="m-logo" id="m-logo" src="" alt="Logo">
+          <span class="m-nav-brand" id="m-brand">YOUR BRAND</span>
+          <div class="m-nav-dots"><div class="m-nav-dot"></div><div class="m-nav-dot"></div><div class="m-nav-dot"></div></div>
+        </div>
+        <div class="m-hero">
+          <span class="m-eyebrow" id="m-eyebrow">Premium Service</span>
+          <span class="m-h1" id="m-h1">Your Business Name</span>
+          <span class="m-sub">A short, sharp description of what you do and who you serve.</span>
+          <span class="m-btn" id="m-btn">Get Started</span>
+        </div>
+        <div class="m-services">
+          <span class="m-sec-label">What We Do</span>
+          <div class="m-cards">
+            <div class="m-card"><span class="m-card-h">Service One</span><span class="m-card-p">Brief description of what makes this great.</span></div>
+            <div class="m-card"><span class="m-card-h">Service Two</span><span class="m-card-p">Brief description of what makes this great.</span></div>
+            <div class="m-card"><span class="m-card-h">Service Three</span><span class="m-card-p">Brief description of what makes this great.</span></div>
+          </div>
+        </div>
+        <div class="m-cta">
+          <span class="m-cta-h" id="m-cta-h">Ready to Get Started?</span>
+          <span class="m-btn" id="m-btn2">Contact Us</span>
+        </div>
+        <div class="m-footer">
+          <span class="m-footer-b" id="m-footer-b">YOUR BRAND</span>
+          <div class="m-footer-links"><div class="m-footer-link"></div><div class="m-footer-link"></div><div class="m-footer-link"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN MODAL -->
+<div class="fs-overlay" id="fs-overlay">
+  <div class="fs-bar">
+    <div class="fs-bar-left">
+      <div class="fs-prev-dot"></div><div class="fs-prev-dot"></div><div class="fs-prev-dot"></div>
+      <span class="fs-title">Full Preview</span>
+    </div>
+    <button class="fs-close" onclick="closeFullscreen()">✕ Close</button>
+  </div>
+  <div class="fs-body">
+    <div class="fs-scroll" id="fs-scroll">
+      <div class="fs-mock-inner" id="fs-mock"></div>
+    </div>
+    <div class="fs-brief" id="fs-brief"></div>
+  </div>
+</div>
+
+<script>
+// ── SUPABASE ──────────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://pxwydcmgkyoledfsxdio.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_6AgzlnVl8JkT7Id8DFEBAQ_XH0tkUG_';
+const SUPABASE_BUCKET = 'client-sites';
+
+// ── PALETTES — 100 total, 5 tabs × 20 ────────────────────────────────────────
+const PAL_TABS = ['dark','light','tinted','earth','vivid'];
+const PALS = {
+  dark:[
+    {id:'dark-studio',  name:'Dark Studio',    bg:'#0A0A0A',tx:'#E8E0D0',ac:'#D8E46A'},
+    {id:'midnight',     name:'Midnight',       bg:'#05050A',tx:'#E8E8F5',ac:'#8B5CF6'},
+    {id:'noir',         name:'Noir',           bg:'#0A0A0A',tx:'#F5F5F5',ac:'#EF4444'},
+    {id:'carbon',       name:'Carbon',         bg:'#111111',tx:'#CCCCCC',ac:'#F97316'},
+    {id:'obsidian',     name:'Obsidian',       bg:'#0D0D14',tx:'#E0E0F5',ac:'#06B6D4'},
+    {id:'onyx',         name:'Onyx',           bg:'#0F0F0F',tx:'#EDE8E0',ac:'#F59E0B'},
+    {id:'pitch',        name:'Pitch',          bg:'#090909',tx:'#F0F0F0',ac:'#EC4899'},
+    {id:'coal',         name:'Coal',           bg:'#141414',tx:'#DDDDD5',ac:'#10B981'},
+    {id:'void',         name:'Void',           bg:'#060610',tx:'#E4E0FF',ac:'#818CF8'},
+    {id:'shadow',       name:'Shadow',         bg:'#080F08',tx:'#E0EEE0',ac:'#86EFAC'},
+    {id:'deep-navy',    name:'Deep Navy',      bg:'#070810',tx:'#E0E2F0',ac:'#4FC3F7'},
+    {id:'volcanic',     name:'Volcanic',       bg:'#0F0A06',tx:'#EEE4DC',ac:'#FF8A65'},
+    {id:'dark-amethyst',name:'Amethyst',       bg:'#0C0810',tx:'#EAE2F0',ac:'#CE93D8'},
+    {id:'blackout',     name:'Blackout',       bg:'#020202',tx:'#FFFFFF', ac:'#FFFFFF'},
+    {id:'night-sky',    name:'Night Sky',      bg:'#08080F',tx:'#E8E8F8',ac:'#90CAF9'},
+    {id:'dark-maroon',  name:'Dark Maroon',    bg:'#100806',tx:'#F0E6E2',ac:'#EF9A9A'},
+    {id:'espresso',     name:'Espresso',       bg:'#120E0A',tx:'#EEE8E0',ac:'#D4A96E'},
+    {id:'gunmetal',     name:'Gunmetal',       bg:'#0E1218',tx:'#D8E0E8',ac:'#7098B8'},
+    {id:'dark-plum',    name:'Dark Plum',      bg:'#0E0810',tx:'#EAE0F0',ac:'#B090D0'},
+    {id:'charcoal',     name:'Charcoal',       bg:'#181818',tx:'#E0E0E0',ac:'#AAAAAA'},
+  ],
+  light:[
+    {id:'clean-white',  name:'Clean White',    bg:'#FAFAFA',tx:'#0F0F0F',ac:'#2563EB'},
+    {id:'ivory',        name:'Ivory',          bg:'#FAF8F4',tx:'#1A1410',ac:'#B45309'},
+    {id:'paper',        name:'Paper',          bg:'#F5F5F0',tx:'#111111',ac:'#059669'},
+    {id:'snow',         name:'Snow',           bg:'#FFFFFF',tx:'#0A0A0A',ac:'#DC2626'},
+    {id:'linen',        name:'Linen',          bg:'#F4EFE8',tx:'#2A1F14',ac:'#9333EA'},
+    {id:'chalk',        name:'Chalk',          bg:'#F8F8F8',tx:'#1A1A1A',ac:'#0EA5E9'},
+    {id:'cream',        name:'Cream',          bg:'#FFF8F0',tx:'#1C1008',ac:'#EA580C'},
+    {id:'pearl',        name:'Pearl',          bg:'#F6F6F8',tx:'#12121A',ac:'#6366F1'},
+    {id:'milk',         name:'Milk',           bg:'#FDFDF9',tx:'#1A1A10',ac:'#65A30D'},
+    {id:'birch',        name:'Birch',          bg:'#F2EDE6',tx:'#201A14',ac:'#E11D48'},
+    {id:'mint-white',   name:'Mint White',     bg:'#F0FAF6',tx:'#102018',ac:'#2DB37D'},
+    {id:'lavender-wh',  name:'Lavender',       bg:'#F4F0FA',tx:'#1A1028',ac:'#8B5CF6'},
+    {id:'peach',        name:'Peach',          bg:'#FAF0EC',tx:'#281810',ac:'#E06050'},
+    {id:'sky-white',    name:'Sky White',      bg:'#EFF8FC',tx:'#081824',ac:'#0EA5E9'},
+    {id:'rose-white',   name:'Rose White',     bg:'#FAF0F2',tx:'#280C12',ac:'#E07090'},
+    {id:'sage-white',   name:'Sage White',     bg:'#F0F5F0',tx:'#101A12',ac:'#558B6E'},
+    {id:'butter',       name:'Butter',         bg:'#FAF8E8',tx:'#201C08',ac:'#D4A017'},
+    {id:'blush',        name:'Blush',          bg:'#FDF0F0',tx:'#240E0E',ac:'#C0505A'},
+    {id:'cloud',        name:'Cloud',          bg:'#F8F8FC',tx:'#10101C',ac:'#7C6FCD'},
+    {id:'seashell',     name:'Seashell',       bg:'#FEF6F0',tx:'#1E1208',ac:'#E8956A'},
+  ],
+  tinted:[
+    {id:'ocean',        name:'Ocean',          bg:'#0D1B2A',tx:'#DFF0FD',ac:'#38BDF8'},
+    {id:'forest',       name:'Forest',         bg:'#0F1F14',tx:'#E2F5E4',ac:'#4ADE80'},
+    {id:'slate',        name:'Slate',          bg:'#1E293B',tx:'#F1F5F9',ac:'#F59E0B'},
+    {id:'wine',         name:'Wine',           bg:'#1A0A0F',tx:'#F5E8EC',ac:'#FB7185'},
+    {id:'cobalt',       name:'Cobalt',         bg:'#0A1628',tx:'#EDF4FF',ac:'#3B82F6'},
+    {id:'sage-dk',      name:'Sage',           bg:'#151F15',tx:'#E8F0E8',ac:'#86EFAC'},
+    {id:'plum',         name:'Plum',           bg:'#180A1F',tx:'#F3E8FF',ac:'#C084FC'},
+    {id:'dusk',         name:'Dusk',           bg:'#1A1528',tx:'#E8E4F8',ac:'#A78BFA'},
+    {id:'smoke',        name:'Smoke',          bg:'#1C1C20',tx:'#E8E8EE',ac:'#94A3B8'},
+    {id:'ember',        name:'Ember',          bg:'#1C1008',tx:'#F5ECD4',ac:'#FB923C'},
+    {id:'deep-teal',    name:'Deep Teal',      bg:'#0A2020',tx:'#D8F0EE',ac:'#4CC8B8'},
+    {id:'midnight-bl',  name:'Midnight Blue',  bg:'#080E20',tx:'#D8E0F0',ac:'#5080E0'},
+    {id:'dark-jade',    name:'Dark Jade',      bg:'#081808',tx:'#D8F0DC',ac:'#40C860'},
+    {id:'burgundy-dk',  name:'Burgundy',       bg:'#200808',tx:'#F0D8D8',ac:'#E03048'},
+    {id:'peacock',      name:'Peacock',        bg:'#082030',tx:'#D8EEF8',ac:'#40A8D8'},
+    {id:'aubergine',    name:'Aubergine',      bg:'#18082C',tx:'#EDD8F8',ac:'#A04CD0'},
+    {id:'merlot',       name:'Merlot',         bg:'#200810',tx:'#F0D8E0',ac:'#D04060'},
+    {id:'dark-amber',   name:'Dark Amber',     bg:'#1C1004',tx:'#F5ECD4',ac:'#E8A840'},
+    {id:'hunter',       name:'Hunter',         bg:'#0A1A08',tx:'#DCF0D8',ac:'#4CAF50'},
+    {id:'indigo-night', name:'Indigo Night',   bg:'#10102A',tx:'#E0E0F8',ac:'#6060E0'},
+  ],
+  earth:[
+    {id:'warm-earth',   name:'Warm Earth',     bg:'#F0EBE0',tx:'#2A1F14',ac:'#C0714A'},
+    {id:'rust',         name:'Rust',           bg:'#F5EBE0',tx:'#2A1008',ac:'#B45309'},
+    {id:'terra',        name:'Terra',          bg:'#EDE8E0',tx:'#1E1510',ac:'#92400E'},
+    {id:'dune',         name:'Dune',           bg:'#F0EDEA',tx:'#1A1614',ac:'#78716C'},
+    {id:'clay',         name:'Clay',           bg:'#EEE6DD',tx:'#241810',ac:'#A16207'},
+    {id:'moss',         name:'Moss',           bg:'#E8EDE2',tx:'#141C10',ac:'#4D7C0F'},
+    {id:'ash',          name:'Ash',            bg:'#ECEAE8',tx:'#1A1816',ac:'#6B7280'},
+    {id:'stone',        name:'Stone',          bg:'#E8E4E0',tx:'#1C1814',ac:'#57534E'},
+    {id:'bone-pal',     name:'Bone',           bg:'#F2EEE6',tx:'#1E1A14',ac:'#C2A96A'},
+    {id:'mink',         name:'Mink',           bg:'#EDE8E4',tx:'#241E1A',ac:'#9C7A6A'},
+    {id:'desert',       name:'Desert Sand',    bg:'#F5EDDC',tx:'#30200C',ac:'#D4903C'},
+    {id:'adobe',        name:'Adobe',          bg:'#F2E8DC',tx:'#281808',ac:'#B8704A'},
+    {id:'oatmeal',      name:'Oatmeal',        bg:'#F5F2EA',tx:'#1C1A12',ac:'#9C8C5C'},
+    {id:'latte',        name:'Latte',          bg:'#F4EDE2',tx:'#201A10',ac:'#B89068'},
+    {id:'hazel',        name:'Hazel',          bg:'#EDE6D8',tx:'#1E1810',ac:'#8C7050'},
+    {id:'khaki',        name:'Khaki',          bg:'#EEEADE',tx:'#1C1A10',ac:'#8C8450'},
+    {id:'wheat',        name:'Wheat',          bg:'#F8F2E0',tx:'#201C0C',ac:'#C0A04A'},
+    {id:'parchment',    name:'Parchment',      bg:'#F4EED8',tx:'#1C180A',ac:'#A08840'},
+    {id:'hemp',         name:'Hemp',           bg:'#F0EAD8',tx:'#1A160A',ac:'#8C7840'},
+    {id:'flax',         name:'Flax',           bg:'#F2ECD6',tx:'#1E1A0A',ac:'#B8A848'},
+  ],
+  vivid:[
+    {id:'neon-noir',    name:'Neon Noir',      bg:'#0A0A0A',tx:'#FFFFFF',ac:'#00FF88'},
+    {id:'electric',     name:'Electric Night', bg:'#050514',tx:'#E8E8FF',ac:'#00BFFF'},
+    {id:'hot-noir',     name:'Hot Noir',       bg:'#0A0006',tx:'#FFE0E8',ac:'#FF0066'},
+    {id:'cyber',        name:'Cyber',          bg:'#0A0F0A',tx:'#E0FFE0',ac:'#39FF14'},
+    {id:'lava',         name:'Lava',           bg:'#150500',tx:'#FFE8E0',ac:'#FF4400'},
+    {id:'ultraviolet',  name:'Ultraviolet',    bg:'#0A000F',tx:'#F0E0FF',ac:'#9900FF'},
+    {id:'solar',        name:'Solar',          bg:'#0F0F00',tx:'#FFFFF0',ac:'#FFD700'},
+    {id:'azure-wave',   name:'Azure Wave',     bg:'#00050F',tx:'#E0EEFF',ac:'#0066FF'},
+    {id:'acid',         name:'Acid',           bg:'#050F00',tx:'#E8FFE0',ac:'#AAFF00'},
+    {id:'coral-reef',   name:'Coral Reef',     bg:'#0F0500',tx:'#FFE8E0',ac:'#FF6B35'},
+    {id:'magenta-wave', name:'Magenta Wave',   bg:'#0F000F',tx:'#FFE0FF',ac:'#FF00CC'},
+    {id:'cyan-storm',   name:'Cyan Storm',     bg:'#000F0F',tx:'#E0FFFF',ac:'#00FFEE'},
+    {id:'ruby',         name:'Ruby Red',       bg:'#0F0000',tx:'#FFE0E0',ac:'#FF1744'},
+    {id:'poison',       name:'Poison',         bg:'#0A0F02',tx:'#EAFFE0',ac:'#76FF03'},
+    {id:'aurora',       name:'Aurora',         bg:'#060614',tx:'#E8F0FF',ac:'#7C4DFF'},
+    {id:'sunset',       name:'Sunset',         bg:'#140600',tx:'#FFE8D8',ac:'#FF6D00'},
+    {id:'plasma',       name:'Plasma',         bg:'#0A000A',tx:'#F0E0FF',ac:'#D500F9'},
+    {id:'glacier',      name:'Glacier',        bg:'#000A10',tx:'#E0F4FF',ac:'#00B0FF'},
+    {id:'volcano',      name:'Volcano',        bg:'#140200',tx:'#FFECE0',ac:'#FF3D00'},
+    {id:'matrix',       name:'Matrix',         bg:'#000A00',tx:'#E0FFE8',ac:'#00E676'},
+  ],
+};
+
+// ── FONTS ─────────────────────────────────────────────────────────────────────
+const HEADING_FONTS = [
+  { group:'Custom', fonts:['Reikna'] },
+  { group:'Display & Impact', fonts:[
+    'Bebas Neue','Oswald','Anton','Righteous','Black Ops One','Racing Sans One','Russo One',
+    'Staatliches','Big Shoulders Display','Teko','Squada One','Fjalla One','Graduate',
+    'Boogaloo','Changa One','Bungee','Bungee Inline','Bungee Shade','Days One','Syncopate',
+    'Turret Road','Krona One','League Gothic','Cuprum','Electrolize','Audiowide','Orbitron',
+    'Michroma','Monoton','Nova Square','Wire One','Viga','Voltaire','Titan One','Ultra',
+    'Lilita One','Passion One','Rammetto One','Patua One','Bangers','Concert One',
+    'Revalia','Poiret One','Unica One','Economica','Allerta Stencil','Quantico',
+    'Stardos Stencil','Pirata One','Six Caps','Wallpoet','Trade Winds','Saira Stencil One',
+    'Ruslan Display','Raleway Dots','Sail','Rye','Road Rage','Londrina Solid',
+    'Londrina Outline','Londrina Shadow','Codystar','Megrim','Stalinist One',
+    'Faster One','Expletus Sans','Jockey One','Bowlby One','Bowlby One SC',
+    'Francois One','Hammersmith One','Julius Sans One','Kranky','Luckiest Guy',
+    'Mogra','Modak','Mouse Memoirs','Odibee Sans','Paytone One','Shrikhand',
+    'Sirin Stencil','Skranji','Stint Ultra Condensed','Sulphur Point','Wendy One',
+  ]},
+  { group:'Modern Sans-Serif', fonts:[
+    'Inter','Montserrat','Poppins','Raleway','DM Sans','Work Sans','Jost','Syne',
+    'Space Grotesk','Urbanist','Outfit','Manrope','Plus Jakarta Sans','Nunito','Barlow',
+    'Josefin Sans','Exo 2','Mulish','Cabin','Varela Round','Overpass','Noto Sans',
+    'PT Sans','Source Sans 3','Lato','Roboto','Open Sans','Fira Sans','Dosis','Karla',
+    'Titillium Web','IBM Plex Sans','Onest','Assistant','Monda','Asap','Catamaran',
+    'Encode Sans','Figtree','Heebo','Kumbh Sans','Lexend','Maven Pro','Mukta',
+    'Nunito Sans','Oxanium','Public Sans','Questrial','Red Hat Display','Rubik',
+    'Secular One','Commissioner','Epilogue','Familjen Grotesk','Instrument Sans',
+    'Kanit','League Spartan','Mohave','Rajdhani','Readex Pro','Sen','Sofia Sans',
+    'Spline Sans','Truculenta','Ubuntu','Unbounded','Yanone Kaffeesatz','Yantramanav',
+    'Sarabun','Saira','Prompt','Exo','Gemunu Libre','Fira Sans Condensed',
+    'Barlow Semi Condensed','Barlow Condensed','Pragati Narrow','Abel','Acme',
+    'Aldrich','Signika','Sigmar One','Hind','Mada','Nobile','Ropa Sans',
+    'Chivo','Libre Franklin','Radio Canada','Roboto Condensed','Sofia Sans Condensed',
+    'Telex','Wix Madefor Display','Antonio','Akshar','Bricolage Grotesque',
+    'Archivo','Archivo Black','Archivo Narrow','Albert Sans','Be Vietnam Pro',
+    'Chakra Petch','Inter Tight','Jura','Khand','Pathway Extreme','Signika Negative',
+    'Smooch Sans','Spline Sans Mono','Vina Sans','Wix Madefor Text','Ysabeau',
+    'Ysabeau Office','Ysabeau Infant','Ysabeau SC','Ysabeau Unicase',
+    'Advent Pro','Alef','Almarai','Anaheim','Encode Sans Condensed',
+    'Encode Sans Expanded','Encode Sans SC','Encode Sans Semi Condensed',
+    'Encode Sans Semi Expanded','Fahkwang','Gantari','Georama','Goblin One',
+    'Gothic A1','Gotu','Gudea','Gurajada','Imprima','Istok Web','Jaldi',
+    'Judson','Kalam','Khula','KoHo','Kodchasan','Kulim Park','Kurale',
+    'Langar','Lekton','Livvic','Miriam Libre','Moul','Numans','Overlock',
+    'Overlock SC','Padauk','Pavanam','Potta One','Puritan','Rambla',
+    'Rasa','Rationale','Ruda','Rufina','Ruluko','Scada','Scope One',
+    'Sintony','Sora','Strait','Sunflower','Tauri','Tillana','Timmana',
+    'Tinos','Tomorrow','Varta','Yantramanav',
+  ]},
+  { group:'Display Serif', fonts:[
+    'Abril Fatface','Playfair Display','Cormorant Garamond','Cormorant','Cormorant SC',
+    'Yeseva One','Josefin Slab','Lobster','Oleo Script','Philosopher',
+    'Cinzel','Cinzel Decorative','Bodoni Moda','Rozha One','Inknut Antiqua',
+    'Fraunces','Gilda Display','Libre Caslon Display','Limelight','Metamorphous',
+    'Enriqueta','Della Respira','Marcellus','Marcellus SC','Crete Round',
+    'Goudy Boorletter 1911','Forum','DM Serif Display','Italiana','Ruthie',
+    'Alfa Slab One','Rye','Fredericka the Great','Baskervville','Cambo',
+    'Domine','Oranienbaum','Petrona','Prata','Bigshot One','Vidaloka',
+    'Lusitana','Bellefair','Cormorant Infant','Cormorant Upright',
+    'Noto Serif Display','Playfair Display SC','Spectral SC','Vollkorn SC',
+    'IM Fell DW Pica','IM Fell Double Pica','IM Fell English','IM Fell French Canon',
+    'IM Fell Great Primer','Headland One','Ibarra Real Nova','Piazzolla',
+    'Newsreader','Young Serif','Literata','Inria Serif','Grenze Gotisch',
+    'Elsie','Elsie Swash Caps','Almendra Display','Almendra SC',
+    'Eczar','Fanwood Text','Gentium Book Plus','Gentium Plus',
+  ]},
+  { group:'Classic Serif', fonts:[
+    'Merriweather','Lora','Libre Baskerville','EB Garamond','Source Serif 4',
+    'Spectral','Bitter','PT Serif','Arvo','Vollkorn','Cardo','Crimson Text',
+    'Crimson Pro','Alegreya','Alegreya SC','Neuton','Sorts Mill Goudy','Tinos',
+    'Vesper Libre','Mate','Fenix','Ovo','Alice','Faustina','Hepta Slab',
+    'Podkova','Rokkitt','Zilla Slab','Yrsa','GFS Didot','GFS Neohellenic',
+    'Montagu Slab','Old Standard TT','Aleo','Caudex','David Libre','Droid Serif',
+    'Donegal One','Gupter','Judson','Lusitana','Martel','Mate SC',
+    'Noto Serif','Quattrocento','Rosarivo','Rufina','Sanchez','Stoke',
+    'Trirong','Vesper Libre','Frank Ruhl Libre','Hahmlet',
+    'Libre Caslon Text','Gloock','Instrument Serif','Trocchi',
+  ]},
+  { group:'Slab Serif', fonts:[
+    'Roboto Slab','Rokkitt','Zilla Slab','Arvo','Bitter','Podkova','Coustard',
+    'Slabo 27px','Montagu Slab','Hepta Slab','Kelly Slab','Aleo','Crete Round',
+    'Donegal One','Eczar','Faustina','Slabo 13px','Stint Ultra Expanded',
+    'Martel','Poly','Rasa','Pridi','Taviraj',
+  ]},
+  { group:'Geometric & Rounded', fonts:[
+    'Comfortaa','Varela Round','Quicksand','Fredoka','Fredoka One','Nunito',
+    'Questrial','Pacifico','Baloo 2','Baloo Bhai 2','Baloo Bhaina 2',
+    'Baloo Chettan 2','Baloo Da 2','Baloo Paaji 2','Baloo Tamma 2',
+    'Baloo Tammudu 2','Baloo Thambi 2','Balsamiq Sans','Sniglet','Grandstander',
+    'Happy Monkey','Jura','M PLUS Rounded 1c','Tsukimi Rounded','BioRhyme',
+    'Coda','Coiny','Chewy','Finlandica','Kite One','Molengo','Orienta',
+    'Sansita','Wellfleet','Rounded Mplus 1c','Moo Lah Lah','Museomoderno',
+    'Nunito Sans','Playpen Sans','Playball','Playwrite AU NSW','Poppins',
+  ]},
+  { group:'Technical & Monospace', fonts:[
+    'IBM Plex Mono','Space Mono','Roboto Mono','Source Code Pro','JetBrains Mono',
+    'Courier Prime','Inconsolata','Share Tech Mono','Fira Code','Fira Mono',
+    'DM Mono','Ubuntu Mono','Oxygen Mono','PT Mono','Nova Mono',
+    'Cutive Mono','VT323','Azeret Mono','Anonymous Pro','B612 Mono',
+    'Xanh Mono','Overpass Mono','Recursive','Silkscreen','Press Start 2P',
+    'Syne Mono','Share Tech','Turret Road','Audiowide','Michroma',
+    'Electrolize','Chakra Petch','Geo','Iceland','Syncopate',
+    'Nova Square','Rajdhani','Bruno Ace','Bruno Ace SC','Exo','Oxanium',
+  ]},
+  { group:'Script & Handwriting', fonts:[
+    'Dancing Script','Kaushan Script','Satisfy','Sacramento','Yellowtail',
+    'Great Vibes','Caveat','Cookie','Allura','Alex Brush','Pinyon Script',
+    'Petit Formal Script','Courgette','La Belle Aurore','Clicker Script',
+    'Amatic SC','Bad Script','Calligraffitti','Dawning of a New Day','Delius',
+    'Delius Swash Caps','Delius Unicase','Engagement','Euphoria Script',
+    'Handlee','Indie Flower','Italianno','Just Me Again Down Here','Kristi',
+    'Leckerli One','Love Ya Like A Sister','Lovers Quarrel','Marck Script',
+    'Miss Fajardose','Monsieur La Doulaise','Mr Bedfort','Mr Dafoe',
+    'Mr De Haviland','Mrs Saint Delafield','Niconne','Norican','Parisienne',
+    'Qwigley','Reenie Beanie','Rochester','Rouge Script','Ruthie',
+    'Shadows Into Light','Shadows Into Light Two','Shalimar','Style Script',
+    'Sue Ellen Francisco','Swanky and Moo Moo','Tangerine','Vibur',
+    'Waiting for the Sunrise','WindSong','Zeyada','Waterfall','Gwendolyn',
+    'Meow Script','Ephesis','Lavishly Yours','Birthstone','Birthstone Bounce',
+    'Mea Culpa','Ms Madi','Send Flowers','Inspiration','Imperial Script',
+    'Ingrid Darling','Island Moments','Kolker Brush','Long Cang','Luxurious Script',
+    'Mystic','Neonderthaw','Ole','Oooh Baby','Passions Conflict','Petemoss',
+    'Princess Sofia','Puppies Play','Qwigley','Quintessential','Ruge Boogie',
+    'Sevillana','Simonetta','Splash','Square Peg','Twinkle Star',
+    'Vujahday Script','Whisper','Yesteryear',
+  ]},
+  { group:'Decorative & Specialty', fonts:[
+    'Cinzel Decorative','Pirata One','Uncial Antiqua','UnifrakturCook',
+    'UnifrakturMaguntia','Risque','Vast Shadow','Warnes','Butcherman',
+    'Creepster','Griffy','Permanent Marker','Londrina Shadow','Londrina Sketch',
+    'Bigelow Rules','Black And White Picture','Blaka','Mystery Quest',
+    'New Rocker','Nova Cut','Nova Flat','Nova Oval','Nova Round',
+    'Nova Script','Nova Slim','Rubik Beastly','Rubik Burned','Rubik Dirt',
+    'Rubik Distressed','Rubik Glitch','Rubik Iso','Rubik Microbe',
+    'Rubik Moonrocks','Rubik Pixels','Rubik Scribble','Rubik Spray Paint',
+    'Rubik Storm','Rubik Wet Paint','Snowburst One','Stalinist One',
+    'Caesar Dressing','Ceviche One','Chelsea Market','Chicle','Combo',
+    'Diplomatica','Ewert','Finger Paint','Flamenco','Flavors','Fleur De Leah',
+    'Fruktur','Fuggles','Germania One','Gravitas One','Henny Penny',
+    'Iceberg','Jolly Lodger','Kavoon','Lacquer','Lily Script One',
+    'Miltonian','Miltonian Tattoo','Monofett','Oregano','Paytone One',
+    'Peralta','Piedra','Plaster','Poller One','Ribeye','Ribeye Marrow',
+    'Ruslan Display','Smokum','Sofadi One','Spicy Rice','Stint Ultra Expanded',
+  ]},
+];
+
+const BODY_FONTS = [
+  { group:'Clean Sans-Serif', fonts:[
+    'Inter','Roboto','Open Sans','Lato','Source Sans 3','DM Sans','Mulish','Nunito',
+    'Barlow','Work Sans','Outfit','Figtree','Manrope','Plus Jakarta Sans','Lexend',
+    'Albert Sans','Be Vietnam Pro','Raleway','Urbanist','Jost','Cabin','Overpass',
+    'Quicksand','Oxygen','Fira Sans','Dosis','Karla','Titillium Web','Hind',
+    'Noto Sans','PT Sans','IBM Plex Sans','Onest','Assistant','Monda','Inder',
+    'Asap','Catamaran','Encode Sans','Figtree','Heebo','Kumbh Sans','Maven Pro',
+    'Mukta','Nunito Sans','Oxanium','Public Sans','Questrial','Red Hat Text',
+    'Rubik','Commissioner','Epilogue','Instrument Sans','Kanit','Mohave',
+    'Rajdhani','Readex Pro','Sen','Sofia Sans','Spline Sans','Ubuntu',
+    'Yantramanav','Sarabun','Saira','Prompt','Exo 2','Gemunu Libre','Abel','Acme',
+    'Signika','Hind Siliguri','Libre Franklin','Chivo','Radio Canada',
+    'Roboto Condensed','Wix Madefor Text','Akshar','Bricolage Grotesque',
+    'Archivo','Antonio','Inter Tight','Jura','Khand','Mada','Nobile',
+    'Ropa Sans','Padauk','Pontano Sans','Proza Libre','Quattrocento Sans',
+    'Rambla','Rosario','Ruda','Scope One','Sora','Tauri','Telex',
+    'Yanone Kaffeesatz','Poppins','Montserrat','Space Grotesk',
+    'Lexend Deca','Lexend Exa','Merienda','Miriam Libre','Numans',
+    'Overlock','Varta','Voltaire','Pathway Extreme','Signika Negative',
+    'Smooch Sans','Spline Sans Mono','Akshar','Familjen Grotesk',
+    'Georama','Gothic A1','Gotu','Gudea','Imprima','Istok Web',
+    'Kulim Park','Kurale','Lekton','Livvic','Rasa','Rationale',
+    'Strait','Sunflower','Timmana','Tinos','Tomorrow','Ysabeau',
+    'Ysabeau Office','Ysabeau SC','Advent Pro','Alef','Almarai',
+    'Encode Sans Condensed','Encode Sans Expanded','Fahkwang','Gantari',
+    'Impacted','Khula','KoHo','Kodchasan','Langar','Livvic',
+    'Overlock SC','Pavanam','Puritan','Scada','Sintony',
+    'Tillana','Truculenta','Unbounded','Wix Madefor Display',
+    'Sigmar One','League Spartan','Secular One',
+    'Chakra Petch','Exo','Oxanium','Bruno Ace','Readex Pro',
+    'Hahmlet','Instrument Serif','Trocchi','Gloock',
+  ]},
+  { group:'Classic Serif', fonts:[
+    'Merriweather','Lora','Libre Baskerville','EB Garamond','PT Serif','Source Serif 4',
+    'Spectral','Bitter','Crimson Text','Crimson Pro','Vollkorn','Cardo','Arvo',
+    'Playfair Display','Cormorant Garamond','Alegreya','Neuton','Gentium Plus',
+    'Sorts Mill Goudy','Tinos','Lusitana','Judson','Fenix','Ovo','Alice',
+    'Faustina','Rokkitt','Zilla Slab','Young Serif','Yrsa','Noto Serif',
+    'Old Standard TT','GFS Didot','Libre Caslon Text','Caudex','David Libre',
+    'Domine','Donegal One','Fanwood Text','Gupter','Headland One',
+    'IM Fell English','Ibarra Real Nova','Judson','Lusitana','Marcellus',
+    'Mate','Oranienbaum','Petrona','Podkova','Prata','Proza Libre',
+    'Quattrocento','Rosarivo','Rufina','Sanchez','Slabo 27px','Stoke',
+    'Trirong','Vesper Libre','Vidaloka','Vollkorn SC','Inria Serif',
+    'Literata','Newsreader','Piazzolla','Frank Ruhl Libre','Fraunces',
+    'Bodoni Moda','Spectral SC','Alegreya SC','Cormorant SC',
+    'Almendra','Almendra SC','Eczar','Inknut Antiqua','Philosopher',
+    'Forum','Enriqueta','Cambo','Baskervville','Bellefair',
+  ]},
+  { group:'Slab Serif', fonts:[
+    'Roboto Slab','Montagu Slab','Hepta Slab','Kelly Slab','Aleo',
+    'Coustard','Podkova','Slabo 27px','Faustina','Eczar','Rasa',
+    'Martel','Poly','Pridi','Taviraj','Rokkitt','Zilla Slab',
+    'Crete Round','Bitter','Arvo','Slabo 13px','Stint Ultra Expanded',
+  ]},
+  { group:'Monospace', fonts:[
+    'IBM Plex Mono','Space Mono','Roboto Mono','Source Code Pro','JetBrains Mono',
+    'Courier Prime','Inconsolata','Share Tech Mono','Fira Code','Fira Mono',
+    'DM Mono','Ubuntu Mono','Oxygen Mono','PT Mono','Cutive Mono',
+    'Azeret Mono','Anonymous Pro','B612 Mono','Xanh Mono','Overpass Mono',
+    'Recursive','Syne Mono','Share Tech','Nanum Gothic Coding',
+  ]},
+  { group:'Casual & Friendly', fonts:[
+    'Caveat','Dancing Script','Pacifico','Kaushan Script','Satisfy','Quicksand',
+    'Comfortaa','Nunito','Baloo 2','Handlee','Indie Flower','Amatic SC',
+    'Patrick Hand','Pangolin','Delius','Architects Daughter',
+    'Coming Soon','Covered By Your Grace','Crafty Girls','Fredoka',
+    'Gloria Hallelujah','Happy Monkey','Just Another Hand','Kalam',
+    'Luckiest Guy','M PLUS Rounded 1c','Permanent Marker','Playpen Sans',
+    'Reenie Beanie','Shantell Sans','The Girl Next Door',
+    'Waiting for the Sunrise','Caveat Brush','Balsamiq Sans',
+    'Annie Use Your Telescope','Chilanka','Comic Neue','Fuzzy Bubbles',
+    'Gochi Hand','Itim','Jua','Klee One','Kolker Brush','Mali',
+    'Neucha','Nothing You Could Do','Patrick Hand SC','Schoolbell',
+    'Shadows Into Light','Short Stack','Single Day','Sniglet','Sriracha',
+    'Sue Ellen Francisco','Swanky and Moo Moo','Unkempt','Zhi Mang Xing',
+  ]},
+];
+
+const QUICK_PAIRINGS = [
+  {id:'reikna',     name:'Reikna',      hf:'Reikna',               bf:'Inter'},
+  {id:'whisper',    name:'Whisper',     hf:'Cormorant Garamond',   bf:'EB Garamond'},
+  {id:'terminal',   name:'Terminal',    hf:'Space Mono',           bf:'Space Mono'},
+  {id:'press',      name:'Press',       hf:'Abril Fatface',        bf:'Lora'},
+  {id:'broadsheet', name:'Broadsheet',  hf:'Playfair Display',     bf:'Libre Baskerville'},
+  {id:'street',     name:'Street',      hf:'Bebas Neue',           bf:'Barlow Condensed'},
+  {id:'orbital',    name:'Orbital',     hf:'Orbitron',             bf:'Share Tech Mono'},
+  {id:'handmade',   name:'Handmade',    hf:'Caveat',               bf:'Lato'},
+  {id:'romance',    name:'Romance',     hf:'Great Vibes',          bf:'EB Garamond'},
+  {id:'deco',       name:'Deco',        hf:'Poiret One',           bf:'Josefin Sans'},
+  {id:'studio',     name:'Studio',      hf:'DM Serif Display',     bf:'DM Sans'},
+  {id:'debug',      name:'Debug',       hf:'Syne',                 bf:'IBM Plex Mono'},
+  {id:'bounce',     name:'Bounce',      hf:'Fredoka One',          bf:'Nunito'},
+  {id:'retro',      name:'Retro',       hf:'Righteous',            bf:'Source Sans 3'},
+  {id:'couture',    name:'Couture',     hf:'Cinzel',               bf:'Raleway'},
+  {id:'athletic',   name:'Athletic',    hf:'Big Shoulders Display',bf:'Barlow'},
+  {id:'academia',   name:'Academia',    hf:'IM Fell English',      bf:'Crimson Text'},
+  {id:'craft',      name:'Craft',       hf:'Lobster',              bf:'Merriweather'},
+  {id:'zero',       name:'Zero',        hf:'Outfit',               bf:'Outfit'},
+  {id:'industrial', name:'Industrial',  hf:'Oswald',               bf:'Courier Prime'},
+  {id:'signal',     name:'Signal',      hf:'Fjalla One',           bf:'Cabin'},
+];
+
+const VIBES = [
+  {id:'minimal',   name:'Minimal',   desc:'Generous space, quiet confidence'},
+  {id:'bold',      name:'Bold',      desc:'Full-bleed sections, large type'},
+  {id:'warm',      name:'Warm',      desc:'Welcoming, approachable, service-feel'},
+  {id:'premium',   name:'Premium',   desc:'Dark, sophisticated, luxury'},
+  {id:'editorial', name:'Editorial', desc:'Magazine layout, content-forward'},
+  {id:'playful',   name:'Playful',   desc:'Energetic, friendly, expressive'},
+];
+
+const CORNERS = [
+  {id:'sharp',   name:'Sharp',   r:'0px',  icon:`<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="16" height="16"/></svg>`},
+  {id:'subtle',  name:'Subtle',  r:'4px',  icon:`<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="16" height="16" rx="3"/></svg>`},
+  {id:'rounded', name:'Rounded', r:'12px', icon:`<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="16" height="16" rx="7"/></svg>`},
+];
+const BTNS = [
+  {id:'solid',   name:'Solid',   icon:`<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="18" height="8" fill="currentColor" opacity=".4"/></svg>`},
+  {id:'outline', name:'Outline', icon:`<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="18" height="8"/></svg>`},
+  {id:'ghost',   name:'Ghost',   icon:`<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="15" x2="18" y2="15"/><line x1="6" y1="10" x2="16" y2="10"/></svg>`},
+  {id:'pill',    name:'Pill',    icon:`<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="18" height="8" rx="4" fill="currentColor" opacity=".4"/></svg>`},
+];
+const SPACINGS = [
+  {id:'compact',  name:'Compact',  cls:'sp-compact',  icon:`<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="5" x2="19" y2="5"/><line x1="3" y1="9" x2="15" y2="9"/><line x1="3" y1="13" x2="19" y2="13"/><line x1="3" y1="17" x2="13" y2="17"/></svg>`},
+  {id:'balanced', name:'Balanced', cls:'sp-balanced', icon:`<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="4" x2="19" y2="4"/><line x1="3" y1="9" x2="15" y2="9"/><line x1="3" y1="15" x2="19" y2="15"/><line x1="3" y1="20" x2="13" y2="20"/></svg>`},
+  {id:'open',     name:'Open',     cls:'sp-open',     icon:`<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="3" x2="19" y2="3"/><line x1="3" y1="10" x2="15" y2="10"/><line x1="3" y1="18" x2="19" y2="18"/></svg>`},
+];
+const HEADERS = [
+  {id:'left',   name:'Left',    desc:'Left-aligned content'},
+  {id:'center', name:'Centred', desc:'Symmetrical, editorial'},
+  {id:'split',  name:'Split',   desc:'Headline left, copy right'},
+];
+const SECTIONS = [
+  {id:'hero',         label:'Hero / Banner',      locked:true},
+  {id:'stats',        label:'Stats & Numbers',    def:false},
+  {id:'services',     label:'Services',           def:true},
+  {id:'about',        label:'About / Story',      def:true},
+  {id:'team',         label:'Team',               def:false},
+  {id:'testimonials', label:'Testimonials',       def:false},
+  {id:'video',        label:'Video Hero',         def:false},
+  {id:'gallery',      label:'Gallery',            def:false},
+  {id:'before-after', label:'Before & After',     def:false},
+  {id:'pricing',      label:'Pricing',            def:false},
+  {id:'faq',          label:'FAQ',                def:false},
+  {id:'blog',         label:'Blog / News',        def:false},
+  {id:'map',          label:'Map / Location',     def:false},
+  {id:'contact',      label:'Contact / Booking',  def:true},
+  {id:'social-proof', label:'Social Proof Bar',   def:false},
+  {id:'partners',     label:'Partners / Logos',   def:false},
+  {id:'newsletter',   label:'Newsletter',         def:false},
+  {id:'comparison',   label:'Comparison Table',   def:false},
+];
+
+// ── COLOUR HELPERS ────────────────────────────────────────────────────────────
+function hexToRgb(hex){
+  const h=hex.replace('#','');
+  return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
+}
+function rgbToHex(r,g,b){return'#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('')}
+function mixHex(hex1,hex2,t){
+  const[r1,g1,b1]=hexToRgb(hex1),[r2,g2,b2]=hexToRgb(hex2);
+  return rgbToHex(r1+(r2-r1)*t,g1+(g2-g1)*t,b1+(b2-b1)*t);
+}
+function deriveAc2(pal){return mixHex(pal.tx,pal.ac,.35)}
+function isValidHex(h){return/^#[0-9A-Fa-f]{6}$/.test(h)}
+
+// ── MERGED FONT LIST — same options available for both heading and body ────────
+const ALL_FONTS = (() => {
+  const map = new Map();
+  for(const arr of [HEADING_FONTS, BODY_FONTS]) {
+    for(const g of arr) {
+      if(!map.has(g.group)) map.set(g.group, new Set());
+      g.fonts.forEach(f => map.get(g.group).add(f));
+    }
+  }
+  return [...map.entries()].map(([group, s]) => ({ group, fonts: [...s] }));
+})();
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const S = {
+  palTab:   'dark',
+  palette:  PALS.dark[0],
+  bg:       PALS.dark[0].bg,
+  tx:       PALS.dark[0].tx,
+  ac1:      PALS.dark[0].ac,
+  ac2:      deriveAc2(PALS.dark[0]),
+  hFont:    'Reikna',
+  bFont:    'Inter',
+  nFont:    'Reikna',
+  logo:     null,
+  customFontName: '',
+  quickId:  'reikna',
+  vibe:     VIBES[3],
+  corner:   CORNERS[0],
+  btn:      BTNS[0],
+  spacing:  SPACINGS[1],
+  header:   HEADERS[0],
+  sections: new Set(['hero','services','about','contact']),
+  photos:   [],
+};
+
+const loadedFonts = new Set(['Reikna','Bebas Neue','Inter','Playfair Display','Merriweather','Oswald','DM Sans','Space Grotesk','Montserrat','Raleway','IBM Plex Mono','IBM Plex Sans','Abril Fatface','Lato','Cormorant Garamond','Roboto','Josefin Sans','Syne','Source Sans 3']);
+
+function loadFont(name) {
+  if(loadedFonts.has(name)) return;
+  loadedFonts.add(name);
+  const l=document.createElement('link');
+  l.rel='stylesheet';
+  l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(name).replace(/%20/g,'+')}:wght@400;700&display=swap`;
+  document.head.appendChild(l);
+}
+
+// ── RENDER PALETTE TABS ───────────────────────────────────────────────────────
+function renderPalTabs() {
+  document.getElementById('pal-tabs').innerHTML = PAL_TABS.map(t=>
+    `<div class="pal-tab${t===S.palTab?' active':''}" onclick="switchPalTab('${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</div>`
+  ).join('');
+}
+function switchPalTab(tab) { S.palTab=tab; renderPalTabs(); renderPalGrid(); }
+
+function renderPalGrid() {
+  document.getElementById('palette-grid').innerHTML = PALS[S.palTab].map(p=>
+    `<div class="pal-tile${p.id===S.palette.id?' active':''}" onclick="pickPal('${p.id}')">
+      <div class="pal-bar"><div class="pal-bg-s" style="background:${p.bg}"></div><div class="pal-ac-s" style="background:${p.ac}"></div></div>
+      <span class="pal-name">${p.name}</span>
+    </div>`
+  ).join('');
+}
+function pickPal(id) {
+  const all=[...Object.values(PALS).flat()];
+  S.palette=all.find(p=>p.id===id);
+  S.bg=S.palette.bg; S.tx=S.palette.tx; S.ac1=S.palette.ac; S.ac2=deriveAc2(S.palette);
+  syncColorInputs();
+  renderPalGrid(); renderQuickPairings(); renderVibes(); renderHeaders(); renderDetails(); applyPreview();
+}
+
+function syncColorInputs(){
+  const slots={bg:S.bg,tx:S.tx,ac1:S.ac1,ac2:S.ac2};
+  for(const[k,v] of Object.entries(slots)){
+    const sw=document.getElementById('sw-'+k);
+    const inp=document.getElementById('inp-'+k);
+    const hex=document.getElementById('hex-'+k);
+    if(sw) sw.style.background=v;
+    if(inp) inp.value=v;
+    if(hex) hex.value=v;
+  }
+}
+
+function onColorPick(slot,val){
+  S[slot==='ac1'?'ac1':slot==='ac2'?'ac2':slot]=val;
+  document.getElementById('sw-'+slot).style.background=val;
+  document.getElementById('hex-'+slot).value=val;
+  renderVibes(); renderHeaders(); applyPreview();
+}
+
+function onHexType(slot,val){
+  if(!isValidHex(val)) return;
+  S[slot]=val;
+  document.getElementById('sw-'+slot).style.background=val;
+  document.getElementById('inp-'+slot).value=val;
+  renderVibes(); renderHeaders(); applyPreview();
+}
+
+function resetColor(slot){
+  const map={bg:S.palette.bg,tx:S.palette.tx,ac1:S.palette.ac,ac2:deriveAc2(S.palette)};
+  S[slot]=map[slot];
+  syncColorInputs();
+  renderVibes(); renderHeaders(); applyPreview();
+}
+
+// ── RENDER QUICK PAIRINGS ─────────────────────────────────────────────────────
+function renderQuickPairings() {
+  document.getElementById('font-quick-grid').innerHTML = QUICK_PAIRINGS.map(p=>
+    `<div class="fq-tile${p.id===S.quickId?' active':''}" onclick="pickQuickPairing('${p.id}')">
+      <span class="fq-heading" style="font-family:'${p.hf}',serif">${p.name}</span>
+      <span class="fq-body" style="font-family:'${p.bf}',sans-serif">Body sample text</span>
+      <span class="fq-name">${p.hf.split(' ')[0]} / ${p.bf.split(' ')[0]}</span>
+    </div>`
+  ).join('');
+}
+function pickQuickPairing(id) {
+  const p=QUICK_PAIRINGS.find(q=>q.id===id);
+  S.quickId=id; S.hFont=p.hf; S.bFont=p.bf;
+  loadFont(p.hf); loadFont(p.bf);
+  // sync picker highlights
+  document.querySelectorAll('#fp-heading .fp-item').forEach(el=>el.classList.toggle('active',el.dataset.font===p.hf));
+  document.querySelectorAll('#fp-body .fp-item').forEach(el=>el.classList.toggle('active',el.dataset.font===p.bf));
+  document.getElementById('fp-heading-sel').textContent=p.hf;
+  document.getElementById('fp-body-sel').textContent=p.bf;
+  renderQuickPairings(); updateFontPreview(); applyPreview();
+}
+
+// ── FONT PICKERS ──────────────────────────────────────────────────────────────
+function buildFontPicker(containerId, groups, selectedFont, type) {
+  const container = document.getElementById(containerId);
+  let html = '';
+  for(const g of groups) {
+    html += `<div class="fp-group-hdr" data-group="${g.group}">${g.group}</div>`;
+    for(const f of g.fonts) {
+      const active = f === selectedFont;
+      html += `<div class="fp-item${active?' active':''}" data-font="${f}" data-type="${type}"
+        onclick="pickFontItem('${type}','${f}')"
+        onmouseover="hoverFont('${type}','${f}')"
+        onmouseout="hoverFontEnd('${type}')">
+        <span class="fp-item-name" data-font="${f}">${f}</span>
+        <span class="fp-check">✓</span>
+      </div>`;
+    }
+  }
+  container.innerHTML = html;
+
+  // Lazy-load font when item scrolls into view, then render it
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(!e.isIntersecting) return;
+      const font = e.target.dataset.font;
+      if(!font) return;
+      loadFont(font);
+      // once loaded, set the span's font-family
+      const span = e.target.querySelector('.fp-item-name');
+      if(span) span.style.fontFamily = `'${font}',serif`;
+      obs.unobserve(e.target);
+    });
+  }, { root: container, rootMargin: '120px' });
+
+  container.querySelectorAll('.fp-item').forEach(el => obs.observe(el));
+}
+
+function filterPicker(type, query) {
+  const container = document.getElementById(`fp-${type}`);
+  const q = query.trim().toLowerCase();
+  let lastHdr = null;
+  let lastHdrHasVisible = false;
+  container.querySelectorAll('.fp-item,.fp-group-hdr').forEach(el => {
+    if(el.classList.contains('fp-group-hdr')) {
+      if(lastHdr) lastHdr.style.display = lastHdrHasVisible ? '' : 'none';
+      lastHdr = el; lastHdrHasVisible = false;
+    } else {
+      const show = !q || el.dataset.font.toLowerCase().includes(q);
+      el.style.display = show ? '' : 'none';
+      if(show) lastHdrHasVisible = true;
+    }
+  });
+  if(lastHdr) lastHdr.style.display = lastHdrHasVisible ? '' : 'none';
+}
+
+function pickFontItem(type, font) {
+  loadFont(font);
+  if(type === 'heading') {
+    S.hFont = font; S.quickId = null;
+    document.getElementById('fp-heading-sel').textContent = font;
+    document.querySelectorAll('#fp-heading .fp-item').forEach(el => el.classList.toggle('active', el.dataset.font === font));
+  } else if(type === 'body') {
+    S.bFont = font; S.quickId = null;
+    document.getElementById('fp-body-sel').textContent = font;
+    document.querySelectorAll('#fp-body .fp-item').forEach(el => el.classList.toggle('active', el.dataset.font === font));
+  } else if(type === 'nav') {
+    S.nFont = font;
+    document.getElementById('fp-nav-sel').textContent = font;
+    document.querySelectorAll('#fp-nav .fp-item').forEach(el => el.classList.toggle('active', el.dataset.font === font));
+  }
+  renderQuickPairings(); updateFontPreview(); applyPreview();
+}
+
+function hoverFont(type, font) {
+  loadFont(font);
+  const h = document.getElementById('fpb-h');
+  const b = document.getElementById('fpb-b');
+  if(type === 'heading') h.style.fontFamily = `'${font}',serif`;
+  else if(type === 'body') b.style.fontFamily = `'${font}',sans-serif`;
+  else if(type === 'nav') { document.querySelector('.m-nav-brand').style.fontFamily = `'${font}',serif`; }
+}
+function hoverFontEnd(type) {
+  const h = document.getElementById('fpb-h');
+  const b = document.getElementById('fpb-b');
+  if(type === 'heading') h.style.fontFamily = `'${S.hFont}',serif`;
+  else if(type === 'body') b.style.fontFamily = `'${S.bFont}',sans-serif`;
+  else if(type === 'nav') { document.querySelector('.m-nav-brand').style.fontFamily = `'${S.nFont}',serif`; }
+}
+
+function onFpbInput(val) {
+  document.getElementById('fpb-h').textContent = val || 'Your Business Name';
+  document.getElementById('f-name').value = val;
+  syncBrand();
+}
+
+function updateFontPreview() {
+  const h = document.getElementById('fpb-h');
+  const b = document.getElementById('fpb-b');
+  const inp = document.getElementById('fpb-input');
+  h.style.fontFamily = `'${S.hFont}',serif`;
+  b.style.fontFamily = `'${S.bFont}',sans-serif`;
+  h.style.color = S.tx || 'var(--bone)';
+  h.style.fontSize = 'clamp(1.4rem,4vw,2.4rem)';
+  b.style.color = 'var(--dim)';
+  if(inp && inp.value) h.textContent = inp.value;
+}
+
+// ── RENDER VIBES ──────────────────────────────────────────────────────────────
+function renderVibes() {
+  document.getElementById('vibe-grid').innerHTML = VIBES.map(v=>
+    `<div class="vibe-tile${v.id===S.vibe.id?' active':''}" onclick="pickVibe('${v.id}')">
+      <div class="vibe-thumb">${vibThumb(v.id)}</div>
+      <span class="vibe-name">${v.name}</span>
+      <span class="vibe-desc">${v.desc}</span>
+    </div>`
+  ).join('');
+}
+function vibThumb(id) {
+  const a=S.ac1,t=S.tx;
+  const b=(w,h,c,o=1)=>`<div style="width:${w}%;height:${h}px;background:${c};opacity:${o};border-radius:1px;flex-shrink:0"></div>`;
+  if(id==='minimal')   return b(30,2,a,.8)+b(75,10,t,.45)+b(50,2,t,.2)+b(35,2,t,.1);
+  if(id==='bold')      return b(95,18,a,.85)+b(70,4,t,.3)+b(40,4,a,.4);
+  if(id==='warm')      return `<div style="display:flex;gap:3px;width:100%">${b(33,12,a,.6)}${b(33,12,t,.15)}${b(34,12,t,.15)}</div>`+b(55,2,t,.2)+b(40,2,a,.3);
+  if(id==='premium')   return `<div style="position:absolute;inset:0;background:rgba(0,0,0,.55)"></div><div style="position:relative">`+b(85,14,a,.9)+b(50,2,t,.3)+`</div>`;
+  if(id==='editorial') return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;width:100%;height:100%"><div>`+b(100,10,t,.5)+b(100,2,a,.6)+b(80,2,t,.2)+`</div><div>`+b(100,28,t,.1)+`</div></div>`;
+  if(id==='playful')   return b(60,8,a,.8)+b(40,8,t,.3)+b(80,2,a,.4)+b(50,8,t,.15)+b(35,2,a,.6);
+  return '';
+}
+function pickVibe(id) { S.vibe=VIBES.find(v=>v.id===id); renderVibes(); applyPreview(); }
+
+// ── RENDER DETAILS ────────────────────────────────────────────────────────────
+function renderDetails() {
+  const ac=S.palette.ac;
+  document.getElementById('corner-row').innerHTML=CORNERS.map(c=>
+    `<div class="detail-tile${c.id===S.corner.id?' active':''}" onclick="pickCorner('${c.id}')">
+      <div class="detail-icon" style="color:${c.id===S.corner.id?ac:'#555'}">${c.icon}</div>
+      <div class="detail-name">${c.name}</div></div>`).join('');
+  document.getElementById('btn-row').innerHTML=BTNS.map(b=>
+    `<div class="detail-tile${b.id===S.btn.id?' active':''}" onclick="pickBtn('${b.id}')">
+      <div class="detail-icon" style="color:${b.id===S.btn.id?ac:'#555'}">${b.icon}</div>
+      <div class="detail-name">${b.name}</div></div>`).join('');
+  document.getElementById('spacing-row').innerHTML=SPACINGS.map(sp=>
+    `<div class="detail-tile${sp.id===S.spacing.id?' active':''}" onclick="pickSpacing('${sp.id}')">
+      <div class="detail-icon" style="color:${sp.id===S.spacing.id?ac:'#555'}">${sp.icon}</div>
+      <div class="detail-name">${sp.name}</div></div>`).join('');
+}
+function pickCorner(id){ S.corner=CORNERS.find(c=>c.id===id); renderDetails(); applyPreview(); }
+function pickBtn(id){    S.btn=BTNS.find(b=>b.id===id);       renderDetails(); applyPreview(); }
+function pickSpacing(id){ S.spacing=SPACINGS.find(s=>s.id===id); renderDetails(); applyPreview(); }
+
+// ── RENDER HEADERS ────────────────────────────────────────────────────────────
+function renderHeaders() {
+  document.getElementById('header-grid').innerHTML = HEADERS.map(h=>{
+    let thumb='';
+    if(h.id==='left')   thumb=`<div style="width:40%;height:6px;background:${S.ac1};opacity:.7;border-radius:1px;margin-bottom:4px"></div><div style="width:70%;height:3px;background:${S.tx};opacity:.3;border-radius:1px"></div>`;
+    if(h.id==='center') thumb=`<div style="width:50%;height:6px;background:${S.ac1};opacity:.7;border-radius:1px;margin:auto 0 4px"></div><div style="width:60%;height:3px;background:${S.tx};opacity:.3;border-radius:1px;margin:auto 0"></div>`;
+    if(h.id==='split')  thumb=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;align-items:center"><div><div style="width:100%;height:8px;background:${S.ac1};opacity:.7;border-radius:1px"></div></div><div><div style="height:3px;background:${S.tx};opacity:.25;border-radius:1px;margin-bottom:3px"></div><div style="height:3px;background:${S.tx};opacity:.15;border-radius:1px;width:80%"></div></div></div>`;
+    return `<div class="header-tile${h.id===S.header.id?' active':''}" onclick="pickHeader('${h.id}')">
+      <div class="header-thumb" style="background:${S.bg}">${thumb}</div>
+      <span class="header-name">${h.name}</span></div>`;
+  }).join('');
+}
+function pickHeader(id){ S.header=HEADERS.find(h=>h.id===id); renderHeaders(); applyPreview(); }
+
+// ── RENDER SECTIONS ───────────────────────────────────────────────────────────
+function renderSections() {
+  document.getElementById('sections-grid').innerHTML = SECTIONS.map(sec=>{
+    const on=sec.locked||S.sections.has(sec.id);
+    return `<div class="sec-check${on?' active':''}${sec.locked?' locked':''}" onclick="${sec.locked?'':'toggleSec(\''+sec.id+'\')'}">
+      <div class="check-box">${on?'✓':''}</div>
+      <span class="sec-label">${sec.label}${sec.locked?' — Always':''}</span></div>`;
+  }).join('');
+}
+function toggleSec(id){ S.sections.has(id)?S.sections.delete(id):S.sections.add(id); renderSections(); }
+
+// ── APPLY PREVIEW ─────────────────────────────────────────────────────────────
+function applyPreview() {
+  const mock=document.getElementById('mock');
+  const c=S.corner, sp=S.spacing, h=S.header, btn=S.btn;
+  const isDark = hexToRgb(S.bg).reduce((s,v)=>s+v,0)/3 < 128;
+  const cd = isDark ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.05)';
+
+  mock.style.background=S.bg;
+  mock.style.color=S.tx;
+  mock.style.fontFamily=`'${S.bFont}',sans-serif`;
+
+  document.querySelectorAll('.m-h1,.m-cta-h,.m-card-h').forEach(el=>el.style.fontFamily=`'${S.hFont}',serif`);
+  document.querySelector('.m-nav-brand').style.fontFamily=`'${S.nFont}',serif`;
+  document.querySelectorAll('.m-eyebrow,.m-sec-label').forEach(el=>el.style.color=S.ac2);
+  document.querySelectorAll('.m-nav-brand,.m-footer-b').forEach(el=>el.style.color=S.ac1);
+  const mLogo=document.getElementById('m-logo'), mBrand=document.getElementById('m-brand');
+  if(S.logo){ mLogo.src=S.logo; mLogo.style.display='block'; mBrand.style.display='none'; }
+  else{ mLogo.style.display='none'; mBrand.style.display=''; }
+  document.querySelectorAll('.m-h1,.m-cta-h,.m-card-h').forEach(el=>el.style.color=S.tx);
+  document.querySelectorAll('.m-btn').forEach(el=>{
+    el.style.background=S.ac1; el.style.color=S.bg; el.style.border='none';
+    el.style.borderRadius=c.r; el.style.textDecoration='none';
+    el.style.paddingLeft='.75rem'; el.style.paddingRight='.75rem';
+    if(btn.id==='outline'){ el.style.background='transparent'; el.style.border=`1.5px solid ${S.ac1}`; el.style.color=S.ac1; }
+    if(btn.id==='ghost'){   el.style.background='transparent'; el.style.border='none'; el.style.color=S.ac1; el.style.textDecoration='underline'; el.style.textUnderlineOffset='3px'; el.style.paddingLeft='0'; el.style.paddingRight='0'; }
+    if(btn.id==='pill'){    el.style.borderRadius='999px'; }
+  });
+  document.querySelectorAll('.m-card').forEach(el=>{ el.style.background=cd; el.style.borderRadius=c.r; });
+  document.querySelectorAll('.m-nav,.m-services,.m-cta,.m-footer').forEach(el=>el.style.borderColor='rgba(128,128,128,.1)');
+
+  const mHero = document.querySelector('.m-hero');
+  if(S.photos.length > 0) {
+    mHero.style.backgroundImage = `linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(${S.photos[0].url})`;
+    mHero.style.backgroundSize = 'cover';
+    mHero.style.backgroundPosition = 'center';
+  } else {
+    mHero.style.backgroundImage = '';
+    mHero.style.backgroundSize = '';
+    mHero.style.backgroundPosition = '';
+  }
+
+  mock.classList.remove('sp-compact','sp-balanced','sp-open');
+  mock.classList.add(sp.cls);
+  mock.classList.remove('head-left','head-center','head-split');
+  mock.classList.add(`head-${h.id}`);
+  mock.classList.remove('btn-solid','btn-outline','btn-ghost','btn-pill');
+  mock.classList.add(`btn-${btn.id}`);
+
+  updateFontPreview();
+  applyVibe();
+}
+
+function applyVibe() {
+  const v = S.vibe.id;
+  const isDark = hexToRgb(S.bg).reduce((s,x)=>s+x,0)/3 < 128;
+  const h1     = document.getElementById('m-h1');
+  const hero   = document.querySelector('.m-hero');
+  const sub    = hero ? hero.querySelector('.m-sub') : null;
+  const eyebrow= document.getElementById('m-eyebrow');
+  const cards  = document.querySelectorAll('.m-card');
+  const mcards = document.querySelector('.m-cards');
+  const cta    = document.querySelector('.m-cta');
+
+  // ── Reset all vibe overrides so switching is clean ────────────────────────
+  if(h1)      { h1.style.fontSize='1.7rem'; h1.style.letterSpacing='.02em'; h1.style.color=S.tx; }
+  if(hero)    { hero.style.background=''; }
+  if(sub)     { sub.style.color=''; sub.style.opacity='.5'; }
+  if(eyebrow) { eyebrow.style.fontSize='.4rem'; eyebrow.style.letterSpacing='.22em'; eyebrow.style.color=S.ac2; eyebrow.style.opacity='1'; }
+  if(mcards)  { mcards.style.display=''; mcards.style.flexDirection=''; mcards.style.gap='4px'; }
+  if(cta)     { cta.style.background=''; }
+  const isDarkBg = hexToRgb(S.bg).reduce((s,x)=>s+x,0)/3 < 128;
+  const baseCd   = isDarkBg ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.05)';
+  const c = S.corner;
+  cards.forEach(el => {
+    el.style.background  = baseCd;
+    el.style.borderRadius= c.r;
+    el.style.border      = 'none';
+    el.style.borderBottom= '';
+    el.style.borderLeft  = '';
+    el.style.padding     = '.55rem .5rem';
+  });
+
+  // ── Vibe-specific overrides ───────────────────────────────────────────────
+  if(v === 'minimal') {
+    if(h1) { h1.style.fontSize='.95rem'; h1.style.letterSpacing='-.01em'; }
+    cards.forEach(el => {
+      el.style.background   = 'transparent';
+      el.style.borderRadius = '0';
+      el.style.borderBottom = `1px solid rgba(128,128,128,.12)`;
+    });
+    if(eyebrow) eyebrow.style.opacity='.4';
+
+  } else if(v === 'bold') {
+    if(h1)    { h1.style.fontSize='2.4rem'; h1.style.letterSpacing='-.01em'; h1.style.color=S.bg; }
+    if(hero)  { hero.style.background=S.ac1; }
+    if(sub)   { sub.style.color=S.bg; sub.style.opacity='.6'; }
+    if(eyebrow){ eyebrow.style.color=S.bg; eyebrow.style.opacity='.7'; }
+    const boldCard = isDark ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.08)';
+    cards.forEach(el => el.style.background=boldCard);
+
+  } else if(v === 'warm') {
+    const warmBg = mixHex(S.bg, S.ac1, .07);
+    if(hero) hero.style.background = mixHex(S.bg, S.ac1, .04);
+    cards.forEach(el => {
+      el.style.background   = warmBg;
+      el.style.borderRadius = '10px';
+    });
+
+  } else if(v === 'premium') {
+    if(h1)     { h1.style.fontSize='1.9rem'; h1.style.letterSpacing='.06em'; }
+    if(hero)   { hero.style.background = isDark ? 'rgba(0,0,0,.5)' : 'rgba(0,0,0,.05)'; }
+    if(eyebrow){ eyebrow.style.letterSpacing='.3em'; eyebrow.style.fontSize='.38rem'; }
+    cards.forEach(el => {
+      el.style.background   = 'transparent';
+      el.style.border       = '1px solid rgba(128,128,128,.14)';
+    });
+
+  } else if(v === 'editorial') {
+    if(h1)    { h1.style.fontSize='1.2rem'; h1.style.letterSpacing='-.02em'; }
+    if(mcards){ mcards.style.display='flex'; mcards.style.flexDirection='column'; mcards.style.gap='0'; }
+    cards.forEach(el => {
+      el.style.background   = 'transparent';
+      el.style.borderRadius = '0';
+      el.style.borderBottom = '1px solid rgba(128,128,128,.1)';
+      el.style.padding      = '.45rem 0';
+    });
+
+  } else if(v === 'playful') {
+    if(h1) { h1.style.fontSize='2rem'; }
+    const palette = [S.ac1, S.ac2, mixHex(S.ac1,S.ac2,.5)];
+    cards.forEach((el,i) => {
+      el.style.background   = palette[i % palette.length];
+      el.style.borderRadius = '10px';
+      el.style.color        = S.bg;
+    });
+    if(cta) cta.style.background = mixHex(S.bg, S.ac1, .08);
+  }
+}
+
+// ── FULLSCREEN ────────────────────────────────────────────────────────────────
+function openFullscreen(){
+  renderFullMock();
+  renderBriefPanel();
+  document.getElementById('fs-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeFullscreen(){
+  document.getElementById('fs-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function fmBtn(label){
+  const c=S.corner,btn=S.btn;
+  let s=`display:inline-block;padding:.7rem 1.9rem;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-family:'${S.bFont}',sans-serif;cursor:default;`;
+  if(btn.id==='solid')  s+=`background:${S.ac1};color:${S.bg};border:none;border-radius:${c.r}`;
+  if(btn.id==='outline')s+=`background:transparent;border:1.5px solid ${S.ac1};color:${S.ac1};border-radius:${c.r}`;
+  if(btn.id==='ghost')  s+=`background:transparent;border:none;color:${S.ac1};text-decoration:underline;text-underline-offset:4px;padding-left:0;padding-right:0`;
+  if(btn.id==='pill')   s+=`background:${S.ac1};color:${S.bg};border:none;border-radius:999px`;
+  return `<span style="${s}">${label}</span>`;
+}
+function fmCard(h,p){
+  const isDark=hexToRgb(S.bg).reduce((s,v)=>s+v,0)/3<128;
+  const surf=isDark?'rgba(255,255,255,.05)':'rgba(0,0,0,.04)';
+  return `<div class="fm-card" style="background:${surf};border-radius:${S.corner.r}">
+    <span class="fm-card-h" style="font-family:'${S.hFont}',serif;color:${S.tx}">${h}</span>
+    <span class="fm-card-p" style="color:${S.tx}">${p}</span>
+  </div>`;
+}
+
+function renderFullMock(){
+  const hf=`'${S.hFont}',serif`, nf=`'${S.nFont}',serif`, bf=`'${S.bFont}',sans-serif`;
+  const brand=(document.getElementById('f-name').value||'Your Brand').toUpperCase();
+  const secs=S.sections;
+  let html=`<div style="background:${S.bg};color:${S.tx};font-family:${bf}">`;
+
+  // Nav
+  const navEl=S.logo
+    ? `<img src="${S.logo}" style="height:36px;max-width:160px;object-fit:contain">`
+    : `<span class="fm-nav-brand" style="font-family:${nf};color:${S.ac1}">${brand}</span>`;
+  html+=`<div class="fm-nav" style="background:${S.bg}">
+    ${navEl}
+    <div class="fm-nav-links">
+      <span class="fm-nav-link" style="color:${S.tx}">Services</span>
+      <span class="fm-nav-link" style="color:${S.tx}">About</span>
+      <span class="fm-nav-link" style="color:${S.tx}">Contact</span>
+      ${fmBtn('Book Now').replace('padding:.7rem 1.9rem','padding:.4rem 1.1rem')}
+    </div>
+  </div>`;
+
+  // Hero
+  const heroAlign=S.header.id==='center'?'text-align:center':'';
+  const subMax=S.header.id==='center'?'margin:0 auto 1.5rem':'margin-bottom:1.5rem';
+  const heroBg=S.photos[0]?`background-image:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(${S.photos[0].url});background-size:cover;background-position:center`:'';
+  html+=`<div class="fm-section" style="${heroBg};${heroAlign}">
+    <span class="fm-eyebrow" style="color:${S.photos[0]?'rgba(255,255,255,.6)':S.ac2}">${document.getElementById('f-industry').value||'Premium Service'}</span>
+    <span class="fm-h1" style="font-family:${hf};color:${S.tx}">${brand}</span>
+    <span class="fm-p" style="color:${S.tx};${subMax}">A short, sharp description of what you do and who you serve — the one sentence that makes them stay.</span>
+    ${fmBtn('Get Started')}${S.header.id!=='center'?'&nbsp;&nbsp;'+fmBtn('Learn More').replace(S.ac1,S.ac2).replace(`color:${S.bg}`,'color:'+S.tx):''}
+  </div>`;
+
+  // Stats
+  if(secs.has('stats')){
+    html+=`<div class="fm-stats" style="background:${mixHex(S.bg,S.tx,.06)};border-top:1px solid rgba(128,128,128,.1);border-bottom:1px solid rgba(128,128,128,.1)">
+      ${['200+','4.9★','Same Day','100%'].map((n,i)=>
+        `<div class="fm-stat"><span class="fm-stat-n" style="font-family:${hf};color:${S.ac1}">${n}</span><span class="fm-stat-l" style="color:${S.tx}">${['Jobs Done','Rating','Booking','Satisfaction'][i]}</span></div>`
+      ).join('')}
+    </div>`;
+  }
+
+  // Services
+  if(secs.has('services')){
+    html+=`<div class="fm-section alt">
+      <span class="fm-eyebrow" style="color:${S.ac2}">What We Do</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Services Built Around You</span>
+      <div class="fm-cards">
+        ${fmCard('Service One','A brief description of what makes this offering valuable to your customers.')}
+        ${fmCard('Service Two','A brief description of what makes this offering valuable to your customers.')}
+        ${fmCard('Service Three','A brief description of what makes this offering valuable to your customers.')}
+      </div>
+    </div>`;
+  }
+
+  // About
+  if(secs.has('about')){
+    const isDark=hexToRgb(S.bg).reduce((s,v)=>s+v,0)/3<128;
+    const surf=isDark?'rgba(255,255,255,.03)':'rgba(0,0,0,.03)';
+    html+=`<div class="fm-section alt" style="background:${surf}">
+      <div class="fm-grid-2">
+        <div>
+          <span class="fm-eyebrow" style="color:${S.ac2}">About Us</span>
+          <span class="fm-h2" style="font-family:${hf};color:${S.tx}">The Story Behind the Work</span>
+          <span class="fm-p" style="color:${S.tx}">We started this business because we cared about doing it right. Every job, every client, every detail — that standard hasn't changed since day one.</span>
+          ${fmBtn('Learn More')}
+        </div>
+        <div style="height:220px;background:${mixHex(S.bg,S.ac1,.12)};border-radius:${S.corner.r}"></div>
+      </div>
+    </div>`;
+  }
+
+  // Testimonials
+  if(secs.has('testimonials')){
+    const isDark=hexToRgb(S.bg).reduce((s,v)=>s+v,0)/3<128;
+    const surf=isDark?'rgba(255,255,255,.04)':'rgba(0,0,0,.04)';
+    html+=`<div class="fm-section alt">
+      <span class="fm-eyebrow" style="color:${S.ac2}">Reviews</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">What Clients Say</span>
+      <div class="fm-reviews">
+        ${['Amazing work — exceeded expectations.','Professional, fast, and affordable. Highly recommend.','Best service we\'ve found in the area.','Incredible attention to detail.'].map((t,i)=>
+          `<div class="fm-review" style="background:${surf};border-radius:${S.corner.r}">
+            <span class="fm-review-text" style="color:${S.tx}">"${t}"</span>
+            <span class="fm-review-name" style="color:${S.tx}">— Happy Client ${i+1}</span>
+          </div>`
+        ).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Gallery
+  if(secs.has('gallery')){
+    const galleryPhotos = S.photos.length > 1 ? S.photos.slice(1) : [];
+    const galleryItems = galleryPhotos.length
+      ? galleryPhotos.map(p=>`<div style="aspect-ratio:1;border-radius:${S.corner.r};overflow:hidden"><img src="${p.url}" style="width:100%;height:100%;object-fit:cover;display:block"></div>`).join('')
+      : [...Array(8)].map((_,i)=>`<div style="aspect-ratio:1;background:${mixHex(S.bg,S.ac1,(.05+i*.04))};border-radius:${S.corner.r}"></div>`).join('');
+    html+=`<div class="fm-section alt">
+      <span class="fm-eyebrow" style="color:${S.ac2}">Gallery</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Our Work</span>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1.5rem">
+        ${galleryItems}
+      </div>
+    </div>`;
+  }
+
+  // Before-After
+  if(secs.has('before-after')){
+    html+=`<div class="fm-section alt">
+      <span class="fm-eyebrow" style="color:${S.ac2}">Before & After</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">The Difference We Make</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem">
+        <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.tx,.1)};border-radius:${S.corner.r};display:flex;align-items:center;justify-content:center;font-size:.65rem;opacity:.35;letter-spacing:.1em;text-transform:uppercase">Before</div>
+        <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.ac1,.2)};border-radius:${S.corner.r};display:flex;align-items:center;justify-content:center;font-size:.65rem;opacity:.5;letter-spacing:.1em;text-transform:uppercase;color:${S.ac1}">After</div>
+      </div>
+    </div>`;
+  }
+
+  // Pricing
+  if(secs.has('pricing')){
+    const isDark=hexToRgb(S.bg).reduce((s,v)=>s+v,0)/3<128;
+    const surf=isDark?'rgba(255,255,255,.04)':'rgba(0,0,0,.04)';
+    const surfHi=mixHex(S.bg,S.ac1,.12);
+    html+=`<div class="fm-section alt">
+      <span class="fm-eyebrow" style="color:${S.ac2}">Pricing</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Simple, Transparent Pricing</span>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem">
+        ${[['Basic','$99','Core features included'],['Standard','$199','Most popular option'],['Premium','$349','Everything included']].map(([n,p,d],i)=>
+          `<div style="background:${i===1?surfHi:surf};padding:2rem;border-radius:${S.corner.r};border:1px solid ${i===1?S.ac1:'transparent'};text-align:center">
+            <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.ac2};margin-bottom:.75rem">${n}</div>
+            <div style="font-family:${hf};font-size:2.5rem;color:${i===1?S.ac1:S.tx};margin-bottom:.5rem">${p}</div>
+            <div style="font-size:.78rem;opacity:.45;margin-bottom:1.5rem">${d}</div>
+            ${fmBtn('Get Started')}
+          </div>`
+        ).join('')}
+      </div>
+    </div>`;
+  }
+
+  // FAQ
+  if(secs.has('faq')){
+    html+=`<div class="fm-section alt">
+      <span class="fm-eyebrow" style="color:${S.ac2}">FAQ</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Common Questions</span>
+      <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:.5rem">
+        ${['How do I get started?','What areas do you service?','How long does it take?','Do you offer guarantees?'].map(q=>
+          `<div style="border:1px solid rgba(128,128,128,.12);padding:1rem 1.25rem;border-radius:${S.corner.r}">
+            <span style="font-size:.85rem;font-weight:600;color:${S.tx}">${q}</span>
+          </div>`
+        ).join('')}
+      </div>
+    </div>`;
+  }
+
+  // CTA / Contact
+  if(secs.has('contact')){
+    html+=`<div class="fm-section" style="text-align:center;background:${mixHex(S.bg,S.ac1,.1)}">
+      <span class="fm-eyebrow" style="color:${S.ac2}">Get Started</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx};font-size:2.25rem">Ready to Work Together?</span>
+      <span class="fm-p" style="color:${S.tx};margin:0 auto 2rem">Don't wait — reach out today and we'll get you booked in.</span>
+      ${fmBtn('Contact Us')}
+    </div>`;
+  }
+
+  // Map
+  if(secs.has('map')){
+    html+=`<div class="fm-section alt">
+      <span class="fm-eyebrow" style="color:${S.ac2}">Location</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Find Us</span>
+      <div style="margin-top:1.25rem;height:180px;background:${mixHex(S.bg,S.tx,.08)};border-radius:${S.corner.r};display:flex;align-items:center;justify-content:center;opacity:.4;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">Map Placeholder</div>
+    </div>`;
+  }
+
+  // Footer
+  html+=`<div class="fm-footer" style="background:${S.bg}">
+    <span class="fm-footer-brand" style="font-family:${hf};color:${S.tx}">${brand}</span>
+    <div class="fm-footer-links">
+      ${['Privacy','Terms','Contact'].map(l=>`<span class="fm-footer-link" style="color:${S.tx}">${l}</span>`).join('')}
+    </div>
+  </div>`;
+
+  html+='</div>';
+  document.getElementById('fs-mock').innerHTML=html;
+}
+
+function renderBriefPanel(){
+  const name=document.getElementById('f-name').value||'—';
+  const ind=document.getElementById('f-industry').value||'—';
+  const secs=[...S.sections].filter(s=>s!=='hero');
+  document.getElementById('fs-brief').innerHTML=`
+    <div class="fs-brief-section">
+      <div class="fs-brief-label">Business</div>
+      <div class="fs-brief-val">${name}<br><span style="opacity:.45;font-size:.6rem">${ind}</span></div>
+    </div>
+    <div class="fs-brief-section">
+      <div class="fs-brief-label">Palette — ${S.palette.name}</div>
+      <div class="fs-brief-swatches">
+        <div class="fs-brief-swatch" style="background:${S.bg}" title="Background"></div>
+        <div class="fs-brief-swatch" style="background:${S.tx}" title="Text"></div>
+        <div class="fs-brief-swatch" style="background:${S.ac1}" title="Primary"></div>
+        <div class="fs-brief-swatch" style="background:${S.ac2}" title="Secondary"></div>
+      </div>
+      <div style="margin-top:.6rem;font-size:.52rem;color:var(--dim);line-height:2">
+        BG ${S.bg}<br>TX ${S.tx}<br>AC1 ${S.ac1}<br>AC2 ${S.ac2}
+      </div>
+    </div>
+    <div class="fs-brief-section">
+      <div class="fs-brief-label">Fonts</div>
+      <div class="fs-brief-val" style="font-size:.65rem">${S.hFont}<br><span style="opacity:.4;font-size:.58rem">${S.bFont}</span><br><span style="opacity:.4;font-size:.58rem">Nav: ${S.nFont}</span></div>
+    </div>
+    ${S.photos.length ? `<div class="fs-brief-section">
+      <div class="fs-brief-label">Photos</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;margin-top:.4rem">
+        ${S.photos.slice(0,6).map((p,i)=>`<div style="aspect-ratio:1;overflow:hidden;border-radius:2px;position:relative"><img src="${p.url}" style="width:100%;height:100%;object-fit:cover">${i===0?'<div style="position:absolute;bottom:0;left:0;right:0;font-size:.36rem;font-weight:700;text-align:center;background:var(--accent);color:#000;padding:.1rem">HERO</div>':''}</div>`).join('')}
+      </div>
+      ${S.photos.length > 6 ? `<div style="font-size:.48rem;color:var(--dim);margin-top:.35rem">+${S.photos.length-6} more</div>` : ''}
+    </div>` : ''}
+    <div class="fs-brief-section">
+      <div class="fs-brief-label">Style</div>
+      <div class="fs-brief-val" style="font-size:.65rem">${S.vibe.name} vibe · ${S.corner.name} corners<br>${S.btn.name} buttons · ${S.spacing.name} spacing<br>${S.header.name} header</div>
+    </div>
+    <div class="fs-brief-section">
+      <div class="fs-brief-label">Sections (${secs.length+1})</div>
+      <div class="fs-brief-sec-list">
+        <span class="fs-brief-tag" style="border-color:var(--accent);color:var(--accent)">Hero</span>
+        ${secs.map(s=>`<span class="fs-brief-tag">${SECTIONS.find(x=>x.id===s)?.label||s}</span>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function syncBrand() {
+  const v=document.getElementById('f-name').value;
+  const brand=v?v.toUpperCase():'YOUR BRAND';
+  document.getElementById('m-brand').textContent=brand;
+  document.getElementById('m-footer-b').textContent=brand;
+  document.getElementById('m-h1').textContent=v||'Your Business Name';
+  document.getElementById('m-cta-h').textContent=v?`Work With ${v}`:'Ready to Get Started?';
+}
+
+// ── SITE GENERATOR ────────────────────────────────────────────────────────────
+function generateClientSite() {
+  const biz = document.getElementById('f-name').value.trim() || 'Your Business';
+  const ind = document.getElementById('f-industry').value || '';
+  const sp  = {compact:'3rem 5%', balanced:'5rem 5%', open:'7rem 5%'}[S.spacing.id] || '5rem 5%';
+  const r   = S.corner.r;
+  const hal = S.header.id === 'center' ? 'center' : 'left';
+  const hf  = S.hFont === 'CustomFont' ? (S.customFontName||'Georgia') : S.hFont;
+  const bf  = S.bFont === 'CustomFont' ? 'Georgia' : S.bFont;
+  const nf  = S.nFont === 'CustomFont' ? hf : S.nFont;
+
+  const gFonts = [...new Set([hf, bf, nf])].filter(f => f !== 'Reikna');
+  const gLink  = gFonts.length ? `<link href="https://fonts.googleapis.com/css2?${gFonts.map(f=>`family=${f.replace(/ /g,'+')}:wght@300;400;600;700`).join('&')}&display=swap" rel="stylesheet">` : '';
+  const reiknaFace = [hf,bf,nf].includes('Reikna') ? `@font-face{font-family:'Reikna';src:url('Reikna.ttf') format('truetype');font-display:swap}` : '';
+
+  const btnR   = S.btn.id === 'pill' ? '999px' : r;
+  const btnBase= `display:inline-block;padding:.9rem 2.25rem;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;cursor:pointer;text-decoration:none;transition:all .2s;border-radius:${btnR}`;
+  const btnStyle = S.btn.id==='outline' ? `background:transparent;color:${S.ac1};border:2px solid ${S.ac1}` :
+                   S.btn.id==='ghost'   ? `background:transparent;color:${S.ac1};border:none;text-decoration:underline;text-underline-offset:4px;padding-left:0;padding-right:0` :
+                                          `background:${S.ac1};color:${S.bg};border:none`;
+
+  const logoEl = S.logo
+    ? `<img src="${S.logo}" style="height:42px;max-width:160px;object-fit:contain" alt="${biz}">`
+    : `<span style="font-family:'${nf}',serif;font-size:1.4rem;font-weight:700;color:${S.ac1};letter-spacing:.1em">${biz.toUpperCase()}</span>`;
+
+  const heroBg  = S.photos[0] ? `background-image:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.6)),url(${S.photos[0].url});background-size:cover;background-position:center` : '';
+  const heroTx  = S.photos[0] ? '#fff' : S.tx;
+  const heroSub = S.photos[0] ? 'rgba(255,255,255,.7)' : `${S.tx}99`;
+  const eyeCol  = S.photos[0] ? 'rgba(255,255,255,.55)' : S.ac2;
+  const secs    = S.sections;
+
+  const cardBg  = `${mixHex(S.bg, S.tx, .05)}`;
+  const surfBg  = `${mixHex(S.bg, S.tx, .03)}`;
+  const galItems = S.photos.length > 1
+    ? S.photos.slice(1).map(p=>`<div style="aspect-ratio:4/3;overflow:hidden;border-radius:${r}"><img src="${p.url}" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>`).join('')
+    : [...Array(6)].map((_,i)=>`<div style="aspect-ratio:4/3;background:${mixHex(S.bg,S.ac1,.06+i*.025)};border-radius:${r}"></div>`).join('');
+
+  const navLinks = [
+    secs.has('services') ? `<a href="#services" style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:${S.tx};opacity:.5;text-decoration:none">Services</a>` : '',
+    secs.has('about')    ? `<a href="#about"    style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:${S.tx};opacity:.5;text-decoration:none">About</a>` : '',
+    secs.has('gallery')  ? `<a href="#gallery"  style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:${S.tx};opacity:.5;text-decoration:none">Gallery</a>` : '',
+    secs.has('contact')  ? `<a href="#contact"  style="${btnBase};${btnStyle};padding:.5rem 1.25rem">Contact</a>` : '',
+  ].filter(Boolean).join('\n    ');
+
+  let body = '';
+
+  // SERVICES
+  if(secs.has('services')) body += `
+<section id="services" style="padding:${sp};background:${S.bg};text-align:${hal}">
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem"><!-- EYEBROW: e.g. "What We Offer" --></p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1rem;line-height:.95"><!-- HEADLINE: e.g. "Services Built Around You" --></h2>
+  <p style="font-size:.9rem;color:${S.tx};opacity:.5;max-width:560px;margin:0 ${hal==='center'?'auto ':''}2.5rem;line-height:1.8"><!-- INTRO: 1-2 sentences about your services --></p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem">
+    <div style="background:${cardBg};padding:2rem;border-radius:${r}">
+      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem"><!-- SERVICE 1 NAME --></h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75"><!-- Service 1: what's included, who it's for --></p>
+    </div>
+    <div style="background:${cardBg};padding:2rem;border-radius:${r}">
+      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem"><!-- SERVICE 2 NAME --></h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75"><!-- Service 2: what's included, who it's for --></p>
+    </div>
+    <div style="background:${cardBg};padding:2rem;border-radius:${r}">
+      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem"><!-- SERVICE 3 NAME --></h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75"><!-- Service 3: what's included, who it's for --></p>
+    </div>
+  </div>
+</section>`;
+
+  // STATS
+  if(secs.has('stats')) body += `
+<section style="padding:2.5rem 5%;background:${mixHex(S.bg,S.tx,.06)};border-top:1px solid rgba(128,128,128,.1);border-bottom:1px solid rgba(128,128,128,.1)">
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center">
+    ${['Jobs Done','Rating','Years Experience','Satisfied Clients'].map(label=>`
+    <div>
+      <span style="font-family:'${hf}',serif;font-size:3rem;color:${S.ac1};display:block;line-height:1;margin-bottom:.5rem"><!-- # --></span>
+      <span style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.4">${label}</span>
+    </div>`).join('')}
+  </div>
+</section>`;
+
+  // ABOUT
+  if(secs.has('about')) body += `
+<section id="about" style="padding:${sp};background:${surfBg}">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1100px;margin:0 auto">
+    <div>
+      <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem"><!-- EYEBROW: e.g. "About Us" --></p>
+      <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1.5rem;line-height:.95"><!-- HEADLINE: e.g. "The Story Behind the Work" --></h2>
+      <p style="font-size:.9rem;color:${S.tx};opacity:.5;line-height:1.8;margin-bottom:1.25rem"><!-- PARAGRAPH 1: Who you are, how long you've been doing this, what you care about. --></p>
+      <p style="font-size:.9rem;color:${S.tx};opacity:.5;line-height:1.8;margin-bottom:2rem"><!-- PARAGRAPH 2: What makes you different. Your guarantee, method, or values. --></p>
+      <a href="#contact" style="${btnBase};${btnStyle}">Get In Touch</a>
+    </div>
+    <div style="aspect-ratio:4/5;overflow:hidden;border-radius:${r};background:${mixHex(S.bg,S.ac1,.15)}">
+      ${S.photos[0] ? `<img src="${S.photos[0].url}" style="width:100%;height:100%;object-fit:cover" alt="${biz}">` : '<!-- REPLACE: Add a team or workspace photo -->'}
+    </div>
+  </div>
+</section>`;
+
+  // TESTIMONIALS
+  if(secs.has('testimonials')) body += `
+<section style="padding:${sp};background:${S.bg};text-align:${hal}">
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem"><!-- EYEBROW: e.g. "Reviews" --></p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2.5rem;line-height:.95"><!-- HEADLINE: e.g. "What Clients Say" --></h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem">
+    ${[1,2,3,4].map(i=>`<div style="background:${cardBg};padding:1.75rem;border-radius:${r}">
+      <p style="font-size:.85rem;color:${S.tx};opacity:.6;line-height:1.75;font-style:italic;margin-bottom:1rem">"<!-- REAL QUOTE ${i} -->"</p>
+      <span style="font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${S.tx};opacity:.3">— <!-- Client Name, Location --></span>
+    </div>`).join('')}
+  </div>
+</section>`;
+
+  // GALLERY
+  if(secs.has('gallery')) body += `
+<section id="gallery" style="padding:${sp};background:${surfBg};text-align:${hal}">
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem"><!-- EYEBROW: e.g. "Our Work" --></p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2rem;line-height:.95"><!-- HEADLINE --></h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem">${galItems}</div>
+</section>`;
+
+  // BEFORE/AFTER
+  if(secs.has('before-after')) body += `
+<section style="padding:${sp};background:${S.bg};text-align:${hal}">
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">Before &amp; After</p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2rem;line-height:.95"><!-- HEADLINE --></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+    <div>
+      <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.tx,.1)};border-radius:${r};overflow:hidden;margin-bottom:.6rem"><!-- BEFORE PHOTO --></div>
+      <span style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${S.tx};opacity:.35">Before</span>
+    </div>
+    <div>
+      <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.ac1,.18)};border-radius:${r};overflow:hidden;margin-bottom:.6rem"><!-- AFTER PHOTO --></div>
+      <span style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${S.ac1};opacity:.7">After</span>
+    </div>
+  </div>
+</section>`;
+
+  // FAQ
+  if(secs.has('faq')) body += `
+<section style="padding:${sp};background:${surfBg}">
+  <div style="max-width:720px;margin:0 auto">
+    <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">FAQ</p>
+    <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2.5rem;line-height:.95"><!-- HEADLINE: e.g. "Common Questions" --></h2>
+    ${[1,2,3,4].map(i=>`<div style="border-bottom:1px solid rgba(128,128,128,.12);padding:1.5rem 0">
+      <h3 style="font-size:.9rem;font-weight:600;color:${S.tx};margin-bottom:.65rem"><!-- QUESTION ${i} --></h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75"><!-- ANSWER ${i} --></p>
+    </div>`).join('')}
+  </div>
+</section>`;
+
+  // CONTACT
+  if(secs.has('contact')) body += `
+<section id="contact" style="padding:${sp};background:${mixHex(S.bg,S.ac1,.06)};text-align:${hal}">
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem"><!-- EYEBROW: e.g. "Get In Touch" --></p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1rem;line-height:.95"><!-- HEADLINE: e.g. "Ready to Book?" --></h2>
+  <p style="font-size:.9rem;color:${S.tx};opacity:.5;max-width:440px;margin:0 ${hal==='center'?'auto ':''}2rem;line-height:1.8"><!-- SUBTEXT: 1-2 sentences, what happens after they reach out --></p>
+  <form action="https://api.web3forms.com/submit" method="POST" style="max-width:480px;margin:${hal==='center'?'0 auto':'0'};display:flex;flex-direction:column;gap:1rem">
+    <input type="hidden" name="access_key" value="<!-- ADD WEB3FORMS KEY -->">
+    <input type="hidden" name="subject" value="New enquiry — ${biz}">
+    <input type="text"  name="name"    placeholder="Your name"    required style="background:${cardBg};border:1px solid rgba(128,128,128,.15);color:${S.tx};padding:.9rem 1rem;font-size:.82rem;outline:none;border-radius:${r};font-family:inherit">
+    <input type="email" name="email"   placeholder="Email address" required style="background:${cardBg};border:1px solid rgba(128,128,128,.15);color:${S.tx};padding:.9rem 1rem;font-size:.82rem;outline:none;border-radius:${r};font-family:inherit">
+    <input type="tel"   name="phone"   placeholder="Phone (optional)"       style="background:${cardBg};border:1px solid rgba(128,128,128,.15);color:${S.tx};padding:.9rem 1rem;font-size:.82rem;outline:none;border-radius:${r};font-family:inherit">
+    <textarea name="message" placeholder="Tell us about your project…" rows="4" style="background:${cardBg};border:1px solid rgba(128,128,128,.15);color:${S.tx};padding:.9rem 1rem;font-size:.82rem;outline:none;border-radius:${r};resize:vertical;font-family:inherit"></textarea>
+    <button type="submit" style="${btnBase};${btnStyle}"><!-- CTA: Send Message / Book Now / Get a Quote --></button>
+  </form>
+</section>`;
+
+  // CTA BAND
+  if(secs.has('cta')) body += `
+<section style="padding:${sp};background:${S.ac1};text-align:center">
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2.5rem,7vw,5rem);color:${S.bg};margin-bottom:1rem;line-height:.95"><!-- BOLD CTA HEADLINE --></h2>
+  <p style="font-size:.95rem;color:${S.bg};opacity:.65;max-width:440px;margin:0 auto 2.5rem;line-height:1.8"><!-- CTA subtext --></p>
+  <a href="#contact" style="${btnBase};background:${S.bg};color:${S.ac1};border:none;border-radius:${btnR}"><!-- BUTTON TEXT --></a>
+</section>`;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${biz}${ind ? ' — ' + ind : ''}</title>
+  <meta name="description" content="<!-- REPLACE: One sentence describing ${biz} and what you offer -->">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  ${gLink}
+  <style>
+    ${reiknaFace}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:${S.bg};color:${S.tx};font-family:'${bf}',sans-serif;-webkit-font-smoothing:antialiased}
+    img{max-width:100%;display:block}
+    a{color:inherit}
+    input,textarea,button{font-family:inherit}
+    @media(max-width:768px){
+      .about-grid{grid-template-columns:1fr!important;gap:2.5rem!important}
+      .hide-mobile{display:none!important}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav style="background:${S.bg};border-bottom:1px solid rgba(128,128,128,.1);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:68px;position:sticky;top:0;z-index:100">
+  ${logoEl}
+  <div class="hide-mobile" style="display:flex;align-items:center;gap:2.5rem">
+    ${navLinks}
+  </div>
+</nav>
+
+<!-- HERO -->
+<header style="padding:${sp};min-height:88vh;display:flex;flex-direction:column;justify-content:flex-end;${heroBg};text-align:${hal}">
+  <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${eyeCol};margin-bottom:1.25rem">${ind || '<!-- EYEBROW -->'}</p>
+  <h1 style="font-family:'${hf}',serif;font-size:clamp(3.5rem,10vw,9rem);line-height:.9;color:${heroTx};margin-bottom:1.75rem;letter-spacing:.01em;max-width:900px${hal==='center'?';margin-left:auto;margin-right:auto':''}"><!-- MAIN HEADLINE: 2-4 powerful words per line --></h1>
+  <p style="font-size:1rem;color:${heroSub};line-height:1.8;max-width:480px;margin-bottom:2.5rem${hal==='center'?';margin-left:auto;margin-right:auto':''}"><!-- ONE SENTENCE: What you do, who you serve, why you. --></p>
+  <div style="display:flex;align-items:center;gap:1.75rem;flex-wrap:wrap${hal==='center'?';justify-content:center':''}">
+    <a href="#contact" style="${btnBase};${btnStyle}"><!-- PRIMARY CTA --></a>
+    ${secs.has('services') ? `<a href="#services" style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:${heroSub};text-decoration:none">Our Services →</a>` : ''}
+  </div>
+</header>
+
+${body}
+
+<!-- FOOTER -->
+<footer style="background:${mixHex(S.bg,S.tx,.06)};border-top:1px solid rgba(128,128,128,.1);padding:2.5rem 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem">
+  ${logoEl}
+  <p style="font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.25">© ${new Date().getFullYear()} ${biz}. All rights reserved.</p>
+</footer>
+
+</body>
+</html>`;
+}
+
+function downloadFile(content, filename) {
+  const blob = new Blob([content], { type: 'text/html' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────────────────────
+async function handleSubmit() {
+  const name  = document.getElementById('f-name').value.trim();
+  const ind   = document.getElementById('f-industry').value;
+  const goal  = document.getElementById('f-goal').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  if(!name || !email){ alert('Please enter your business name and email.'); return; }
+
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = 'Generating your site…';
+  btn.disabled = true;
+
+  try {
+    // 1. Generate + download the site file for the client
+    const html = generateClientSite();
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    downloadFile(html, `${slug}-site.html`);
+
+    // 2. Upload full HTML to Supabase so Nash gets a copy
+    btn.textContent = 'Uploading…';
+    const fileName = `${slug}-${Date.now()}.html`;
+    let siteUrl = 'Upload failed — request file from client';
+    try {
+      const up = await fetch(`${SUPABASE_URL}/storage/v1/object/${SUPABASE_BUCKET}/${fileName}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'text/html',
+          'x-upsert': 'true',
+        },
+        body: html,
+      });
+      if (up.ok) {
+        siteUrl = `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${fileName}`;
+      }
+    } catch(_) {}
+
+    // 3. Send brief + download link via Web3Forms
+    btn.textContent = 'Sending brief…';
+    const brief = [
+      `Business: ${name}`,
+      `Industry: ${ind || 'Not specified'}`,
+      `Goal: ${goal || 'Not specified'}`,
+      `Reply to: ${email}`,
+      ``,
+      `Palette: ${S.palette.name} — bg:${S.bg} / tx:${S.tx} / ac1:${S.ac1} / ac2:${S.ac2}`,
+      `Fonts: ${S.hFont} / ${S.bFont} / nav: ${S.nFont}`,
+      `Vibe: ${S.vibe.name} · Corners: ${S.corner.name} · Buttons: ${S.btn.name}`,
+      `Spacing: ${S.spacing.name} · Header: ${S.header.name}`,
+      `Sections: ${[...S.sections].join(', ')}`,
+      `Logo: ${S.logo ? 'Yes' : 'No'} · Photos: ${S.photos.length}`,
+      ``,
+      `SITE FILE: ${siteUrl}`,
+    ].join('\n');
+
+    await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        access_key: 'cd06c1c4',
+        subject: `SNS BUILD — New Brief: ${name}`,
+        name, email, message: brief,
+      })
+    });
+
+    document.getElementById('success').classList.add('show');
+    btn.textContent = 'Sent ✓';
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'Get My Site →';
+    alert('Something went wrong — please try again.');
+  }
+}
+
+// ── PHOTOS ───────────────────────────────────────────────────────────────────
+function onPhotosUpload(files) {
+  const arr = Array.from(files);
+  let loaded = 0;
+  arr.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      S.photos.push({ url: e.target.result, name: file.name });
+      loaded++;
+      if(loaded === arr.length) { renderPhotoGrid(); applyPreview(); }
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('inp-photos').value = '';
+}
+function removePhoto(idx) {
+  S.photos.splice(idx, 1);
+  renderPhotoGrid();
+  applyPreview();
+}
+function renderPhotoGrid() {
+  const grid = document.getElementById('photo-grid');
+  if(!S.photos.length) { grid.innerHTML = ''; return; }
+  grid.innerHTML = S.photos.map((p, i) => `
+    <div class="photo-thumb">
+      <img src="${p.url}" alt="">
+      ${i === 0 ? '<div class="photo-thumb-tag">Hero</div>' : ''}
+      <button class="photo-thumb-rm" onclick="removePhoto(${i})">×</button>
+    </div>
+  `).join('');
+}
+
+// ── BRAND ASSETS ─────────────────────────────────────────────────────────────
+function onLogoUpload(file) {
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    S.logo = e.target.result;
+    document.getElementById('logo-preview').src = S.logo;
+    document.getElementById('logo-status').style.display = 'block';
+    applyPreview();
+  };
+  reader.readAsDataURL(file);
+}
+function clearLogo() {
+  S.logo = null;
+  document.getElementById('logo-status').style.display = 'none';
+  document.getElementById('inp-logo').value = '';
+  applyPreview();
+}
+function onCustomFont(file) {
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    const style = document.createElement('style');
+    style.textContent = `@font-face{font-family:'CustomFont';src:url('${dataUrl}');font-display:swap}`;
+    document.head.appendChild(style);
+    loadedFonts.add('CustomFont');
+    S.customFontName = file.name.replace(/\.[^/.]+$/, '');
+    document.getElementById('custom-font-label').textContent = `"${S.customFontName}" ready`;
+    document.getElementById('custom-font-status').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+function useCustomFont(type) {
+  const disp = S.customFontName || 'Custom';
+  if(type === 'heading') { S.hFont = 'CustomFont'; S.quickId = null; document.getElementById('fp-heading-sel').textContent = disp; }
+  if(type === 'body')    { S.bFont = 'CustomFont'; S.quickId = null; document.getElementById('fp-body-sel').textContent = disp; }
+  if(type === 'nav')     { S.nFont = 'CustomFont'; document.getElementById('fp-nav-sel').textContent = disp; }
+  renderQuickPairings(); updateFontPreview(); applyPreview();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderPalTabs();
+renderPalGrid();
+syncColorInputs();
+renderQuickPairings();
+QUICK_PAIRINGS.forEach(p => { if(p.hf!=='Reikna') loadFont(p.hf); if(p.bf!=='Reikna') loadFont(p.bf); });
+buildFontPicker('fp-heading', ALL_FONTS, 'Reikna', 'heading');
+buildFontPicker('fp-body', ALL_FONTS, 'Inter', 'body');
+buildFontPicker('fp-nav', ALL_FONTS, 'Reikna', 'nav');
+renderVibes();
+renderDetails();
+renderHeaders();
+renderSections();
+applyPreview();
+</script>
+</body>
+</html>

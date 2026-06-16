@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — SNS BUILD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#07070A;
+      --card:rgba(255,255,255,.028);
+      --card-hover:rgba(255,255,255,.048);
+      --mid:#0F0F12;
+      --border:rgba(255,255,255,.07);
+      --border-strong:rgba(255,255,255,.14);
+      --text:#EDEAE4;
+      --muted:rgba(237,234,228,.48);
+      --dim:rgba(237,234,228,.22);
+      --accent:#D8E46A;
+      --accent-dim:rgba(216,228,106,.1);
+      --accent-glow:rgba(216,228,106,.22);
+      --font:'Inter',sans-serif;
+      --font-display:'Cormorant Garamond',serif;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;position:relative}
+    body::after{
+      content:'';position:fixed;inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity:.03;pointer-events:none;z-index:9999
+    }
+
+    /* ── NAV ── */
+    nav{
+      background:rgba(7,7,10,.78);
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      padding:0 5%;display:flex;align-items:center;justify-content:space-between;
+      height:64px;position:sticky;top:0;z-index:100
+    }
+    .nav-brand{font-family:var(--font-display);font-size:2.2rem;color:var(--accent);letter-spacing:.1em;text-decoration:none;flex-shrink:0}
+    .nav-links{display:flex;align-items:center;gap:2.5rem}
+    .nav-link{font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);text-decoration:none;transition:color .15s}
+    .nav-link:hover{color:var(--text)}
+    .nav-link.active{color:var(--text)}
+    .nav-cta{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#000;background:var(--accent);padding:.5rem 1.2rem;text-decoration:none;transition:background .2s,box-shadow .2s}
+    .nav-cta:hover{background:#c8d45a;box-shadow:0 0 18px var(--accent-glow)}
+
+    /* ── HERO ── */
+    .hero{
+      padding:7rem 5% 6rem;border-bottom:1px solid var(--border);
+      position:relative;overflow:hidden
+    }
+    .hero::before{
+      content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);
+      width:800px;height:500px;
+      background:radial-gradient(ellipse at 50% 0%,rgba(216,228,106,.065) 0%,transparent 65%);
+      pointer-events:none
+    }
+    .hero-eyebrow{
+      font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;
+      color:var(--accent);margin-bottom:1.75rem;
+      display:flex;align-items:center;gap:.75rem;position:relative
+    }
+    .hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--accent);flex-shrink:0}
+    .hero h1{
+      font-family:var(--font-display);
+      font-size:clamp(4rem,10vw,9rem);
+      line-height:.88;letter-spacing:-.01em;
+      margin-bottom:2rem;max-width:700px;
+      background:linear-gradient(150deg,#EDEAE4 40%,rgba(216,228,106,.65) 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      position:relative
+    }
+    .hero-sub{font-size:.95rem;color:var(--muted);line-height:1.85;max-width:460px;font-weight:300;position:relative}
+
+    /* ── SHARED ── */
+    .section-label{
+      font-size:.54rem;font-weight:700;text-transform:uppercase;
+      letter-spacing:.2em;color:var(--accent);margin-bottom:1.5rem;
+      display:flex;align-items:center;gap:.75rem
+    }
+    .section-label::before{content:'';width:20px;height:1px;background:var(--accent);flex-shrink:0}
+    .section-title{
+      font-family:var(--font-display);
+      font-size:clamp(2.5rem,5.5vw,4.5rem);
+      line-height:.9;color:var(--text);
+      margin-bottom:3.5rem;letter-spacing:-.01em
+    }
+    .btn-primary{
+      display:inline-block;padding:1rem 2.25rem;
+      background:var(--accent);color:#000;
+      font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;
+      text-decoration:none;transition:background .2s,box-shadow .2s
+    }
+    .btn-primary:hover{background:#c8d45a;box-shadow:0 0 28px var(--accent-glow)}
+
+    /* ── PRICING GRID ── */
+    .pricing-section{padding:6rem 5%;border-bottom:1px solid var(--border)}
+    .pricing-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);
+      gap:1px;background:var(--border);
+      border:1px solid var(--border)
+    }
+    @media(max-width:860px){.pricing-grid{grid-template-columns:1fr}}
+
+    .pricing-card{
+      background:var(--bg);padding:3rem 2.5rem;
+      display:flex;flex-direction:column;position:relative;
+      transition:background .2s
+    }
+    .pricing-card:hover{background:var(--card)}
+    .pricing-card.featured{
+      background:rgba(216,228,106,.04);
+      border-left:1px solid rgba(216,228,106,.18);
+      border-right:1px solid rgba(216,228,106,.18)
+    }
+    .pricing-card.featured::before{
+      content:'Most Popular';position:absolute;top:0;left:0;right:0;
+      background:var(--accent);color:#000;
+      font-size:.44rem;font-weight:700;text-transform:uppercase;
+      letter-spacing:.2em;text-align:center;padding:.4rem 0
+    }
+
+    .card-tier{
+      font-size:.5rem;font-weight:700;text-transform:uppercase;
+      letter-spacing:.22em;color:var(--dim);margin-bottom:1.75rem
+    }
+    .pricing-card.featured .card-tier{margin-top:2rem}
+    .card-price{
+      font-family:var(--font-display);
+      font-size:clamp(3.5rem,6vw,5.5rem);
+      line-height:1;color:var(--text);
+      margin-bottom:.4rem;letter-spacing:-.02em
+    }
+    .card-price-note{
+      font-size:.58rem;color:var(--dim);
+      margin-bottom:2.25rem;padding-bottom:2.25rem;
+      border-bottom:1px solid var(--border);font-weight:300
+    }
+    .pricing-card.featured .card-price{color:var(--accent)}
+
+    .card-features{list-style:none;display:flex;flex-direction:column;gap:1rem;flex:1}
+    .card-feature{
+      font-size:.72rem;color:var(--muted);
+      line-height:1.5;display:flex;align-items:flex-start;gap:.75rem;
+      font-weight:300
+    }
+    .card-feature-icon{
+      width:14px;height:14px;border:1.5px solid var(--border);
+      flex-shrink:0;margin-top:.1rem;display:flex;align-items:center;justify-content:center
+    }
+    .card-feature.inc .card-feature-icon{
+      background:var(--accent);border-color:var(--accent);color:#000;
+      font-size:.5rem;font-weight:900
+    }
+    .card-feature.inc{color:var(--text)}
+
+    .card-cta{
+      margin-top:2.5rem;display:block;padding:.9rem 1.5rem;
+      text-align:center;font-size:.56rem;font-weight:700;
+      text-transform:uppercase;letter-spacing:.14em;text-decoration:none;
+      transition:all .2s;
+      border:1px solid var(--border);color:var(--dim);background:transparent
+    }
+    .card-cta:hover{border-color:var(--text);color:var(--text)}
+    .pricing-card.featured .card-cta{
+      background:var(--accent);border-color:var(--accent);color:#000
+    }
+    .pricing-card.featured .card-cta:hover{
+      background:#c8d45a;box-shadow:0 0 20px var(--accent-glow)
+    }
+
+    .card-timeline{font-size:.52rem;color:var(--dim);text-align:center;margin-top:.85rem;font-weight:300}
+
+    /* ── COMPARISON TABLE ── */
+    .included-section{padding:6rem 5%;border-bottom:1px solid var(--border)}
+    .compare-table{width:100%;border-collapse:collapse}
+    .compare-table th{
+      font-size:.5rem;font-weight:700;text-transform:uppercase;
+      letter-spacing:.18em;color:var(--dim);
+      padding:.85rem 1.25rem;text-align:left;
+      border-bottom:1px solid var(--border);
+      background:rgba(255,255,255,.02)
+    }
+    .compare-table th:not(:first-child){text-align:center}
+    .compare-table th.col-featured{color:var(--accent)}
+    .compare-table td{
+      font-size:.72rem;color:var(--muted);
+      padding:1rem 1.25rem;border-bottom:1px solid var(--border);
+      vertical-align:middle;font-weight:300
+    }
+    .compare-table td:not(:first-child){text-align:center}
+    .compare-table tr:hover td{background:rgba(255,255,255,.018)}
+    .compare-table .check{color:var(--accent);font-size:.85rem;font-weight:700}
+    .compare-table .dash{color:var(--border-strong,rgba(255,255,255,.14));font-size:.9rem}
+    .compare-table .feature-name{color:var(--text);font-weight:400}
+
+    /* ── HOW IT WORKS ── */
+    .how-section{padding:6rem 5%;border-bottom:1px solid var(--border)}
+    .steps-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);
+      border:1px solid var(--border);margin-top:0
+    }
+    @media(max-width:720px){
+      .steps-grid{grid-template-columns:1fr 1fr}
+      .step{border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+      .step:nth-child(2n){border-right:none}
+      .step:nth-last-child(-n+2){border-bottom:none}
+    }
+    .step{
+      background:var(--bg);padding:2.5rem 2rem;
+      border-right:1px solid var(--border);
+      transition:background .2s
+    }
+    .step:last-child{border-right:none}
+    .step:hover{background:var(--card)}
+    .step-num{
+      font-family:var(--font-display);font-size:3.25rem;
+      color:var(--accent);line-height:1;
+      margin-bottom:1.5rem;opacity:.18;user-select:none;display:block
+    }
+    .step-title{
+      font-size:.72rem;font-weight:700;text-transform:uppercase;
+      letter-spacing:.1em;color:var(--text);margin-bottom:.7rem
+    }
+    .step-desc{font-size:.7rem;color:var(--muted);line-height:1.8;font-weight:300}
+
+    /* ── CTA BAND ── */
+    .cta-band{
+      padding:7rem 5%;
+      display:flex;align-items:center;justify-content:space-between;
+      gap:4rem;flex-wrap:wrap;
+      position:relative;overflow:hidden
+    }
+    .cta-band::before{
+      content:'';position:absolute;
+      top:50%;left:-5%;transform:translateY(-50%);
+      width:600px;height:400px;
+      background:radial-gradient(ellipse at 0% 50%,rgba(216,228,106,.055) 0%,transparent 60%);
+      pointer-events:none
+    }
+    .cta-band-title{
+      font-family:var(--font-display);
+      font-size:clamp(2.5rem,6vw,5rem);
+      line-height:.9;color:var(--text);letter-spacing:-.01em;position:relative
+    }
+    .cta-band-sub{font-size:.8rem;color:var(--muted);margin-top:.85rem;line-height:1.8;font-weight:300}
+    .cta-btn{
+      display:inline-block;padding:1rem 2.5rem;
+      background:var(--accent);color:#000;
+      font-size:.58rem;font-weight:700;text-transform:uppercase;
+      letter-spacing:.16em;text-decoration:none;
+      transition:all .2s;white-space:nowrap;flex-shrink:0;position:relative
+    }
+    .cta-btn:hover{background:#c8d45a;box-shadow:0 0 28px var(--accent-glow)}
+
+    /* ── FOOTER ── */
+    footer{
+      border-top:1px solid var(--border);
+      padding:4rem 5%;
+      display:grid;grid-template-columns:1fr auto auto;
+      gap:5rem;align-items:start
+    }
+    @media(max-width:700px){footer{grid-template-columns:1fr;gap:2.5rem}}
+    .footer-brand{font-family:var(--font-display);font-size:2rem;color:var(--dim);letter-spacing:.1em;display:block;margin-bottom:.65rem}
+    .footer-tagline{font-size:.64rem;color:var(--dim);font-weight:300;line-height:1.7;max-width:260px}
+    .footer-col-label{font-size:.48rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:var(--dim);margin-bottom:1.1rem;opacity:.6}
+    .footer-links{display:flex;flex-direction:column;gap:.7rem}
+    .footer-link{font-size:.7rem;color:var(--dim);text-decoration:none;transition:color .15s;font-weight:300}
+    .footer-link:hover{color:var(--text)}
+    .footer-bottom{
+      border-top:1px solid var(--border);padding:1.5rem 5%;
+      display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem
+    }
+    .footer-copy{font-size:.52rem;color:var(--dim);font-weight:300}
+    .footer-email{font-size:.6rem;color:var(--dim);text-decoration:none;transition:color .15s}
+    .footer-email:hover{color:var(--accent)}
+
+    /* ── SCROLL REVEAL ── */
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+    .reveal.visible{opacity:1;transform:none}
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">SNS BUILD</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="work.html" class="nav-link">Work</a>
+    <a href="pricing.html" class="nav-link active">Pricing</a>
+    <a href="configurator.html" class="nav-cta">Start Building →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Transparent Pricing</div>
+  <h1>Simple.<br>No surprises.</h1>
+  <p class="hero-sub">Flat rates. No hourly billing. No scope creep. Every decision is locked in before we build — so the price you see is the price you pay.</p>
+</div>
+
+<!-- PRICING CARDS -->
+<div class="pricing-section">
+  <div class="pricing-grid">
+
+    <div class="pricing-card reveal">
+      <div class="card-tier">Basic</div>
+      <div class="card-price">$500</div>
+      <div class="card-price-note">One-time · No monthly fees</div>
+      <ul class="card-features">
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Single-page site</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Mobile responsive</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Contact form</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Google Analytics</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>1 revision round</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Quote tool</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Local SEO setup</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Google Business Profile</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Blog posts</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Booking integration</li>
+      </ul>
+      <a href="configurator.html" class="card-cta">Get Started</a>
+      <div class="card-timeline">Delivered in 5 days</div>
+    </div>
+
+    <div class="pricing-card featured reveal d1">
+      <div class="card-tier">Standard</div>
+      <div class="card-price">$1,200</div>
+      <div class="card-price-note">One-time · No monthly fees</div>
+      <ul class="card-features">
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Up to 6 pages</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Mobile responsive</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Contact form</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Google Analytics</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>2 revision rounds</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Quote tool</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Local SEO setup</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Google Business Profile</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Blog posts</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Booking integration</li>
+      </ul>
+      <a href="configurator.html" class="card-cta">Get Started</a>
+      <div class="card-timeline">Delivered in 10 days</div>
+    </div>
+
+    <div class="pricing-card reveal d2">
+      <div class="card-tier">Premium</div>
+      <div class="card-price">$2,500</div>
+      <div class="card-price-note">One-time · No monthly fees</div>
+      <ul class="card-features">
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Unlimited pages</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Mobile responsive</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Contact form</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Google Analytics</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>3 revision rounds</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Quote tool</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Local SEO setup</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Google Business Profile</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>10 blog posts</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Booking integration</li>
+      </ul>
+      <a href="configurator.html" class="card-cta">Get Started</a>
+      <div class="card-timeline">Delivered in 3 weeks</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEATURE COMPARISON TABLE -->
+<div class="included-section">
+  <div class="section-label reveal">What's included</div>
+  <div class="section-title reveal">Every tier.<br>Every detail.</div>
+  <table class="compare-table reveal">
+    <thead>
+      <tr>
+        <th style="width:40%">Feature</th>
+        <th>Basic</th>
+        <th class="col-featured">Standard</th>
+        <th>Premium</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="feature-name">Pages</td><td>1</td><td>Up to 6</td><td>Unlimited</td></tr>
+      <tr><td class="feature-name">Mobile responsive</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name">Custom design via configurator</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name">Contact form</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name">Google Analytics</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name">Revision rounds</td><td>1</td><td>2</td><td>3</td></tr>
+      <tr><td class="feature-name">Self-serve quote tool</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name">Local SEO setup</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name">Google Business Profile setup</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name">Sitemap + search indexing</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name">Blog posts (SEO)</td><td class="dash">—</td><td class="dash">—</td><td>10 posts</td></tr>
+      <tr><td class="feature-name">Booking / calendar integration</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name">Delivery</td><td>5 days</td><td>10 days</td><td>3 weeks</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-section">
+  <div class="section-label reveal">The process</div>
+  <div class="section-title reveal">Four steps.<br>One week.</div>
+  <div class="steps-grid">
+    <div class="step reveal">
+      <span class="step-num">01</span>
+      <div class="step-title">Design it</div>
+      <div class="step-desc">Use the configurator to lock in every detail — colours, fonts, layout, sections. No guesswork, no back-and-forth.</div>
+    </div>
+    <div class="step reveal d1">
+      <span class="step-num">02</span>
+      <div class="step-title">We build it</div>
+      <div class="step-desc">Your brief lands in our inbox. We get to work the same day. Every decision is already made.</div>
+    </div>
+    <div class="step reveal d2">
+      <span class="step-num">03</span>
+      <div class="step-title">You review it</div>
+      <div class="step-desc">We send you a live preview. You flag anything that needs tweaking. One round of revisions, focused and fast.</div>
+    </div>
+    <div class="step reveal d3">
+      <span class="step-num">04</span>
+      <div class="step-title">It goes live</div>
+      <div class="step-desc">Your site is deployed, indexed, and ready for customers. You get the keys and full ownership. Done.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div class="reveal">
+    <div class="cta-band-title">Ready to<br>build yours?</div>
+    <div class="cta-band-sub">Start with the configurator. Takes 5 minutes.<br>We'll have a quote back within 24 hours.</div>
+  </div>
+  <a href="configurator.html" class="cta-btn reveal d2">Open Configurator →</a>
+</div>
+
+<footer>
+  <div class="reveal">
+    <span class="footer-brand">SNS BUILD</span>
+    <div class="footer-tagline">Professional websites for local businesses. Delivered in a week. You own the code.</div>
+  </div>
+  <div class="reveal d1">
+    <div class="footer-col-label">Navigate</div>
+    <div class="footer-links">
+      <a href="index.html" class="footer-link">Home</a>
+      <a href="pricing.html" class="footer-link">Pricing</a>
+      <a href="configurator.html" class="footer-link">Configurator</a>
+    </div>
+  </div>
+  <div class="reveal d2">
+    <div class="footer-col-label">Contact</div>
+    <div class="footer-links">
+      <a href="mailto:hello@snsbuild.ca" class="footer-link">hello@snsbuild.ca</a>
+      <span class="footer-link" style="cursor:default;pointer-events:none">Salmon Arm, BC</span>
+    </div>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span class="footer-copy">© 2026 SNS BUILD. All rights reserved.</span>
+  <a href="mailto:hello@snsbuild.ca" class="footer-email">hello@snsbuild.ca</a>
+</div>
+
+<script>
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target);}
+  });
+},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+</script>
+
+</body>
+</html>
