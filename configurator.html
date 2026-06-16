@@ -477,7 +477,7 @@
       <div class="form-stack">
         <div class="field"><label>Business Name</label><input type="text" id="f-name" placeholder="e.g. Raven Roofing" oninput="syncBrand();document.getElementById('fpb-input').value=this.value"></div>
         <div class="field"><label>Industry</label>
-          <select id="f-industry">
+          <select id="f-industry" onchange="document.getElementById('f-industry-other-wrap').style.display=this.value==='Other'?'block':'none'">
             <option value="">Select your industry</option>
             <option>Home Services</option><option>Trades (plumbing, electrical, roofing)</option>
             <option>Health & Wellness</option><option>Food & Hospitality</option>
@@ -487,6 +487,7 @@
             <option>Real Estate</option><option>Other</option>
           </select>
         </div>
+        <div class="field" id="f-industry-other-wrap" style="display:none"><label>Describe your business</label><input type="text" id="f-industry-other" placeholder="e.g. Drone photography, wedding planning, dog grooming..."></div>
         <div class="field"><label>What should visitors do on your site?</label><textarea id="f-goal" placeholder="e.g. Book a service, call for a quote, shop online..."></textarea></div>
         <div class="field"><label>Your Email</label><input type="email" id="f-email" placeholder="you@yourbusiness.com"></div>
         <button class="submit-btn" onclick="handleSubmit()">Get My Site →</button>
@@ -1702,7 +1703,8 @@ function syncBrand() {
 // ── SITE GENERATOR ────────────────────────────────────────────────────────────
 function generateClientSite() {
   const biz = document.getElementById('f-name').value.trim() || 'Your Business';
-  const ind = document.getElementById('f-industry').value || '';
+  const indRaw2 = document.getElementById('f-industry').value;
+  const ind = (indRaw2 === 'Other' ? (document.getElementById('f-industry-other').value.trim() || 'Other') : indRaw2) || '';
   const sp  = {compact:'3rem 5%', balanced:'5rem 5%', open:'7rem 5%'}[S.spacing.id] || '5rem 5%';
   const r   = S.corner.r;
   const hal = S.header.id === 'center' ? 'center' : 'left';
@@ -1940,7 +1942,8 @@ function downloadFile(content, filename) {
 // ── SUBMIT ────────────────────────────────────────────────────────────────────
 async function handleSubmit() {
   const name  = document.getElementById('f-name').value.trim();
-  const ind   = document.getElementById('f-industry').value;
+  const indRaw = document.getElementById('f-industry').value;
+  const ind   = indRaw === 'Other' ? (document.getElementById('f-industry-other').value.trim() || 'Other') : indRaw;
   const goal  = document.getElementById('f-goal').value.trim();
   const email = document.getElementById('f-email').value.trim();
   if(!name || !email){ alert('Please enter your business name and email.'); return; }
