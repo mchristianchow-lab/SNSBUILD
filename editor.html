@@ -889,22 +889,33 @@ function loadFromClaude() {
 
   function norm(s) { return s.toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim(); }
 
+  // Build lookup once
+  const lookup = {};
+  for (const [key, val] of Object.entries(data)) {
+    if (val) lookup[norm(key)] = String(val);
+  }
+
   let filled = 0;
   for (const f of fields) {
     if (f.type === 'image') continue;
     const lbl = norm(f.label);
     const sec = norm(f.section + ' ' + f.label);
 
-    for (const [key, val] of Object.entries(data)) {
-      if (!val) continue;
-      const k = norm(key);
-      if (k === lbl || k === sec || lbl.includes(k) || k.includes(lbl)) {
-        f.value = String(val);
-        const el = document.getElementById(f.id);
-        if (el) { el.value = String(val); el.classList.add('autofilled'); }
-        filled++;
-        break;
+    // Priority: exact section+label → exact label → key ends with label
+    let val = lookup[sec] || lookup[lbl] || null;
+
+    // Last resort: key ends with " {label}" (e.g. "hero eyebrow" matches field "eyebrow" only if no better match)
+    if (!val) {
+      for (const [k, v] of Object.entries(lookup)) {
+        if (k !== sec && k !== lbl && k.endsWith(' ' + lbl)) { val = v; break; }
       }
+    }
+
+    if (val) {
+      f.value = val;
+      const el = document.getElementById(f.id);
+      if (el) { el.value = val; el.classList.add('autofilled'); }
+      filled++;
     }
   }
 
