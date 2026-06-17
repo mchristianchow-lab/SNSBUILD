@@ -227,6 +227,7 @@
     </div>
     <div class="header-actions">
       <button class="btn-ghost" onclick="document.getElementById('file-inp').click()">Open Template</button>
+      <button class="btn-ghost" id="copy-btn" onclick="copyForClaude()" style="display:none">Copy for Claude</button>
       <button class="btn-ghost" onclick="openModal()">Load from Claude</button>
       <button class="btn-primary" id="export-btn" disabled onclick="exportSite()">Export Site</button>
     </div>
@@ -788,6 +789,7 @@ function loadFile(file) {
 
     document.getElementById('file-name').textContent = file.name;
     document.getElementById('export-btn').disabled = false;
+    document.getElementById('copy-btn').style.display = 'block';
     document.getElementById('progress-wrap').style.display = 'block';
     document.getElementById('empty-state').style.display = 'none';
     document.getElementById('frame').style.display = 'block';
@@ -835,6 +837,36 @@ document.addEventListener('drop', e => {
   const f = e.dataTransfer.files[0];
   if (f?.name.endsWith('.html')) loadFile(f);
 });
+
+// ── COPY FOR CLAUDE ──────────────────────────────────────────────────────────
+function copyForClaude() {
+  const url = document.getElementById('scrape-url').value.trim();
+  const lines = [`SCRAPED FROM: ${url || 'unknown'}\n`];
+
+  let lastSec = null;
+  for (const f of fields) {
+    if (f.type === 'image') continue;
+    if (f.section !== lastSec) {
+      lastSec = f.section;
+      lines.push(`\n[${f.section.toUpperCase()}]`);
+    }
+    const val = f.value || '(empty)';
+    lines.push(`${f.label}: ${val}`);
+  }
+
+  lines.push('\n---');
+  lines.push('Rewrite this into polished marketing copy for a client website.');
+  lines.push('Return a JSON object with the same keys (lowercase field labels) but professional, conversion-focused values.');
+  lines.push('Keep phone/email/address exactly as-is. Rewrite everything else.');
+
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 1800);
+  });
+}
 
 // ── LOAD FROM CLAUDE ─────────────────────────────────────────────────────────
 function openModal() {
