@@ -253,57 +253,85 @@ let fields      = [];
 let scrapedData = null;
 
 // ── SCRAPER ───────────────────────────────────────────────────────────────────
+// jina.ai renders JavaScript (works on Wix/React/SPAs) — returns markdown text
+async function fetchViaJina(url) {
+  const r = await fetch(`https://r.jina.ai/${url}`, {
+    headers: { 'Accept': 'text/plain', 'X-No-Cache': 'true' }
+  });
+  if (!r.ok) throw new Error('jina error');
+  const text = await r.text();
+  if (text.length < 100) throw new Error('empty');
+  return { type: 'text', content: text };
+}
+
 const PROXIES = [
   async (url) => {
     const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
     const j = await r.json();
     if (!j.contents) throw new Error('empty');
-    return j.contents;
+    return { type: 'html', content: j.contents };
   },
   async (url) => {
     const r = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(url)}`);
     if (!r.ok) throw new Error('bad status');
-    return r.text();
+    return { type: 'html', content: await r.text() };
   },
   async (url) => {
     const r = await fetch(`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(url)}`);
     if (!r.ok) throw new Error('bad status');
-    return r.text();
+    return { type: 'html', content: await r.text() };
   },
   async (url) => {
     const r = await fetch(`https://thingproxy.freeboard.io/fetch/${url}`);
     if (!r.ok) throw new Error('bad status');
-    return r.text();
+    return { type: 'html', content: await r.text() };
   },
 ];
 
 async function scrapeURL() {
-  const url = document.getElementById('scrape-url').value.trim();
+  let url = document.getElementById('scrape-url').value.trim();
   if (!url) return;
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
 
   const btn = document.getElementById('scrape-btn');
   btn.disabled = true;
   clearPills();
 
-  let html = null;
-  for (let i = 0; i < PROXIES.length; i++) {
-    setStatus(`Trying proxy ${i + 1} of ${PROXIES.length}...`, 'loading');
-    try {
-      html = await Promise.race([
-        PROXIES[i](url),
-        new Promise((_,r) => setTimeout(() => r(new Error('timeout')), 8000))
-      ]);
-      if (html && html.length > 200) break;
-    } catch(e) { html = null; }
+  let result = null;
+
+  // Try jina first — it renders JS so works on Wix/React sites
+  setStatus('Rendering page (handles Wix/JS sites)...', 'loading');
+  try {
+    result = await Promise.race([
+      fetchViaJina(url),
+      new Promise((_,r) => setTimeout(() => r(new Error('timeout')), 12000))
+    ]);
+  } catch(e) { result = null; }
+
+  // Fall back to static proxies
+  if (!result) {
+    for (let i = 0; i < PROXIES.length; i++) {
+      setStatus(`Trying proxy ${i + 1} of ${PROXIES.length}...`, 'loading');
+      try {
+        result = await Promise.race([
+          PROXIES[i](url),
+          new Promise((_,r) => setTimeout(() => r(new Error('timeout')), 8000))
+        ]);
+        if (result?.content?.length > 200) break;
+      } catch(e) { result = null; }
+    }
   }
 
-  if (!html) {
-    setStatus('All proxies failed. Go to the site → Cmd+S → drag the saved file into the drop zone.', 'error');
+  if (!result) {
+    setStatus('All methods failed. Go to their site → Cmd+S → drag the saved .html file into the drop zone below.', 'error');
     btn.disabled = false;
     return;
   }
 
-  scrapedData = extractData(html, url);
+  scrapedData = result.type === 'text'
+    ? extractDataFromText(result.content, url)
+    : extractData(result.content, url);
+
   const found = getFoundKeys(scrapedData);
 
   if (!found.length) {
@@ -380,6 +408,52 @@ function extractData(html, sourceUrl) {
     (address.match(/([A-Z][a-z]+(?:\s[A-Z][a-z]+)?),?\s*[A-Z]{2}/)?.[1] || '');
 
   return { businessName, phone, email, address, headline, tagline, about, services, city };
+}
+
+// Parse plain text / markdown from jina.ai
+function extractDataFromText(text, sourceUrl) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+  // Business name: first # heading or title line
+  const titleLine = lines.find(l => /^#\s/.test(l) || /^Title:/i.test(l));
+  const businessName = titleLine
+    ? titleLine.replace(/^#+\s*/, '').replace(/^Title:\s*/i, '').split('|')[0].split('-')[0].trim()
+    : '';
+
+  // Phone
+  const phone = text.match(/\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}/)?.[0]?.trim() || '';
+
+  // Email
+  const email = text.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/)?.[0] || '';
+
+  // Address — look for BC postal code pattern or street address
+  const addrMatch = text.match(/\d+\s+[A-Z][a-zA-Z\s]+(?:Street|St|Ave|Avenue|Rd|Road|Blvd|Drive|Dr|Way|Lane|Ln)[^,\n]*/i);
+  const address = addrMatch?.[0]?.trim() || '';
+
+  // City
+  const cityMatch = text.match(/([A-Z][a-zA-Z\s]+),?\s*BC/);
+  const city = cityMatch?.[1]?.trim() || '';
+
+  // Headline: first ## heading
+  const h2 = lines.find(l => /^##\s/.test(l));
+  const headline = h2 ? h2.replace(/^#+\s*/, '').trim() : '';
+
+  // Tagline: line after headline or description meta
+  const descMatch = text.match(/(?:Description|Tagline):\s*(.+)/i);
+  const tagline = descMatch?.[1]?.trim() || '';
+
+  // About: longest paragraph that isn't a heading
+  const paras = lines.filter(l => l.length > 80 && !/^#/.test(l) && !/^[*\-]/.test(l));
+  const about = paras[0] || '';
+
+  // Services: bullet points / list items
+  const bullets = lines
+    .filter(l => /^[\*\-]\s/.test(l))
+    .map(l => l.replace(/^[\*\-]\s+/, '').trim())
+    .filter(l => l.length > 2 && l.length < 80)
+    .slice(0, 8);
+
+  return { businessName, phone, email, address, headline, tagline, about, services: bullets, city };
 }
 
 function getFoundKeys(d) {
