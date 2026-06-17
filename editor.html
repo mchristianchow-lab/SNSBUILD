@@ -160,6 +160,16 @@
     .scale-btn.active,.scale-btn:hover{border-color:var(--accent);color:var(--accent)}
     .preview-wrap{flex:1;overflow:hidden;display:flex;align-items:stretch;justify-content:center;position:relative}
     iframe{width:100%;height:100%;border:none;transition:width .2s}
+    .ve-btn{font-size:.52rem;font-weight:600;letter-spacing:.04em;color:var(--dim);background:transparent;border:1px solid var(--border);border-radius:3px;padding:.2rem .65rem;cursor:pointer;transition:all .15s;margin-left:auto}
+    .ve-btn:hover{border-color:var(--accent);color:var(--accent)}
+    .ve-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+    .ve-toolbar{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:.35rem .75rem;display:none;align-items:center;gap:.75rem;z-index:9999;font-size:.52rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+    .ve-toolbar.show{display:flex}
+    .ve-toolbar span{color:var(--bone);opacity:.5}
+    .ve-size-row{display:flex;align-items:center;gap:.4rem}
+    .ve-size-btn{width:22px;height:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:3px;color:var(--bone);cursor:pointer;font-size:.7rem;display:flex;align-items:center;justify-content:center;line-height:1}
+    .ve-size-btn:hover{background:rgba(255,255,255,.14)}
+    .ve-size-val{min-width:28px;text-align:center;color:var(--bone);font-size:.6rem}
 
     /* ── EMPTY ── */
     .empty{
@@ -280,8 +290,18 @@
           <button class="scale-btn active" id="scale-desktop" onclick="setScale('desktop')">Desktop</button>
           <button class="scale-btn" id="scale-mobile" onclick="setScale('mobile')">Mobile</button>
         </div>
+        <button class="ve-btn" id="ve-toggle" onclick="toggleVisualEdit()">✏ Visual Edit</button>
       </div>
       <div class="preview-wrap" id="preview-wrap">
+        <div class="ve-toolbar" id="ve-toolbar">
+          <span>Selected:</span>
+          <div class="ve-size-row">
+            <button class="ve-size-btn" onclick="adjustFontSize(-1)">−</button>
+            <span class="ve-size-val" id="ve-size-val">—</span>
+            <button class="ve-size-btn" onclick="adjustFontSize(1)">+</button>
+          </div>
+          <span id="ve-tag-label" style="opacity:.3">—</span>
+        </div>
         <div class="empty" id="empty-state">Load a template to preview</div>
         <iframe id="frame" style="display:none"></iframe>
       </div>
@@ -751,6 +771,7 @@ function handleImg(f, input, thumb) {
 
 // ── PREVIEW ───────────────────────────────────────────────────────────────────
 function refresh() {
+  if (visualEditMode) return; // freeze while editing visually
   let html = rawHTML;
   for (const f of fields) {
     if (f.value) html = replaceAll(html, f.full, f.value);
@@ -818,11 +839,221 @@ function loadFile(file) {
   reader.readAsText(file);
 }
 
+// ── VISUAL EDITOR ─────────────────────────────────────────────────────────────
+let visualEditMode = false;
+let veSelected = null;
+
+function toggleVisualEdit() {
+  const frame = document.getElementById('frame');
+  if (frame.style.display === 'none') return;
+  visualEditMode = !visualEditMode;
+  const btn = document.getElementById('ve-toggle');
+  btn.classList.toggle('active', visualEditMode);
+  btn.textContent = visualEditMode ? '✕ Exit Edit' : '✏ Visual Edit';
+  if (visualEditMode) {
+    injectVisualEditor();
+  } else {
+    veDeselect();
+    document.getElementById('ve-toolbar').classList.remove('show');
+    // Re-enable live preview
+    refresh();
+  }
+}
+
+function injectVisualEditor() {
+  const frame = document.getElementById('frame');
+  const doc = frame.contentDocument || frame.contentWindow.document;
+  if (!doc) return;
+
+  // Inject styles into the site
+  const style = doc.createElement('style');
+  style.id = '__ve-style';
+  style.textContent = `
+    [data-ve-id]:not([contenteditable="true"]) { outline: 2px dashed transparent !important; cursor: move !important; }
+    [data-ve-id]:hover { outline-color: rgba(80,180,255,.45) !important; }
+    [data-ve-id].ve-sel { outline: 2px solid #4af !important; z-index: 9998 !important; }
+    .ve-resize-handle {
+      position: fixed; width: 14px; height: 14px;
+      background: #4af; border-radius: 2px; cursor: se-resize;
+      z-index: 9999; pointer-events: all;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; color: #000; user-select: none;
+    }
+  `;
+  if (!doc.getElementById('__ve-style')) doc.head.appendChild(style);
+
+  // Tag all meaningful text elements
+  const TAGS = 'h1,h2,h3,h4,h5,h6,p,a,button,span,li';
+  let idx = 0;
+  doc.querySelectorAll(TAGS).forEach(el => {
+    if (el.offsetHeight < 10 || el.closest('[data-ve-id]')) return;
+    el.setAttribute('data-ve-id', idx++);
+    el.addEventListener('click', veOnClick, true);
+    el.addEventListener('dblclick', veOnDblClick, true);
+  });
+
+  doc.addEventListener('click', e => {
+    if (!e.target.closest('[data-ve-id]')) veDeselect();
+  });
+
+  // Listen for selection messages from iframe
+  frame.contentWindow.__veNotify = function(id, tag, size) {
+    veSelected = id;
+    document.getElementById('ve-size-val').textContent = Math.round(size) + 'px';
+    document.getElementById('ve-tag-label').textContent = '<' + tag.toLowerCase() + '>';
+    document.getElementById('ve-toolbar').classList.add('show');
+  };
+
+  frame.contentWindow.__veDeselect = function() {
+    document.getElementById('ve-toolbar').classList.remove('show');
+    veSelected = null;
+  };
+}
+
+function veOnClick(e) {
+  e.stopPropagation();
+  const el = e.currentTarget;
+  const doc = el.ownerDocument;
+
+  // Deselect previous
+  doc.querySelectorAll('.ve-sel').forEach(n => n.classList.remove('ve-sel'));
+  doc.querySelectorAll('.ve-resize-handle').forEach(n => n.remove());
+
+  el.classList.add('ve-sel');
+
+  // Place resize handle at element bottom-right
+  const rect = el.getBoundingClientRect();
+  const handle = doc.createElement('div');
+  handle.className = 've-resize-handle';
+  handle.textContent = '⤡';
+  handle.style.left = (rect.right - 7) + 'px';
+  handle.style.top  = (rect.bottom - 7) + 'px';
+  doc.body.appendChild(handle);
+
+  const win = el.ownerDocument.defaultView;
+  const sz  = parseFloat(win.getComputedStyle(el).fontSize);
+  if (win.__veNotify) win.__veNotify(el.getAttribute('data-ve-id'), el.tagName, sz);
+
+  // DRAG — use transform translate
+  const matrix = new win.DOMMatrix(win.getComputedStyle(el).transform);
+  let origTx = matrix.m41 || 0, origTy = matrix.m42 || 0;
+  let startX, startY, dragging = false;
+
+  function onMouseDown(ev) {
+    if (ev.target === handle) return;
+    ev.preventDefault();
+    startX = ev.clientX; startY = ev.clientY;
+    dragging = true;
+    doc.addEventListener('mousemove', onMouseMove, true);
+    doc.addEventListener('mouseup', onMouseUp, true);
+  }
+  function onMouseMove(ev) {
+    if (!dragging) return;
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
+    el.style.transform = `translate(${origTx + dx}px, ${origTy + dy}px)`;
+    // Move handle too
+    handle.style.left = (rect.right + origTx + dx - 7) + 'px';
+    handle.style.top  = (rect.bottom + origTy + dy - 7) + 'px';
+  }
+  function onMouseUp(ev) {
+    if (!dragging) return;
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
+    origTx += dx; origTy += dy;
+    dragging = false;
+    startX = undefined; startY = undefined;
+    doc.removeEventListener('mousemove', onMouseMove, true);
+    doc.removeEventListener('mouseup', onMouseUp, true);
+  }
+  el.addEventListener('mousedown', onMouseDown, true);
+
+  // RESIZE handle — drag up/down changes font size
+  handle.addEventListener('mousedown', ev => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    const startY2 = ev.clientY;
+    const startSz = parseFloat(win.getComputedStyle(el).fontSize);
+    function onRMove(e2) {
+      const dy = startY2 - e2.clientY;
+      const newSz = Math.max(8, Math.round(startSz + dy * 0.4));
+      el.style.fontSize = newSz + 'px';
+      document.getElementById('ve-size-val').textContent = newSz + 'px';
+    }
+    function onRUp() {
+      doc.removeEventListener('mousemove', onRMove, true);
+      doc.removeEventListener('mouseup', onRUp, true);
+    }
+    doc.addEventListener('mousemove', onRMove, true);
+    doc.addEventListener('mouseup', onRUp, true);
+  });
+}
+
+function veOnDblClick(e) {
+  e.stopPropagation();
+  const el = e.currentTarget;
+  el.contentEditable = 'true';
+  el.focus();
+  // Place cursor where clicked
+  const range = el.ownerDocument.caretRangeFromPoint
+    ? el.ownerDocument.caretRangeFromPoint(e.clientX, e.clientY)
+    : null;
+  if (range) {
+    const sel = el.ownerDocument.defaultView.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  el.style.cursor = 'text';
+  el.style.outline = '2px solid #4af';
+  el.addEventListener('blur', () => {
+    el.contentEditable = 'false';
+    el.style.cursor = 'move';
+  }, { once: true });
+}
+
+function veDeselect() {
+  const frame = document.getElementById('frame');
+  if (!frame.contentDocument) return;
+  const doc = frame.contentDocument;
+  doc.querySelectorAll('.ve-sel').forEach(n => n.classList.remove('ve-sel'));
+  doc.querySelectorAll('.ve-resize-handle').forEach(n => n.remove());
+  if (frame.contentWindow && frame.contentWindow.__veDeselect) frame.contentWindow.__veDeselect();
+  veSelected = null;
+}
+
+function adjustFontSize(delta) {
+  if (!veSelected) return;
+  const frame = document.getElementById('frame');
+  const doc = frame.contentDocument;
+  const el = doc.querySelector(`[data-ve-id="${veSelected}"]`);
+  if (!el) return;
+  const cur = parseFloat(frame.contentWindow.getComputedStyle(el).fontSize);
+  const newSz = Math.max(8, Math.round(cur + delta));
+  el.style.fontSize = newSz + 'px';
+  document.getElementById('ve-size-val').textContent = newSz + 'px';
+}
+
 // ── EXPORT ────────────────────────────────────────────────────────────────────
 function exportSite() {
-  let html = rawHTML;
-  for (const f of fields) {
-    if (f.value) html = replaceAll(html, f.full, f.value);
+  let html;
+  const frame = document.getElementById('frame');
+  if (visualEditMode && frame.contentDocument) {
+    // Strip visual editor artifacts before export
+    const doc = frame.contentDocument;
+    doc.querySelectorAll('.ve-resize-handle').forEach(n => n.remove());
+    doc.querySelectorAll('[data-ve-id]').forEach(el => {
+      el.removeAttribute('data-ve-id');
+      el.classList.remove('ve-sel');
+      el.contentEditable = 'false';
+    });
+    const veStyle = doc.getElementById('__ve-style');
+    if (veStyle) veStyle.remove();
+    html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+  } else {
+    html = rawHTML;
+    for (const f of fields) {
+      if (f.value) html = replaceAll(html, f.full, f.value);
+    }
   }
   const fname = document.getElementById('file-name').textContent.replace('.html','') + '-FINAL.html';
   const blob  = new Blob([html], {type:'text/html'});
