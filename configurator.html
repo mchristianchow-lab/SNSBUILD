@@ -1969,7 +1969,6 @@ async function handleSubmit() {
         headers: {
           'Authorization': `Bearer ${SUPABASE_KEY}`,
           'Content-Type': 'text/html',
-          'x-upsert': 'true',
         },
         body: html,
       });
