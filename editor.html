@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNS BUILD — Site Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --black:#07070A;--mid:#0F0F12;--card:rgba(255,255,255,.028);
+      --border:rgba(255,255,255,.07);--border-mid:rgba(255,255,255,.12);
+      --accent:#D8E46A;--bone:#EDEAE4;--dim:rgba(237,234,228,.3);
+      --muted:rgba(237,234,228,.5);--font:'Inter',sans-serif;
+    }
+    html,body{height:100%;overflow:hidden}
+    body{background:var(--black);color:var(--bone);font-family:var(--font);-webkit-font-smoothing:antialiased}
+
+    /* ── LAYOUT ── */
+    .app{display:flex;flex-direction:column;height:100vh}
+    .header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 1.5rem;height:52px;flex-shrink:0;
+      background:var(--mid);border-bottom:1px solid var(--border)
+    }
+    .header-left{display:flex;align-items:center;gap:1.25rem}
+    .brand{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+    .file-name{font-size:.62rem;color:var(--dim)}
+    .header-actions{display:flex;gap:.6rem}
+    .main{display:flex;flex:1;overflow:hidden}
+
+    /* ── PANEL ── */
+    .panel{
+      width:380px;flex-shrink:0;
+      background:var(--mid);border-right:1px solid var(--border);
+      display:flex;flex-direction:column;overflow:hidden
+    }
+    .panel-inner{flex:1;overflow-y:auto;padding-bottom:3rem}
+    .panel-inner::-webkit-scrollbar{width:3px}
+    .panel-inner::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
+
+    /* ── DROP ZONE ── */
+    .drop-zone{
+      margin:1.5rem;padding:2.5rem 1.5rem;
+      border:1.5px dashed rgba(216,228,106,.2);border-radius:6px;
+      display:flex;flex-direction:column;align-items:center;
+      gap:.75rem;text-align:center;cursor:pointer;transition:border-color .15s
+    }
+    .drop-zone:hover,.drop-zone.over{border-color:var(--accent)}
+    .drop-icon{font-size:1.75rem;opacity:.35;line-height:1}
+    .drop-title{font-size:.72rem;font-weight:600;color:var(--bone)}
+    .drop-sub{font-size:.6rem;color:var(--dim);line-height:1.6}
+
+    /* ── FORM ── */
+    .section-head{
+      padding:.9rem 1.25rem .3rem;
+      font-size:.5rem;font-weight:700;letter-spacing:.2em;
+      text-transform:uppercase;color:var(--accent);opacity:.75;
+      border-top:1px solid var(--border);margin-top:.5rem
+    }
+    .section-head:first-child{border-top:none;margin-top:0}
+    .field{padding:.4rem 1.25rem}
+    label{
+      display:block;font-size:.58rem;font-weight:600;
+      letter-spacing:.06em;text-transform:uppercase;
+      color:var(--muted);margin-bottom:.28rem
+    }
+    .hint{font-weight:400;text-transform:none;letter-spacing:0;opacity:.65;font-style:italic}
+    input[type=text],textarea{
+      width:100%;background:rgba(255,255,255,.04);
+      border:1px solid var(--border);border-radius:4px;
+      color:var(--bone);font-family:var(--font);font-size:.72rem;
+      padding:.42rem .6rem;outline:none;transition:border-color .15s;resize:vertical
+    }
+    input[type=text]:focus,textarea:focus{border-color:rgba(216,228,106,.35)}
+    textarea{min-height:58px;line-height:1.5}
+    input[type=text]::placeholder,textarea::placeholder{color:rgba(237,234,228,.2)}
+
+    /* ── IMAGE FIELDS ── */
+    .img-row{display:flex;align-items:center;gap:.75rem}
+    .img-thumb{
+      width:56px;height:56px;flex-shrink:0;border-radius:4px;
+      background:rgba(255,255,255,.05);border:1px solid var(--border);
+      overflow:hidden;display:flex;align-items:center;justify-content:center;
+      font-size:.5rem;color:var(--dim);text-align:center;line-height:1.3
+    }
+    .img-thumb img{width:100%;height:100%;object-fit:cover}
+    .img-btn{
+      font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--accent);background:rgba(216,228,106,.07);
+      border:1px solid rgba(216,228,106,.22);border-radius:4px;
+      padding:.35rem .8rem;cursor:pointer;transition:all .15s;white-space:nowrap
+    }
+    .img-btn:hover{background:rgba(216,228,106,.14)}
+
+    /* ── PREVIEW ── */
+    .preview{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#000}
+    .preview-bar{
+      padding:.45rem 1rem;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:1rem;flex-shrink:0;
+      background:var(--mid)
+    }
+    .preview-label{font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+    .preview-scale{display:flex;gap:.25rem}
+    .scale-btn{
+      font-size:.52rem;font-weight:600;letter-spacing:.04em;
+      color:var(--dim);background:transparent;
+      border:1px solid var(--border);border-radius:3px;
+      padding:.2rem .55rem;cursor:pointer;transition:all .15s
+    }
+    .scale-btn.active,.scale-btn:hover{border-color:var(--accent);color:var(--accent)}
+    .preview-wrap{flex:1;overflow:hidden;display:flex;align-items:stretch;justify-content:center;position:relative}
+    iframe{width:100%;height:100%;border:none;transition:width .2s}
+
+    /* ── EMPTY ── */
+    .empty{
+      flex:1;display:flex;align-items:center;justify-content:center;
+      font-size:.7rem;color:var(--dim)
+    }
+
+    /* ── BUTTONS ── */
+    .btn-primary{
+      font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--black);background:var(--accent);
+      border:none;border-radius:3px;padding:.42rem 1rem;cursor:pointer;transition:opacity .15s
+    }
+    .btn-primary:hover{opacity:.85}
+    .btn-primary:disabled{opacity:.3;cursor:default}
+    .btn-ghost{
+      font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--dim);background:transparent;
+      border:1px solid var(--border);border-radius:3px;
+      padding:.42rem 1rem;cursor:pointer;transition:all .15s
+    }
+    .btn-ghost:hover{border-color:var(--border-mid);color:var(--bone)}
+
+    /* ── COMPLETION BAR ── */
+    .progress-wrap{padding:.5rem 1.25rem .25rem;flex-shrink:0}
+    .progress-label{font-size:.52rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:.3rem}
+    .progress-bar{height:2px;background:rgba(255,255,255,.06);border-radius:1px}
+    .progress-fill{height:100%;background:var(--accent);border-radius:1px;transition:width .3s}
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <header class="header">
+    <div class="header-left">
+      <span class="brand">SNS BUILD</span>
+      <span class="file-name" id="file-name">No file loaded</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-ghost" onclick="document.getElementById('file-inp').click()">Open File</button>
+      <button class="btn-primary" id="export-btn" disabled onclick="exportSite()">Export Site</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="panel">
+
+      <!-- Progress bar (hidden until file loaded) -->
+      <div class="progress-wrap" id="progress-wrap" style="display:none">
+        <div class="progress-label">Completion — <span id="pct">0</span>%</div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="panel-inner" id="panel-inner">
+        <!-- Drop zone -->
+        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-inp').click()">
+          <div class="drop-icon">↓</div>
+          <div class="drop-title">Drop the client's HTML file here</div>
+          <div class="drop-sub">Grab it from Supabase or the email attachment.<br>All fields auto-populate from the file.</div>
+        </div>
+        <!-- Fields injected here -->
+      </div>
+    </div>
+
+    <div class="preview">
+      <div class="preview-bar">
+        <span class="preview-label">Live Preview</span>
+        <div class="preview-scale">
+          <button class="scale-btn active" id="scale-desktop" onclick="setScale('desktop')">Desktop</button>
+          <button class="scale-btn" id="scale-mobile" onclick="setScale('mobile')">Mobile</button>
+        </div>
+      </div>
+      <div class="preview-wrap" id="preview-wrap">
+        <div class="empty" id="empty-state">Load a file to preview</div>
+        <iframe id="frame" style="display:none"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="file-inp" accept=".html" style="display:none" onchange="loadFile(this.files[0])">
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────────────────
+let rawHTML = '';
+let fields  = [];
+
+// ── SECTION DETECTION ────────────────────────────────────────────────────────
+const SECTION_PATTERNS = [
+  [/<!-- NAV -->/i,           'Navigation'],
+  [/<!-- HERO -->/i,          'Hero'],
+  [/id="services"/i,          'Services'],
+  [/id="stats"/i,             'Stats'],
+  [/id="about"/i,             'About'],
+  [/id="testimonials"/i,      'Testimonials'],
+  [/id="gallery"/i,           'Gallery'],
+  [/id="portfolio"/i,         'Portfolio'],
+  [/id="faq"/i,               'FAQ'],
+  [/id="contact"/i,           'Contact'],
+  [/id="cta"/i,               'CTA Banner'],
+  [/<!-- FOOTER -->/i,        'Footer'],
+];
+
+function detectSection(html, pos) {
+  let last = 'General';
+  for (const [re, label] of SECTION_PATTERNS) {
+    re.lastIndex = 0;
+    const m = re.exec(html.slice(0, pos));
+    if (m) last = label;
+  }
+  return last;
+}
+
+// ── FIELD DETECTION ──────────────────────────────────────────────────────────
+const SECTION_DIVIDERS = /^(NAV|HERO|FOOTER|HEAD|SERVICES?|ABOUT|STATS?|TESTIMONIALS?|REVIEWS?|GALLERY|PORTFOLIO|FAQ|CONTACT|CTA)$/i;
+const IMAGE_KEYS = ['photo','image','logo','picture','before','after','team','workspace'];
+
+function isImageHint(text) {
+  return IMAGE_KEYS.some(k => text.toLowerCase().includes(k));
+}
+
+function parseFields(html) {
+  const out = [];
+  const seen = new Set();
+  const re = /<!--\s*([\s\S]*?)\s*-->/g;
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    const full = m[0];
+    const inner = m[1].trim();
+    if (!inner || seen.has(full)) continue;
+    seen.add(full);
+
+    // skip section dividers & real dev comments
+    if (SECTION_DIVIDERS.test(inner)) continue;
+    if (inner.startsWith('//') || inner.startsWith('*') || inner.startsWith('!')) continue;
+
+    // parse label : hint
+    const ci = inner.indexOf(':');
+    let label = inner, hint = '';
+    if (ci > -1) {
+      label = inner.slice(0, ci).trim();
+      hint  = inner.slice(ci + 1).trim();
+      if (/^replace$/i.test(label)) { label = hint; hint = ''; }
+    }
+    // title-case label
+    label = label.replace(/\b\w/g, c => c.toUpperCase());
+
+    const section = detectSection(html, m.index);
+    const isImg   = isImageHint(label + ' ' + hint);
+    const isLong  = /paragraph|sentence|intro|quote|subtext|answer|description|about/i.test(label + ' ' + hint);
+
+    out.push({
+      id: `f${out.length}`,
+      full,      // the exact comment string for replacement
+      label,
+      hint,
+      section,
+      type: isImg ? 'image' : isLong ? 'textarea' : 'text',
+      value: '',
+    });
+  }
+  return out;
+}
+
+// ── BUILD FORM ────────────────────────────────────────────────────────────────
+function buildForm() {
+  const pi = document.getElementById('panel-inner');
+  pi.innerHTML = '';
+  let lastSec = null;
+
+  for (const f of fields) {
+    if (f.section !== lastSec) {
+      lastSec = f.section;
+      const h = document.createElement('div');
+      h.className = 'section-head';
+      h.textContent = f.section;
+      pi.appendChild(h);
+    }
+
+    const wrap = document.createElement('div');
+    wrap.className = 'field';
+
+    const lbl = document.createElement('label');
+    lbl.setAttribute('for', f.id);
+    lbl.innerHTML = escHtml(f.label) + (f.hint ? ` <span class="hint">— ${escHtml(f.hint)}</span>` : '');
+    wrap.appendChild(lbl);
+
+    if (f.type === 'image') {
+      const row   = document.createElement('div');
+      row.className = 'img-row';
+
+      const thumb = document.createElement('div');
+      thumb.className = 'img-thumb';
+      thumb.id = `${f.id}_thumb`;
+      thumb.textContent = 'No image';
+
+      const btnLabel = document.createElement('label');
+      btnLabel.className = 'img-btn';
+      btnLabel.textContent = '+ Upload Image';
+      const inp = document.createElement('input');
+      inp.type = 'file';
+      inp.accept = 'image/*';
+      inp.style.display = 'none';
+      inp.addEventListener('change', () => handleImg(f, inp, thumb));
+      btnLabel.appendChild(inp);
+
+      row.appendChild(thumb);
+      row.appendChild(btnLabel);
+      wrap.appendChild(row);
+
+    } else if (f.type === 'textarea') {
+      const ta = document.createElement('textarea');
+      ta.id = f.id;
+      ta.rows = 3;
+      ta.placeholder = f.hint || f.label;
+      ta.addEventListener('input', () => { f.value = ta.value; refresh(); });
+      wrap.appendChild(ta);
+
+    } else {
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.id = f.id;
+      inp.placeholder = f.hint || f.label;
+      inp.addEventListener('input', () => { f.value = inp.value; refresh(); });
+      wrap.appendChild(inp);
+    }
+
+    pi.appendChild(wrap);
+  }
+}
+
+// ── IMAGE HANDLING ────────────────────────────────────────────────────────────
+function handleImg(f, input, thumb) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    f.value = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;display:block" alt="">`;
+    thumb.innerHTML = `<img src="${e.target.result}">`;
+    refresh();
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── PREVIEW ───────────────────────────────────────────────────────────────────
+function refresh() {
+  let html = rawHTML;
+  for (const f of fields) {
+    if (f.value) html = replaceAll(html, f.full, f.value);
+  }
+  document.getElementById('frame').srcdoc = html;
+  updateProgress();
+}
+
+function replaceAll(str, find, replace) {
+  // literal string replace-all (no regex so we don't need to escape)
+  return str.split(find).join(replace);
+}
+
+function updateProgress() {
+  const total   = fields.length;
+  const filled  = fields.filter(f => f.value).length;
+  const pct     = total ? Math.round(filled / total * 100) : 0;
+  document.getElementById('pct').textContent = pct;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+// ── SCALE ─────────────────────────────────────────────────────────────────────
+function setScale(mode) {
+  const frame = document.getElementById('frame');
+  document.getElementById('scale-desktop').classList.toggle('active', mode === 'desktop');
+  document.getElementById('scale-mobile').classList.toggle('active', mode === 'mobile');
+  if (mode === 'mobile') {
+    frame.style.width = '390px';
+    frame.style.maxWidth = '390px';
+    frame.style.boxShadow = '0 0 0 1px rgba(255,255,255,.08)';
+  } else {
+    frame.style.width = '100%';
+    frame.style.maxWidth = '';
+    frame.style.boxShadow = '';
+  }
+}
+
+// ── LOAD FILE ─────────────────────────────────────────────────────────────────
+function loadFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    rawHTML = e.target.result;
+    fields  = parseFields(rawHTML);
+
+    // update UI
+    document.getElementById('file-name').textContent = file.name;
+    document.getElementById('export-btn').disabled = false;
+    document.getElementById('progress-wrap').style.display = 'block';
+    document.getElementById('empty-state').style.display = 'none';
+    document.getElementById('frame').style.display = 'block';
+
+    buildForm();
+    refresh();
+  };
+  reader.readAsText(file);
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+function exportSite() {
+  let html = rawHTML;
+  for (const f of fields) {
+    if (f.value) html = replaceAll(html, f.full, f.value);
+  }
+  const fname = document.getElementById('file-name').textContent.replace('.html','') + '-FINAL.html';
+  const blob  = new Blob([html], {type:'text/html'});
+  const a     = document.createElement('a');
+  a.href      = URL.createObjectURL(blob);
+  a.download  = fname;
+  a.click();
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────────────────────
+const dz = document.getElementById('drop-zone');
+['dragenter','dragover'].forEach(ev => {
+  document.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('over'); });
+});
+['dragleave','drop'].forEach(ev => {
+  document.addEventListener(ev, () => dz.classList.remove('over'));
+});
+document.addEventListener('drop', e => {
+  e.preventDefault();
+  const f = e.dataTransfer.files[0];
+  if (f?.name.endsWith('.html')) loadFile(f);
+});
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
