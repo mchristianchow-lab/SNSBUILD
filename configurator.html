@@ -252,6 +252,8 @@
     .success.show{display:block}
     .success-title{font-family:var(--font-display);font-size:2.2rem;color:var(--bone);letter-spacing:.06em;margin-bottom:.6rem}
     .success-body{font-size:.8rem;color:var(--muted);line-height:1.75}
+    .content-sec-head{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:var(--accent);padding:.65rem 1.25rem;margin-top:1.5rem;border-bottom:1px solid var(--border)}
+    .hint{font-weight:400;text-transform:none;letter-spacing:0;opacity:.55;font-size:.56rem}
 
     /* PREVIEW */
     .preview-col{position:sticky;top:60px;height:calc(100vh - 60px);display:flex;flex-direction:column;overflow:hidden}
@@ -499,11 +501,89 @@
         <div class="field" id="f-industry-other-wrap" style="display:none"><label>Describe your business</label><input type="text" id="f-industry-other" placeholder="e.g. Drone photography, wedding planning, dog grooming..."></div>
         <div class="field"><label>What should visitors do on your site?</label><textarea id="f-goal" placeholder="e.g. Book a service, call for a quote, shop online..."></textarea></div>
         <div class="field"><label>Your Email</label><input type="email" id="f-email" placeholder="you@yourbusiness.com"></div>
-        <button class="submit-btn" onclick="handleSubmit()">Get My Site →</button>
+        <div class="field"><label>Phone Number</label><input type="tel" id="f-phone" placeholder="(250) 555-1234"></div>
+        <div class="field"><label>City / Address</label><input type="text" id="f-address" placeholder="e.g. Salmon Arm, BC"></div>
+      </div>
+    </div>
+
+    <!-- STEP 09: CONTENT -->
+    <div class="step-block">
+      <div class="step-label"><span>09</span> Your content</div>
+      <div class="form-stack">
+
+        <div class="content-sec-head">Hero</div>
+        <div class="field"><label>Eyebrow <span class="hint">— small text above headline</span></label><input type="text" id="f-hero-eyebrow" placeholder="e.g. Salmon Arm's Trusted Cleaners"></div>
+        <div class="field"><label>Main Headline</label><input type="text" id="f-hero-headline" placeholder="e.g. A Spotless Home. Every Time."></div>
+        <div class="field"><label>Subheadline <span class="hint">— one sentence: what you do, who you serve</span></label><textarea id="f-hero-sub" rows="2" placeholder="Professional cleaning for Salmon Arm homes and businesses — certified, eco-friendly, guaranteed."></textarea></div>
+        <div class="field"><label>Primary CTA Button</label><input type="text" id="f-hero-cta" placeholder="e.g. Book a Clean"></div>
+
+        <div class="content-sec-head">Services</div>
+        <div class="field"><label>Section Eyebrow</label><input type="text" id="f-svc-eyebrow" placeholder="e.g. What We Offer"></div>
+        <div class="field"><label>Section Headline</label><input type="text" id="f-svc-headline" placeholder="e.g. Services Built Around You"></div>
+        <div class="field"><label>Section Intro</label><textarea id="f-svc-intro" rows="2" placeholder="1-2 sentences about your services."></textarea></div>
+        <div class="field"><label>Service 1 — Name</label><input type="text" id="f-svc1-name" placeholder="e.g. Home Cleaning"></div>
+        <div class="field"><label>Service 1 — Description</label><textarea id="f-svc1-desc" rows="2" placeholder="What's included, who it's for."></textarea></div>
+        <div class="field"><label>Service 2 — Name</label><input type="text" id="f-svc2-name" placeholder="e.g. Commercial Cleaning"></div>
+        <div class="field"><label>Service 2 — Description</label><textarea id="f-svc2-desc" rows="2" placeholder="What's included, who it's for."></textarea></div>
+        <div class="field"><label>Service 3 — Name</label><input type="text" id="f-svc3-name" placeholder="e.g. Move-In / Move-Out"></div>
+        <div class="field"><label>Service 3 — Description</label><textarea id="f-svc3-desc" rows="2" placeholder="What's included, who it's for."></textarea></div>
+
+        <div class="content-sec-head">Stats</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;padding:0 1.25rem .5rem">
+          <div class="field" style="padding:0"><label>Stat 1 — Value</label><input type="text" id="f-stat1" placeholder="500+"></div>
+          <div class="field" style="padding:0"><label>Stat 1 — Label</label><input type="text" id="f-stat1-label" placeholder="Jobs Done"></div>
+          <div class="field" style="padding:0"><label>Stat 2 — Value</label><input type="text" id="f-stat2" placeholder="5.0★"></div>
+          <div class="field" style="padding:0"><label>Stat 2 — Label</label><input type="text" id="f-stat2-label" placeholder="Rating"></div>
+          <div class="field" style="padding:0"><label>Stat 3 — Value</label><input type="text" id="f-stat3" placeholder="10+"></div>
+          <div class="field" style="padding:0"><label>Stat 3 — Label</label><input type="text" id="f-stat3-label" placeholder="Years Experience"></div>
+          <div class="field" style="padding:0"><label>Stat 4 — Value</label><input type="text" id="f-stat4" placeholder="300+"></div>
+          <div class="field" style="padding:0"><label>Stat 4 — Label</label><input type="text" id="f-stat4-label" placeholder="Satisfied Clients"></div>
+        </div>
+
+        <div class="content-sec-head">About</div>
+        <div class="field"><label>Eyebrow</label><input type="text" id="f-about-eyebrow" placeholder="e.g. About Us"></div>
+        <div class="field"><label>Headline</label><input type="text" id="f-about-headline" placeholder="e.g. The Story Behind the Work"></div>
+        <div class="field"><label>Paragraph 1 <span class="hint">— who you are, how long, what you care about</span></label><textarea id="f-about-p1" rows="3" placeholder="Who you are, how long you've been doing this, what you care about."></textarea></div>
+        <div class="field"><label>Paragraph 2 <span class="hint">— what makes you different</span></label><textarea id="f-about-p2" rows="3" placeholder="What makes you different. Your guarantee, method, or values."></textarea></div>
+
+        <div class="content-sec-head">Testimonials</div>
+        <div class="field"><label>Quote 1</label><textarea id="f-t1-q" rows="2" placeholder="What did they say?"></textarea></div>
+        <div class="field"><label>Client 1 — Name & Location</label><input type="text" id="f-t1-name" placeholder="e.g. Sarah M., Salmon Arm"></div>
+        <div class="field"><label>Quote 2</label><textarea id="f-t2-q" rows="2" placeholder="What did they say?"></textarea></div>
+        <div class="field"><label>Client 2 — Name & Location</label><input type="text" id="f-t2-name" placeholder="e.g. James R., Vernon"></div>
+        <div class="field"><label>Quote 3</label><textarea id="f-t3-q" rows="2" placeholder="What did they say?"></textarea></div>
+        <div class="field"><label>Client 3 — Name & Location</label><input type="text" id="f-t3-name" placeholder="e.g. Kim T., Enderby"></div>
+        <div class="field"><label>Quote 4</label><textarea id="f-t4-q" rows="2" placeholder="What did they say?"></textarea></div>
+        <div class="field"><label>Client 4 — Name & Location</label><input type="text" id="f-t4-name" placeholder="e.g. Dave H., Armstrong"></div>
+
+        <div class="content-sec-head">FAQ</div>
+        <div class="field"><label>FAQ Headline</label><input type="text" id="f-faq-headline" placeholder="e.g. Common Questions"></div>
+        <div class="field"><label>Question 1</label><input type="text" id="f-faq1-q" placeholder="e.g. Do you bring your own supplies?"></div>
+        <div class="field"><label>Answer 1</label><textarea id="f-faq1-a" rows="2" placeholder="Yes — we bring everything..."></textarea></div>
+        <div class="field"><label>Question 2</label><input type="text" id="f-faq2-q" placeholder="e.g. How long does a clean take?"></div>
+        <div class="field"><label>Answer 2</label><textarea id="f-faq2-a" rows="2" placeholder="Typically 2-3 hours depending on home size..."></textarea></div>
+        <div class="field"><label>Question 3</label><input type="text" id="f-faq3-q" placeholder="e.g. Do I need to be home?"></div>
+        <div class="field"><label>Answer 3</label><textarea id="f-faq3-a" rows="2" placeholder="No — many clients give us a key or entry code..."></textarea></div>
+        <div class="field"><label>Question 4</label><input type="text" id="f-faq4-q" placeholder="e.g. What's your cancellation policy?"></div>
+        <div class="field"><label>Answer 4</label><textarea id="f-faq4-a" rows="2" placeholder="We ask for 24 hours notice..."></textarea></div>
+
+        <div class="content-sec-head">Contact Section</div>
+        <div class="field"><label>Eyebrow</label><input type="text" id="f-contact-eyebrow" placeholder="e.g. Get In Touch"></div>
+        <div class="field"><label>Headline</label><input type="text" id="f-contact-headline" placeholder="e.g. Ready to Book?"></div>
+        <div class="field"><label>Subtext</label><textarea id="f-contact-sub" rows="2" placeholder="1-2 sentences about what happens after they reach out."></textarea></div>
+        <div class="field"><label>Submit Button Text</label><input type="text" id="f-contact-cta" placeholder="e.g. Send Message"></div>
+        <div class="field"><label>Web3Forms Key <span class="hint">— get one free at web3forms.com</span></label><input type="text" id="f-web3forms" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></div>
+
+        <div class="content-sec-head">CTA Banner</div>
+        <div class="field"><label>Headline</label><input type="text" id="f-cta-headline" placeholder="e.g. Ready to Get Started?"></div>
+        <div class="field"><label>Subtext</label><textarea id="f-cta-sub" rows="2" placeholder="Brief supporting line."></textarea></div>
+        <div class="field"><label>Button Text</label><input type="text" id="f-cta-btn" placeholder="e.g. Book Now"></div>
+
+        <button class="submit-btn" onclick="handleSubmit()">Generate Site →</button>
       </div>
       <div class="success" id="success">
-        <div class="success-title">You're In.</div>
-        <p class="success-body">Your site file just downloaded to your computer — that's your design, ready to build on.<br><br>Send us that file along with your real content (copy, photos, anything we're missing) and we'll have your site live within a week.</p>
+        <div class="success-title">Site Generated.</div>
+        <p class="success-body">Your complete site file just downloaded — fully built with your content and design. Upload it or send it straight to the client.</p>
       </div>
     </div>
 
@@ -1710,7 +1790,59 @@ function syncBrand() {
 }
 
 // ── SITE GENERATOR ────────────────────────────────────────────────────────────
+function v(id, fallback='') { const el=document.getElementById(id); return el?(el.value||'').trim()||fallback:fallback; }
+
+function getContent() {
+  return {
+    phone:          v('f-phone'),
+    address:        v('f-address'),
+    web3key:        v('f-web3forms'),
+    heroEyebrow:    v('f-hero-eyebrow'),
+    heroHeadline:   v('f-hero-headline'),
+    heroSub:        v('f-hero-sub'),
+    heroCta:        v('f-hero-cta','Get In Touch'),
+    svcEyebrow:     v('f-svc-eyebrow'),
+    svcHeadline:    v('f-svc-headline'),
+    svcIntro:       v('f-svc-intro'),
+    svc1Name:       v('f-svc1-name'),
+    svc1Desc:       v('f-svc1-desc'),
+    svc2Name:       v('f-svc2-name'),
+    svc2Desc:       v('f-svc2-desc'),
+    svc3Name:       v('f-svc3-name'),
+    svc3Desc:       v('f-svc3-desc'),
+    stat1:          v('f-stat1'),
+    stat1Label:     v('f-stat1-label','Jobs Done'),
+    stat2:          v('f-stat2'),
+    stat2Label:     v('f-stat2-label','Rating'),
+    stat3:          v('f-stat3'),
+    stat3Label:     v('f-stat3-label','Years Experience'),
+    stat4:          v('f-stat4'),
+    stat4Label:     v('f-stat4-label','Satisfied Clients'),
+    aboutEyebrow:   v('f-about-eyebrow'),
+    aboutHeadline:  v('f-about-headline'),
+    aboutP1:        v('f-about-p1'),
+    aboutP2:        v('f-about-p2'),
+    t1q:            v('f-t1-q'),  t1name: v('f-t1-name'),
+    t2q:            v('f-t2-q'),  t2name: v('f-t2-name'),
+    t3q:            v('f-t3-q'),  t3name: v('f-t3-name'),
+    t4q:            v('f-t4-q'),  t4name: v('f-t4-name'),
+    faqHeadline:    v('f-faq-headline'),
+    faq1q:          v('f-faq1-q'), faq1a: v('f-faq1-a'),
+    faq2q:          v('f-faq2-q'), faq2a: v('f-faq2-a'),
+    faq3q:          v('f-faq3-q'), faq3a: v('f-faq3-a'),
+    faq4q:          v('f-faq4-q'), faq4a: v('f-faq4-a'),
+    contactEyebrow: v('f-contact-eyebrow'),
+    contactHeadline:v('f-contact-headline'),
+    contactSub:     v('f-contact-sub'),
+    contactCta:     v('f-contact-cta','Send Message'),
+    ctaHeadline:    v('f-cta-headline'),
+    ctaSub:         v('f-cta-sub'),
+    ctaBtn:         v('f-cta-btn','Get Started'),
+  };
+}
+
 function generateClientSite() {
+  const C   = getContent();
   const biz = document.getElementById('f-name').value.trim() || 'Your Business';
   const indRaw2 = document.getElementById('f-industry').value;
   const ind = (indRaw2 === 'Other' ? (document.getElementById('f-industry-other').value.trim() || 'Other') : indRaw2) || '';
@@ -1759,21 +1891,21 @@ function generateClientSite() {
   // SERVICES
   if(secs.has('services')) body += `
 <section id="services" style="padding:${sp};background:${S.bg};text-align:${hal}">
-  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem"><!-- EYEBROW: e.g. "What We Offer" --></p>
-  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1rem;line-height:.95"><!-- HEADLINE: e.g. "Services Built Around You" --></h2>
-  <p style="font-size:.9rem;color:${S.tx};opacity:.5;max-width:560px;margin:0 ${hal==='center'?'auto ':''}2.5rem;line-height:1.8"><!-- INTRO: 1-2 sentences about your services --></p>
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">${C.svcEyebrow}</p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1rem;line-height:.95">${C.svcHeadline}</h2>
+  <p style="font-size:.9rem;color:${S.tx};opacity:.5;max-width:560px;margin:0 ${hal==='center'?'auto ':''}2.5rem;line-height:1.8">${C.svcIntro}</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem">
     <div style="background:${cardBg};padding:2rem;border-radius:${r}">
-      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem"><!-- SERVICE 1 NAME --></h3>
-      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75"><!-- Service 1: what's included, who it's for --></p>
+      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem">${C.svc1Name}</h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${C.svc1Desc}</p>
     </div>
     <div style="background:${cardBg};padding:2rem;border-radius:${r}">
-      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem"><!-- SERVICE 2 NAME --></h3>
-      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75"><!-- Service 2: what's included, who it's for --></p>
+      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem">${C.svc2Name}</h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${C.svc2Desc}</p>
     </div>
     <div style="background:${cardBg};padding:2rem;border-radius:${r}">
-      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem"><!-- SERVICE 3 NAME --></h3>
-      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75"><!-- Service 3: what's included, who it's for --></p>
+      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem">${C.svc3Name}</h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${C.svc3Desc}</p>
     </div>
   </div>
 </section>`;
@@ -1782,9 +1914,9 @@ function generateClientSite() {
   if(secs.has('stats')) body += `
 <section style="padding:2.5rem 5%;background:${mixHex(S.bg,S.tx,.06)};border-top:1px solid rgba(128,128,128,.1);border-bottom:1px solid rgba(128,128,128,.1)">
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center">
-    ${['Jobs Done','Rating','Years Experience','Satisfied Clients'].map(label=>`
+    ${[[C.stat1,C.stat1Label],[C.stat2,C.stat2Label],[C.stat3,C.stat3Label],[C.stat4,C.stat4Label]].map(([val,label])=>`
     <div>
-      <span style="font-family:'${hf}',serif;font-size:3rem;color:${S.ac1};display:block;line-height:1;margin-bottom:.5rem"><!-- # --></span>
+      <span style="font-family:'${hf}',serif;font-size:3rem;color:${S.ac1};display:block;line-height:1;margin-bottom:.5rem">${val}</span>
       <span style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.4">${label}</span>
     </div>`).join('')}
   </div>
@@ -1795,10 +1927,10 @@ function generateClientSite() {
 <section id="about" style="padding:${sp};background:${surfBg}">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1100px;margin:0 auto">
     <div>
-      <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem"><!-- EYEBROW: e.g. "About Us" --></p>
-      <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1.5rem;line-height:.95"><!-- HEADLINE: e.g. "The Story Behind the Work" --></h2>
-      <p style="font-size:.9rem;color:${S.tx};opacity:.5;line-height:1.8;margin-bottom:1.25rem"><!-- PARAGRAPH 1: Who you are, how long you've been doing this, what you care about. --></p>
-      <p style="font-size:.9rem;color:${S.tx};opacity:.5;line-height:1.8;margin-bottom:2rem"><!-- PARAGRAPH 2: What makes you different. Your guarantee, method, or values. --></p>
+      <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">${C.aboutEyebrow}</p>
+      <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1.5rem;line-height:.95">${C.aboutHeadline}</h2>
+      <p style="font-size:.9rem;color:${S.tx};opacity:.5;line-height:1.8;margin-bottom:1.25rem">${C.aboutP1}</p>
+      <p style="font-size:.9rem;color:${S.tx};opacity:.5;line-height:1.8;margin-bottom:2rem">${C.aboutP2}</p>
       <a href="#contact" style="${btnBase};${btnStyle}">Get In Touch</a>
     </div>
     <div style="aspect-ratio:4/5;overflow:hidden;border-radius:${r};background:${mixHex(S.bg,S.ac1,.15)}">
@@ -1810,12 +1942,12 @@ function generateClientSite() {
   // TESTIMONIALS
   if(secs.has('testimonials')) body += `
 <section style="padding:${sp};background:${S.bg};text-align:${hal}">
-  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem"><!-- EYEBROW: e.g. "Reviews" --></p>
-  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2.5rem;line-height:.95"><!-- HEADLINE: e.g. "What Clients Say" --></h2>
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">Reviews</p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2.5rem;line-height:.95">What Clients Say</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem">
-    ${[1,2,3,4].map(i=>`<div style="background:${cardBg};padding:1.75rem;border-radius:${r}">
-      <p style="font-size:.85rem;color:${S.tx};opacity:.6;line-height:1.75;font-style:italic;margin-bottom:1rem">"<!-- REAL QUOTE ${i} -->"</p>
-      <span style="font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${S.tx};opacity:.3">— <!-- Client Name, Location --></span>
+    ${[[C.t1q,C.t1name],[C.t2q,C.t2name],[C.t3q,C.t3name],[C.t4q,C.t4name]].map(([q,name])=>`<div style="background:${cardBg};padding:1.75rem;border-radius:${r}">
+      <p style="font-size:.85rem;color:${S.tx};opacity:.6;line-height:1.75;font-style:italic;margin-bottom:1rem">"${q}"</p>
+      <span style="font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${S.tx};opacity:.3">— ${name}</span>
     </div>`).join('')}
   </div>
 </section>`;
@@ -1823,8 +1955,8 @@ function generateClientSite() {
   // GALLERY
   if(secs.has('gallery')) body += `
 <section id="gallery" style="padding:${sp};background:${surfBg};text-align:${hal}">
-  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem"><!-- EYEBROW: e.g. "Our Work" --></p>
-  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2rem;line-height:.95"><!-- HEADLINE --></h2>
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">Our Work</p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2rem;line-height:.95">See the Difference</h2>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem">${galItems}</div>
 </section>`;
 
@@ -1832,14 +1964,14 @@ function generateClientSite() {
   if(secs.has('before-after')) body += `
 <section style="padding:${sp};background:${S.bg};text-align:${hal}">
   <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">Before &amp; After</p>
-  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2rem;line-height:.95"><!-- HEADLINE --></h2>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2rem;line-height:.95">The Results Speak for Themselves</h2>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
     <div>
-      <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.tx,.1)};border-radius:${r};overflow:hidden;margin-bottom:.6rem"><!-- BEFORE PHOTO --></div>
+      <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.tx,.1)};border-radius:${r};overflow:hidden;margin-bottom:.6rem">${S.photos[1]?`<img src="${S.photos[1].url}" style="width:100%;height:100%;object-fit:cover">`:''}</div>
       <span style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${S.tx};opacity:.35">Before</span>
     </div>
     <div>
-      <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.ac1,.18)};border-radius:${r};overflow:hidden;margin-bottom:.6rem"><!-- AFTER PHOTO --></div>
+      <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.ac1,.18)};border-radius:${r};overflow:hidden;margin-bottom:.6rem">${S.photos[2]?`<img src="${S.photos[2].url}" style="width:100%;height:100%;object-fit:cover">`:''}</div>
       <span style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${S.ac1};opacity:.7">After</span>
     </div>
   </div>
@@ -1850,10 +1982,10 @@ function generateClientSite() {
 <section style="padding:${sp};background:${surfBg}">
   <div style="max-width:720px;margin:0 auto">
     <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">FAQ</p>
-    <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2.5rem;line-height:.95"><!-- HEADLINE: e.g. "Common Questions" --></h2>
-    ${[1,2,3,4].map(i=>`<div style="border-bottom:1px solid rgba(128,128,128,.12);padding:1.5rem 0">
-      <h3 style="font-size:.9rem;font-weight:600;color:${S.tx};margin-bottom:.65rem"><!-- QUESTION ${i} --></h3>
-      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75"><!-- ANSWER ${i} --></p>
+    <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2.5rem;line-height:.95">${C.faqHeadline}</h2>
+    ${[[C.faq1q,C.faq1a],[C.faq2q,C.faq2a],[C.faq3q,C.faq3a],[C.faq4q,C.faq4a]].map(([q,a])=>`<div style="border-bottom:1px solid rgba(128,128,128,.12);padding:1.5rem 0">
+      <h3 style="font-size:.9rem;font-weight:600;color:${S.tx};margin-bottom:.65rem">${q}</h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${a}</p>
     </div>`).join('')}
   </div>
 </section>`;
@@ -1861,26 +1993,26 @@ function generateClientSite() {
   // CONTACT
   if(secs.has('contact')) body += `
 <section id="contact" style="padding:${sp};background:${mixHex(S.bg,S.ac1,.06)};text-align:${hal}">
-  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem"><!-- EYEBROW: e.g. "Get In Touch" --></p>
-  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1rem;line-height:.95"><!-- HEADLINE: e.g. "Ready to Book?" --></h2>
-  <p style="font-size:.9rem;color:${S.tx};opacity:.5;max-width:440px;margin:0 ${hal==='center'?'auto ':''}2rem;line-height:1.8"><!-- SUBTEXT: 1-2 sentences, what happens after they reach out --></p>
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">${C.contactEyebrow}</p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1rem;line-height:.95">${C.contactHeadline}</h2>
+  <p style="font-size:.9rem;color:${S.tx};opacity:.5;max-width:440px;margin:0 ${hal==='center'?'auto ':''}2rem;line-height:1.8">${C.contactSub}</p>
   <form action="https://api.web3forms.com/submit" method="POST" style="max-width:480px;margin:${hal==='center'?'0 auto':'0'};display:flex;flex-direction:column;gap:1rem">
-    <input type="hidden" name="access_key" value="<!-- ADD WEB3FORMS KEY -->">
+    <input type="hidden" name="access_key" value="${C.web3key||'YOUR-WEB3FORMS-KEY'}">
     <input type="hidden" name="subject" value="New enquiry — ${biz}">
     <input type="text"  name="name"    placeholder="Your name"    required style="background:${cardBg};border:1px solid rgba(128,128,128,.15);color:${S.tx};padding:.9rem 1rem;font-size:.82rem;outline:none;border-radius:${r};font-family:inherit">
     <input type="email" name="email"   placeholder="Email address" required style="background:${cardBg};border:1px solid rgba(128,128,128,.15);color:${S.tx};padding:.9rem 1rem;font-size:.82rem;outline:none;border-radius:${r};font-family:inherit">
     <input type="tel"   name="phone"   placeholder="Phone (optional)"       style="background:${cardBg};border:1px solid rgba(128,128,128,.15);color:${S.tx};padding:.9rem 1rem;font-size:.82rem;outline:none;border-radius:${r};font-family:inherit">
     <textarea name="message" placeholder="Tell us about your project…" rows="4" style="background:${cardBg};border:1px solid rgba(128,128,128,.15);color:${S.tx};padding:.9rem 1rem;font-size:.82rem;outline:none;border-radius:${r};resize:vertical;font-family:inherit"></textarea>
-    <button type="submit" style="${btnBase};${btnStyle}"><!-- CTA: Send Message / Book Now / Get a Quote --></button>
+    <button type="submit" style="${btnBase};${btnStyle}">${C.contactCta}</button>
   </form>
 </section>`;
 
   // CTA BAND
   if(secs.has('cta')) body += `
 <section style="padding:${sp};background:${S.ac1};text-align:center">
-  <h2 style="font-family:'${hf}',serif;font-size:clamp(2.5rem,7vw,5rem);color:${S.bg};margin-bottom:1rem;line-height:.95"><!-- BOLD CTA HEADLINE --></h2>
-  <p style="font-size:.95rem;color:${S.bg};opacity:.65;max-width:440px;margin:0 auto 2.5rem;line-height:1.8"><!-- CTA subtext --></p>
-  <a href="#contact" style="${btnBase};background:${S.bg};color:${S.ac1};border:none;border-radius:${btnR}"><!-- BUTTON TEXT --></a>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2.5rem,7vw,5rem);color:${S.bg};margin-bottom:1rem;line-height:.95">${C.ctaHeadline}</h2>
+  <p style="font-size:.95rem;color:${S.bg};opacity:.65;max-width:440px;margin:0 auto 2.5rem;line-height:1.8">${C.ctaSub}</p>
+  <a href="#contact" style="${btnBase};background:${S.bg};color:${S.ac1};border:none;border-radius:${btnR}">${C.ctaBtn}</a>
 </section>`;
 
   return `<!DOCTYPE html>
@@ -1889,7 +2021,7 @@ function generateClientSite() {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${biz}${ind ? ' — ' + ind : ''}</title>
-  <meta name="description" content="<!-- REPLACE: One sentence describing ${biz} and what you offer -->">
+  <meta name="description" content="${C.heroSub||biz+' — '+ind}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   ${gLink}
@@ -1919,11 +2051,11 @@ function generateClientSite() {
 
 <!-- HERO -->
 <header style="padding:${sp};min-height:88vh;display:flex;flex-direction:column;justify-content:flex-end;${heroBg};text-align:${hal}">
-  <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${eyeCol};margin-bottom:1.25rem">${ind || '<!-- EYEBROW -->'}</p>
-  <h1 style="font-family:'${hf}',serif;font-size:clamp(3.5rem,10vw,9rem);line-height:.9;color:${heroTx};margin-bottom:1.75rem;letter-spacing:.01em;max-width:900px${hal==='center'?';margin-left:auto;margin-right:auto':''}"><!-- MAIN HEADLINE: 2-4 powerful words per line --></h1>
-  <p style="font-size:1rem;color:${heroSub};line-height:1.8;max-width:480px;margin-bottom:2.5rem${hal==='center'?';margin-left:auto;margin-right:auto':''}"><!-- ONE SENTENCE: What you do, who you serve, why you. --></p>
+  <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${eyeCol};margin-bottom:1.25rem">${C.heroEyebrow||ind||biz}</p>
+  <h1 style="font-family:'${hf}',serif;font-size:clamp(3.5rem,10vw,9rem);line-height:.9;color:${heroTx};margin-bottom:1.75rem;letter-spacing:.01em;max-width:900px${hal==='center'?';margin-left:auto;margin-right:auto':''}">${C.heroHeadline||biz}</h1>
+  <p style="font-size:1rem;color:${heroSub};line-height:1.8;max-width:480px;margin-bottom:2.5rem${hal==='center'?';margin-left:auto;margin-right:auto':''}">${C.heroSub}</p>
   <div style="display:flex;align-items:center;gap:1.75rem;flex-wrap:wrap${hal==='center'?';justify-content:center':''}">
-    <a href="#contact" style="${btnBase};${btnStyle}"><!-- PRIMARY CTA --></a>
+    <a href="#contact" style="${btnBase};${btnStyle}">${C.heroCta}</a>
     ${secs.has('services') ? `<a href="#services" style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:${heroSub};text-decoration:none">Our Services →</a>` : ''}
   </div>
 </header>
@@ -1933,6 +2065,10 @@ ${body}
 <!-- FOOTER -->
 <footer style="background:${mixHex(S.bg,S.tx,.06)};border-top:1px solid rgba(128,128,128,.1);padding:2.5rem 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem">
   ${logoEl}
+  <div style="display:flex;gap:2rem;align-items:center;flex-wrap:wrap">
+    ${C.phone?`<a href="tel:${C.phone}" style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.4;text-decoration:none">${C.phone}</a>`:''}
+    ${C.address?`<span style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.4">${C.address}</span>`:''}
+  </div>
   <p style="font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.25">© ${new Date().getFullYear()} ${biz}. All rights reserved.</p>
 </footer>
 
