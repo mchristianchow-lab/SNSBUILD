@@ -39,6 +39,46 @@
     .panel-inner::-webkit-scrollbar{width:3px}
     .panel-inner::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
 
+    /* ── SCRAPE ZONE ── */
+    .scrape-zone{
+      padding:1rem 1.25rem;border-bottom:1px solid var(--border);
+      flex-shrink:0;background:rgba(216,228,106,.03)
+    }
+    .scrape-zone-label{
+      font-size:.48rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+      color:var(--accent);opacity:.7;margin-bottom:.55rem
+    }
+    .scrape-row{display:flex;gap:.5rem}
+    .scrape-row input{
+      flex:1;background:rgba(255,255,255,.04);
+      border:1px solid var(--border);border-radius:4px;
+      color:var(--bone);font-family:var(--font);font-size:.7rem;
+      padding:.38rem .6rem;outline:none;transition:border-color .15s
+    }
+    .scrape-row input:focus{border-color:rgba(216,228,106,.35)}
+    .scrape-row input::placeholder{color:rgba(237,234,228,.2)}
+    .btn-scrape{
+      font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--black);background:var(--accent);
+      border:none;border-radius:4px;padding:.38rem .9rem;cursor:pointer;
+      transition:opacity .15s;white-space:nowrap;flex-shrink:0
+    }
+    .btn-scrape:hover{opacity:.85}
+    .btn-scrape:disabled{opacity:.35;cursor:default}
+    .scrape-status{
+      font-size:.58rem;margin-top:.45rem;line-height:1.45;
+      min-height:1.2em;color:var(--dim);transition:color .2s
+    }
+    .scrape-status.loading{color:var(--dim)}
+    .scrape-status.success{color:var(--accent)}
+    .scrape-status.error{color:#ff7070}
+    .scrape-pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.4rem}
+    .pill{
+      font-size:.48rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+      padding:.15rem .45rem;border-radius:2px;
+      background:rgba(216,228,106,.1);color:var(--accent);border:1px solid rgba(216,228,106,.2)
+    }
+
     /* ── DROP ZONE ── */
     .drop-zone{
       margin:1.5rem;padding:2.5rem 1.5rem;
@@ -66,6 +106,7 @@
       color:var(--muted);margin-bottom:.28rem
     }
     .hint{font-weight:400;text-transform:none;letter-spacing:0;opacity:.65;font-style:italic}
+    .autofilled{border-color:rgba(216,228,106,.45) !important}
     input[type=text],textarea{
       width:100%;background:rgba(255,255,255,.04);
       border:1px solid var(--border);border-radius:4px;
@@ -150,7 +191,7 @@
       <span class="file-name" id="file-name">No file loaded</span>
     </div>
     <div class="header-actions">
-      <button class="btn-ghost" onclick="document.getElementById('file-inp').click()">Open File</button>
+      <button class="btn-ghost" onclick="document.getElementById('file-inp').click()">Open Template</button>
       <button class="btn-primary" id="export-btn" disabled onclick="exportSite()">Export Site</button>
     </div>
   </header>
@@ -158,7 +199,19 @@
   <div class="main">
     <div class="panel">
 
-      <!-- Progress bar (hidden until file loaded) -->
+      <!-- Scrape zone — always visible -->
+      <div class="scrape-zone">
+        <div class="scrape-zone-label">Scrape Client Site</div>
+        <div class="scrape-row">
+          <input type="text" id="scrape-url" placeholder="https://clientsoldsite.com"
+            onkeydown="if(event.key==='Enter')scrapeURL()">
+          <button class="btn-scrape" id="scrape-btn" onclick="scrapeURL()">Fetch</button>
+        </div>
+        <div class="scrape-status" id="scrape-status"></div>
+        <div class="scrape-pills" id="scrape-pills"></div>
+      </div>
+
+      <!-- Progress bar (hidden until template loaded) -->
       <div class="progress-wrap" id="progress-wrap" style="display:none">
         <div class="progress-label">Completion — <span id="pct">0</span>%</div>
         <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
@@ -168,8 +221,8 @@
         <!-- Drop zone -->
         <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-inp').click()">
           <div class="drop-icon">↓</div>
-          <div class="drop-title">Drop the client's HTML file here</div>
-          <div class="drop-sub">Grab it from Supabase or the email attachment.<br>All fields auto-populate from the file.</div>
+          <div class="drop-title">Drop the SNS BUILD template here</div>
+          <div class="drop-sub">Scrape their site above first, then load<br>the template — fields auto-fill from their data.</div>
         </div>
         <!-- Fields injected here -->
       </div>
@@ -184,7 +237,7 @@
         </div>
       </div>
       <div class="preview-wrap" id="preview-wrap">
-        <div class="empty" id="empty-state">Load a file to preview</div>
+        <div class="empty" id="empty-state">Load a template to preview</div>
         <iframe id="frame" style="display:none"></iframe>
       </div>
     </div>
@@ -195,8 +248,180 @@
 
 <script>
 // ── STATE ────────────────────────────────────────────────────────────────────
-let rawHTML = '';
-let fields  = [];
+let rawHTML     = '';
+let fields      = [];
+let scrapedData = null;
+
+// ── SCRAPER ───────────────────────────────────────────────────────────────────
+async function scrapeURL() {
+  const url = document.getElementById('scrape-url').value.trim();
+  if (!url) return;
+
+  const btn = document.getElementById('scrape-btn');
+  btn.disabled = true;
+  setStatus('Fetching site...', 'loading');
+  clearPills();
+
+  try {
+    const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+    const res   = await fetch(proxy);
+    if (!res.ok) throw new Error('Proxy error');
+    const json  = await res.json();
+    if (!json.contents) throw new Error('Empty response');
+
+    scrapedData = extractData(json.contents, url);
+
+    const found = getFoundKeys(scrapedData);
+    if (!found.length) {
+      setStatus('Fetched but could not parse useful data.', 'error');
+    } else {
+      setStatus(`Extracted ${found.length} fields:`, 'success');
+      showPills(found);
+      if (fields.length) {
+        const filled = autoFillFromScraped();
+        setStatus(`Extracted ${found.length} fields — auto-filled ${filled} template fields.`, 'success');
+      }
+    }
+  } catch(e) {
+    setStatus('Could not fetch. Site may block scrapers — try saving the page manually (Cmd+S) and opening it.', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function extractData(html, sourceUrl) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+
+  // Business name
+  const businessName =
+    doc.querySelector('meta[property="og:site_name"]')?.getAttribute('content')?.trim() ||
+    doc.querySelector('title')?.textContent?.split(/[|\-–]/)[0]?.trim() ||
+    doc.querySelector('.logo, .brand, .site-name, [class*="logo"] a, nav h1, header h1')?.textContent?.trim() ||
+    '';
+
+  // Phone — tel: links first, then text regex
+  const telEl = doc.querySelector('a[href^="tel:"]');
+  const phone = telEl
+    ? telEl.getAttribute('href').replace('tel:','').replace(/[^\d+\-() ]/g,'').trim()
+    : (doc.body.textContent.match(/\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}/)?.[0]?.trim() || '');
+
+  // Email — mailto: links
+  const mailEl = doc.querySelector('a[href^="mailto:"]');
+  const email = mailEl
+    ? mailEl.getAttribute('href').replace('mailto:','').split('?')[0].trim()
+    : (doc.body.textContent.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/)?.[0] || '');
+
+  // Address
+  const addrEl = doc.querySelector('address, [class*="address"], [itemprop="address"], [class*="location"]');
+  const address = addrEl?.textContent?.trim().replace(/\s+/g,' ') || '';
+
+  // Hero headline (h1 outside nav)
+  const heroSec = doc.querySelector('[id*="hero"],[class*="hero"],section:first-of-type');
+  const headline =
+    heroSec?.querySelector('h1,h2')?.textContent?.trim() ||
+    [...doc.querySelectorAll('h1')].find(el => !el.closest('nav,header'))?.textContent?.trim() ||
+    '';
+
+  // Tagline / subheadline
+  const tagline =
+    doc.querySelector('meta[name="description"]')?.getAttribute('content')?.trim() ||
+    heroSec?.querySelector('h2,h3,p')?.textContent?.trim() ||
+    '';
+
+  // About paragraph
+  const aboutSec = doc.querySelector('[id*="about"],[class*="about"]');
+  const about = aboutSec?.querySelector('p')?.textContent?.trim().replace(/\s+/g,' ') || '';
+
+  // Services
+  const svcSec = doc.querySelector('[id*="service"],[class*="service"]');
+  const services = svcSec
+    ? [...svcSec.querySelectorAll('h3,h4,h5,li,.service-name,[class*="title"]')]
+        .map(el => el.textContent.trim())
+        .filter(t => t.length > 2 && t.length < 80)
+        .filter((t,i,a) => a.indexOf(t) === i)
+        .slice(0, 8)
+    : [];
+
+  // City / service area
+  const city =
+    doc.querySelector('[class*="city"],[class*="location"],[class*="area"]')?.textContent?.trim() ||
+    (address.match(/([A-Z][a-z]+(?:\s[A-Z][a-z]+)?),?\s*[A-Z]{2}/)?.[1] || '');
+
+  return { businessName, phone, email, address, headline, tagline, about, services, city };
+}
+
+function getFoundKeys(d) {
+  const out = [];
+  if (d.businessName) out.push('Business Name');
+  if (d.phone)        out.push('Phone');
+  if (d.email)        out.push('Email');
+  if (d.address)      out.push('Address');
+  if (d.headline)     out.push('Headline');
+  if (d.tagline)      out.push('Tagline');
+  if (d.about)        out.push('About');
+  if (d.city)         out.push('City');
+  if (d.services.length) out.push(`${d.services.length} Services`);
+  return out;
+}
+
+// ── AUTO-FILL ─────────────────────────────────────────────────────────────────
+function autoFillFromScraped() {
+  if (!scrapedData || !fields.length) return 0;
+  let filled = 0;
+
+  for (const f of fields) {
+    const key = (f.label + ' ' + f.hint).toLowerCase();
+    let val = '';
+
+    if (/business.?name|company.?name|brand|firm|practice/.test(key))
+      val = scrapedData.businessName;
+    else if (/phone|tel|call|number/.test(key))
+      val = scrapedData.phone;
+    else if (/email/.test(key))
+      val = scrapedData.email;
+    else if (/address|street|location/.test(key))
+      val = scrapedData.address;
+    else if (/city|area|region|serve/.test(key))
+      val = scrapedData.city;
+    else if (/headline|hero.?title|main.?title|h1/.test(key))
+      val = scrapedData.headline;
+    else if (/tagline|subhead|subtitle|hero.?sub/.test(key))
+      val = scrapedData.tagline;
+    else if (/about|description|intro|overview|who.?we|paragraph/.test(key))
+      val = scrapedData.about;
+    else {
+      // service 1, service 2, etc.
+      const sm = key.match(/service[^\d]*(\d)/);
+      if (sm) val = scrapedData.services[parseInt(sm[1]) - 1] || '';
+      // service name, service title without number → first service
+      else if (/service.?(name|title|item)/.test(key)) val = scrapedData.services[0] || '';
+    }
+
+    if (val) {
+      f.value = val;
+      const el = document.getElementById(f.id);
+      if (el) { el.value = val; el.classList.add('autofilled'); }
+      filled++;
+    }
+  }
+
+  if (filled) refresh();
+  return filled;
+}
+
+// ── STATUS & PILLS ────────────────────────────────────────────────────────────
+function setStatus(msg, type) {
+  const el = document.getElementById('scrape-status');
+  el.textContent = msg;
+  el.className = `scrape-status ${type}`;
+}
+function clearPills() {
+  document.getElementById('scrape-pills').innerHTML = '';
+}
+function showPills(items) {
+  const el = document.getElementById('scrape-pills');
+  el.innerHTML = items.map(i => `<span class="pill">${i}</span>`).join('');
+}
 
 // ── SECTION DETECTION ────────────────────────────────────────────────────────
 const SECTION_PATTERNS = [
@@ -238,16 +463,14 @@ function parseFields(html) {
   const re = /<!--\s*([\s\S]*?)\s*-->/g;
   let m;
   while ((m = re.exec(html)) !== null) {
-    const full = m[0];
+    const full  = m[0];
     const inner = m[1].trim();
     if (!inner || seen.has(full)) continue;
     seen.add(full);
 
-    // skip section dividers & real dev comments
     if (SECTION_DIVIDERS.test(inner)) continue;
     if (inner.startsWith('//') || inner.startsWith('*') || inner.startsWith('!')) continue;
 
-    // parse label : hint
     const ci = inner.indexOf(':');
     let label = inner, hint = '';
     if (ci > -1) {
@@ -255,7 +478,6 @@ function parseFields(html) {
       hint  = inner.slice(ci + 1).trim();
       if (/^replace$/i.test(label)) { label = hint; hint = ''; }
     }
-    // title-case label
     label = label.replace(/\b\w/g, c => c.toUpperCase());
 
     const section = detectSection(html, m.index);
@@ -264,7 +486,7 @@ function parseFields(html) {
 
     out.push({
       id: `f${out.length}`,
-      full,      // the exact comment string for replacement
+      full,
       label,
       hint,
       section,
@@ -326,7 +548,7 @@ function buildForm() {
       ta.id = f.id;
       ta.rows = 3;
       ta.placeholder = f.hint || f.label;
-      ta.addEventListener('input', () => { f.value = ta.value; refresh(); });
+      ta.addEventListener('input', () => { f.value = ta.value; ta.classList.remove('autofilled'); refresh(); });
       wrap.appendChild(ta);
 
     } else {
@@ -334,7 +556,7 @@ function buildForm() {
       inp.type = 'text';
       inp.id = f.id;
       inp.placeholder = f.hint || f.label;
-      inp.addEventListener('input', () => { f.value = inp.value; refresh(); });
+      inp.addEventListener('input', () => { f.value = inp.value; inp.classList.remove('autofilled'); refresh(); });
       wrap.appendChild(inp);
     }
 
@@ -366,14 +588,13 @@ function refresh() {
 }
 
 function replaceAll(str, find, replace) {
-  // literal string replace-all (no regex so we don't need to escape)
   return str.split(find).join(replace);
 }
 
 function updateProgress() {
-  const total   = fields.length;
-  const filled  = fields.filter(f => f.value).length;
-  const pct     = total ? Math.round(filled / total * 100) : 0;
+  const total  = fields.length;
+  const filled = fields.filter(f => f.value).length;
+  const pct    = total ? Math.round(filled / total * 100) : 0;
   document.getElementById('pct').textContent = pct;
   document.getElementById('progress-fill').style.width = pct + '%';
 }
@@ -402,7 +623,6 @@ function loadFile(file) {
     rawHTML = e.target.result;
     fields  = parseFields(rawHTML);
 
-    // update UI
     document.getElementById('file-name').textContent = file.name;
     document.getElementById('export-btn').disabled = false;
     document.getElementById('progress-wrap').style.display = 'block';
@@ -410,6 +630,16 @@ function loadFile(file) {
     document.getElementById('frame').style.display = 'block';
 
     buildForm();
+
+    // If we already scraped, auto-fill immediately
+    if (scrapedData) {
+      const filled = autoFillFromScraped();
+      if (filled) {
+        const prev = document.getElementById('scrape-status').textContent;
+        setStatus(`${prev.split('—')[0].trim()} — auto-filled ${filled} fields.`, 'success');
+      }
+    }
+
     refresh();
   };
   reader.readAsText(file);
