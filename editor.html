@@ -253,40 +253,72 @@ let fields      = [];
 let scrapedData = null;
 
 // ── SCRAPER ───────────────────────────────────────────────────────────────────
+const PROXIES = [
+  async (url) => {
+    const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+    const j = await r.json();
+    if (!j.contents) throw new Error('empty');
+    return j.contents;
+  },
+  async (url) => {
+    const r = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(url)}`);
+    if (!r.ok) throw new Error('bad status');
+    return r.text();
+  },
+  async (url) => {
+    const r = await fetch(`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(url)}`);
+    if (!r.ok) throw new Error('bad status');
+    return r.text();
+  },
+  async (url) => {
+    const r = await fetch(`https://thingproxy.freeboard.io/fetch/${url}`);
+    if (!r.ok) throw new Error('bad status');
+    return r.text();
+  },
+];
+
 async function scrapeURL() {
   const url = document.getElementById('scrape-url').value.trim();
   if (!url) return;
 
   const btn = document.getElementById('scrape-btn');
   btn.disabled = true;
-  setStatus('Fetching site...', 'loading');
   clearPills();
 
-  try {
-    const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-    const res   = await fetch(proxy);
-    if (!res.ok) throw new Error('Proxy error');
-    const json  = await res.json();
-    if (!json.contents) throw new Error('Empty response');
-
-    scrapedData = extractData(json.contents, url);
-
-    const found = getFoundKeys(scrapedData);
-    if (!found.length) {
-      setStatus('Fetched but could not parse useful data.', 'error');
-    } else {
-      setStatus(`Extracted ${found.length} fields:`, 'success');
-      showPills(found);
-      if (fields.length) {
-        const filled = autoFillFromScraped();
-        setStatus(`Extracted ${found.length} fields — auto-filled ${filled} template fields.`, 'success');
-      }
-    }
-  } catch(e) {
-    setStatus('Could not fetch. Site may block scrapers — try saving the page manually (Cmd+S) and opening it.', 'error');
-  } finally {
-    btn.disabled = false;
+  let html = null;
+  for (let i = 0; i < PROXIES.length; i++) {
+    setStatus(`Trying proxy ${i + 1} of ${PROXIES.length}...`, 'loading');
+    try {
+      html = await Promise.race([
+        PROXIES[i](url),
+        new Promise((_,r) => setTimeout(() => r(new Error('timeout')), 8000))
+      ]);
+      if (html && html.length > 200) break;
+    } catch(e) { html = null; }
   }
+
+  if (!html) {
+    setStatus('All proxies failed. Go to the site → Cmd+S → drag the saved file into the drop zone.', 'error');
+    btn.disabled = false;
+    return;
+  }
+
+  scrapedData = extractData(html, url);
+  const found = getFoundKeys(scrapedData);
+
+  if (!found.length) {
+    setStatus('Fetched but could not parse useful data.', 'error');
+  } else {
+    showPills(found);
+    if (fields.length) {
+      const filled = autoFillFromScraped();
+      setStatus(`Extracted ${found.length} fields — auto-filled ${filled} template fields.`, 'success');
+    } else {
+      setStatus(`Extracted ${found.length} fields. Now load the template to auto-fill.`, 'success');
+    }
+  }
+
+  btn.disabled = false;
 }
 
 function extractData(html, sourceUrl) {
