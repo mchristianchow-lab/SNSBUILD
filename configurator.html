@@ -1474,7 +1474,7 @@ function fmCard(h,p){
 
 function renderFullMock(){
   const hf=`'${S.hFont}',serif`, nf=`'${S.nFont}',serif`, bf=`'${S.bFont}',sans-serif`;
-  const brand=(document.getElementById('f-name').value||'Your Brand').toUpperCase();
+  const brand=(document.getElementById('f-name').value||'Your Brand');
   const secs=S.sections;
   let html=`<div style="background:${S.bg};color:${S.tx};font-family:${bf}">`;
 
@@ -1702,7 +1702,7 @@ function renderBriefPanel(){
 
 function syncBrand() {
   const v=document.getElementById('f-name').value;
-  const brand=v?v.toUpperCase():'YOUR BRAND';
+  const brand=v||'Your Brand';
   document.getElementById('m-brand').textContent=brand;
   document.getElementById('m-footer-b').textContent=brand;
   document.getElementById('m-h1').textContent=v||'Your Business Name';
@@ -1733,7 +1733,7 @@ function generateClientSite() {
 
   const logoEl = S.logo
     ? `<img src="${S.logo}" style="height:42px;max-width:160px;object-fit:contain" alt="${biz}">`
-    : `<span style="font-family:'${nf}',serif;font-size:1.4rem;font-weight:700;color:${S.ac1};letter-spacing:.1em">${biz.toUpperCase()}</span>`;
+    : `<span style="font-family:'${nf}',serif;font-size:1.4rem;font-weight:700;color:${S.ac1};letter-spacing:.1em">${biz}</span>`;
 
   const heroBg  = S.photos[0] ? `background-image:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.6)),url(${S.photos[0].url});background-size:cover;background-position:center` : '';
   const heroTx  = S.photos[0] ? '#fff' : S.tx;
