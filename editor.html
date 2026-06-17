@@ -180,6 +180,41 @@
     .progress-label{font-size:.52rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:.3rem}
     .progress-bar{height:2px;background:rgba(255,255,255,.06);border-radius:1px}
     .progress-fill{height:100%;background:var(--accent);border-radius:1px;transition:width .3s}
+
+    /* ── MODAL ── */
+    .modal-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.8);
+      display:flex;align-items:center;justify-content:center;
+      z-index:100;opacity:0;pointer-events:none;transition:opacity .15s
+    }
+    .modal-overlay.open{opacity:1;pointer-events:auto}
+    .modal{
+      width:500px;max-width:92vw;
+      background:var(--mid);border:1px solid var(--border-mid);
+      border-radius:8px;display:flex;flex-direction:column;overflow:hidden
+    }
+    .modal-head{
+      padding:.9rem 1.25rem;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;flex-shrink:0
+    }
+    .modal-title{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+    .modal-close{background:none;border:none;color:var(--dim);font-size:1.1rem;cursor:pointer;line-height:1;padding:.15rem .3rem}
+    .modal-close:hover{color:var(--bone)}
+    .modal-body{padding:1rem 1.25rem;display:flex;flex-direction:column;gap:.65rem}
+    .modal-hint{font-size:.6rem;color:var(--dim);line-height:1.65}
+    .modal-hint code{font-family:monospace;font-size:.58rem;color:var(--accent);background:rgba(216,228,106,.08);padding:.1rem .3rem;border-radius:2px}
+    .modal-ta{
+      width:100%;height:240px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--border);border-radius:4px;
+      color:var(--bone);font-family:monospace;font-size:.65rem;
+      padding:.65rem;outline:none;resize:vertical;line-height:1.6
+    }
+    .modal-ta:focus{border-color:rgba(216,228,106,.35)}
+    .modal-foot{
+      padding:.75rem 1.25rem;border-top:1px solid var(--border);
+      display:flex;justify-content:flex-end;gap:.5rem
+    }
   </style>
 </head>
 <body>
@@ -192,6 +227,7 @@
     </div>
     <div class="header-actions">
       <button class="btn-ghost" onclick="document.getElementById('file-inp').click()">Open Template</button>
+      <button class="btn-ghost" onclick="openModal()">Load from Claude</button>
       <button class="btn-primary" id="export-btn" disabled onclick="exportSite()">Export Site</button>
     </div>
   </header>
@@ -245,6 +281,27 @@
 </div>
 
 <input type="file" id="file-inp" accept=".html" style="display:none" onchange="loadFile(this.files[0])">
+
+<!-- Load from Claude modal -->
+<div class="modal-overlay" id="claude-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">Load from Claude</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-hint">
+        Ask Claude to write copy for your client, then paste the JSON it gives you here. All matching fields fill instantly.<br><br>
+        Keys should match field labels — e.g. <code>"main headline"</code>, <code>"phone"</code>, <code>"service 1 name"</code>. Also accepts <code>```json</code> code blocks.
+      </div>
+      <textarea class="modal-ta" id="claude-json" placeholder='{"eyebrow":"Salmon Arm Cleaning","main headline":"Your Home, Gleaming Clean","phone":"250-253-1686",...}'></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="loadFromClaude()">Fill Fields</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ── STATE ────────────────────────────────────────────────────────────────────
@@ -778,6 +835,56 @@ document.addEventListener('drop', e => {
   const f = e.dataTransfer.files[0];
   if (f?.name.endsWith('.html')) loadFile(f);
 });
+
+// ── LOAD FROM CLAUDE ─────────────────────────────────────────────────────────
+function openModal() {
+  document.getElementById('claude-modal').classList.add('open');
+  setTimeout(() => document.getElementById('claude-json').focus(), 50);
+}
+function closeModal() {
+  document.getElementById('claude-modal').classList.remove('open');
+}
+function loadFromClaude() {
+  const raw = document.getElementById('claude-json').value.trim();
+  let data;
+  try {
+    const cleaned = raw.replace(/^```json?\s*/,'').replace(/\s*```$/,'');
+    data = JSON.parse(cleaned);
+  } catch(e) {
+    alert('Invalid JSON. Copy the exact block Claude gives you and try again.');
+    return;
+  }
+
+  function norm(s) { return s.toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim(); }
+
+  let filled = 0;
+  for (const f of fields) {
+    if (f.type === 'image') continue;
+    const lbl = norm(f.label);
+    const sec = norm(f.section + ' ' + f.label);
+
+    for (const [key, val] of Object.entries(data)) {
+      if (!val) continue;
+      const k = norm(key);
+      if (k === lbl || k === sec || lbl.includes(k) || k.includes(lbl)) {
+        f.value = String(val);
+        const el = document.getElementById(f.id);
+        if (el) { el.value = String(val); el.classList.add('autofilled'); }
+        filled++;
+        break;
+      }
+    }
+  }
+
+  if (filled) {
+    refresh();
+    closeModal();
+    document.getElementById('claude-json').value = '';
+    setStatus(`Loaded from Claude — filled ${filled} fields.`, 'success');
+  } else {
+    alert('No fields matched. Make sure you have a template loaded and keys match field labels.');
+  }
+}
 
 // ── UTILS ─────────────────────────────────────────────────────────────────────
 function escHtml(s) {
