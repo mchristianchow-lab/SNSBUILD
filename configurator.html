@@ -562,7 +562,7 @@
 // ── SUPABASE ──────────────────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://pxwydcmgkyoledfsxdio.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_6AgzlnVl8JkT7Id8DFEBAQ_XH0tkUG_';
-const SUPABASE_BUCKET = 'client-sites';
+const SUPABASE_BUCKET = 'Client Sites';
 
 // ── PALETTES — 100 total, 5 tabs × 20 ────────────────────────────────────────
 const PAL_TABS = ['dark','light','tinted','earth','vivid'];
@@ -1963,7 +1963,7 @@ async function handleSubmit() {
     const fileName = `${slug}-${Date.now()}.html`;
     let siteUrl = 'Upload failed — request file from client';
     try {
-      const up = await fetch(`${SUPABASE_URL}/storage/v1/object/${SUPABASE_BUCKET}/${fileName}`, {
+      const up = await fetch(`${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(SUPABASE_BUCKET)}/${fileName}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${SUPABASE_KEY}`,
@@ -1973,7 +1973,7 @@ async function handleSubmit() {
         body: html,
       });
       if (up.ok) {
-        siteUrl = `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${fileName}`;
+        siteUrl = `${SUPABASE_URL}/storage/v1/object/public/${encodeURIComponent(SUPABASE_BUCKET)}/${fileName}`;
       } else {
         const errBody = await up.json().catch(() => ({}));
         console.error('Supabase upload failed:', up.status, JSON.stringify(errBody));
