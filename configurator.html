@@ -2015,8 +2015,10 @@ function generateClientSite() {
   <a href="#contact" style="${btnBase};background:${S.bg};color:${S.ac1};border:none;border-radius:${btnR}">${C.ctaBtn}</a>
 </section>`;
 
+  const fpActive = S.quickPairing || null;
   return `<!DOCTYPE html>
 <html lang="en">
+<!-- SNS-DESIGN: {"palId":"${S.palette?.id||''}","bg":"${S.bg}","tx":"${S.tx}","ac":"${S.ac1}","fpId":"${fpActive?.id||''}"} -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
