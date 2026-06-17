@@ -1974,8 +1974,11 @@ async function handleSubmit() {
       });
       if (up.ok) {
         siteUrl = `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${fileName}`;
+      } else {
+        const errBody = await up.json().catch(() => ({}));
+        console.error('Supabase upload failed:', up.status, JSON.stringify(errBody));
       }
-    } catch(_) {}
+    } catch(e) { console.error('Supabase upload exception:', e); }
 
     // 3. Send brief + download link via Web3Forms
     btn.textContent = 'Sending brief…';
