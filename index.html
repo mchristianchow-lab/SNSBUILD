@@ -11,7 +11,18 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SNS BUILD — Professional Websites, Delivered in a Week</title>
+  <title>SNS Build — Professional Websites for BC Businesses</title>
+  <meta name="description" content="SNS Build designs fast, custom websites for local businesses across British Columbia. Flat-rate pricing, delivered in one week. Start free with our online configurator.">
+  <link rel="canonical" href="https://snsbuild.com/">
+  <meta property="og:title" content="SNS Build — Professional Websites for BC Businesses">
+  <meta property="og:description" content="SNS Build designs fast, custom websites for local businesses across British Columbia. Flat-rate pricing, delivered in one week. Start free with our online configurator.">
+  <meta property="og:url" content="https://snsbuild.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://snsbuild.com/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SNS Build — Professional Websites for BC Businesses">
+  <meta name="twitter:description" content="Custom websites for BC local businesses. Flat-rate, delivered in a week.">
+  <meta name="twitter:image" content="https://snsbuild.com/og-image.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
@@ -644,6 +655,44 @@ const ro = new IntersectionObserver(entries => {
   });
 },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://snsbuild.com/#website",
+      "url": "https://snsbuild.com/",
+      "name": "SNS Build",
+      "description": "Professional websites for BC businesses"
+    },
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://snsbuild.com/#business",
+      "name": "SNS Build",
+      "url": "https://snsbuild.com",
+      "email": "hello@snsbuild.ca",
+      "description": "Custom website design for local businesses across British Columbia. Flat-rate pricing, delivered in one week.",
+      "areaServed": {
+        "@type": "State",
+        "name": "British Columbia"
+      },
+      "serviceType": "Web Design",
+      "priceRange": "$$"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://snsbuild.com/#service",
+      "name": "Custom Website Design",
+      "provider": {"@id": "https://snsbuild.com/#business"},
+      "areaServed": "British Columbia, Canada",
+      "description": "Custom website design and development for BC local businesses. Includes design, development, hosting setup, and domain configuration.",
+      "url": "https://snsbuild.com/"
+    }
+  ]
+}
 </script>
 
 </body>
