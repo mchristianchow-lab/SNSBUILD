@@ -85,14 +85,14 @@
     .pal-tile:hover{filter:brightness(1.2)}
     .pal-tile.active{border-color:var(--accent)}
     .pal-bar{display:flex;height:30px}
-    .pal-bg-s{flex:2}.pal-ac-s{flex:1}
+    .pal-bg-s{flex:2}.pal-su-s{flex:1}.pal-ac-s{flex:1}
     .pal-name{font-size:.48rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);display:block;padding:.3rem .4rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .pal-tile.active .pal-name{color:var(--accent)}
 
     /* COLOR FINE-TUNE */
     .color-fine{margin-top:1px;border:1px solid var(--border);border-top:none;padding:1rem;background:var(--mid)}
     .color-fine-label{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--dim);margin-bottom:.75rem;opacity:.6}
-    .cp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+    .cp-row{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem}
     .cp-slot{display:flex;flex-direction:column;gap:.4rem}
     .cp-swatch{position:relative;width:100%;aspect-ratio:1;cursor:pointer;border:1px solid rgba(255,255,255,.08);transition:border-color .15s}
     .cp-swatch:hover{border-color:rgba(255,255,255,.3)}
@@ -158,6 +158,10 @@
 
     /* FONT SECTION */
     .font-pairings-label{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--dim);margin-bottom:.6rem;opacity:.6}
+    .font-mood-tabs{display:flex;border:1px solid var(--border);border-bottom:none;margin-top:.75rem}
+    .fq-tab{flex:1;padding:.5rem .3rem;text-align:center;cursor:pointer;font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);background:var(--mid);border-bottom:2px solid transparent;transition:all .15s;user-select:none}
+    .fq-tab:hover{background:var(--dark-card);color:var(--muted)}
+    .fq-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--black)}
     .font-quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem}
     .fq-tile{background:var(--mid);padding:.75rem .75rem .6rem;cursor:pointer;border:2px solid transparent;transition:all .15s;user-select:none}
     .fq-tile:hover{background:var(--dark-card)}
@@ -348,22 +352,28 @@
             <span class="cp-reset" onclick="resetColor('bg')">Reset</span>
           </div>
           <div class="cp-slot">
+            <div class="cp-swatch" id="sw-su"><input type="color" id="inp-su" oninput="onColorPick('su',this.value)"></div>
+            <input class="cp-hex" id="hex-su" maxlength="7" oninput="onHexType('su',this.value)">
+            <span class="cp-name">Surface</span>
+            <span class="cp-reset" onclick="resetColor('su')">Reset</span>
+          </div>
+          <div class="cp-slot">
             <div class="cp-swatch" id="sw-tx"><input type="color" id="inp-tx" oninput="onColorPick('tx',this.value)"></div>
             <input class="cp-hex" id="hex-tx" maxlength="7" oninput="onHexType('tx',this.value)">
             <span class="cp-name">Text</span>
             <span class="cp-reset" onclick="resetColor('tx')">Reset</span>
           </div>
           <div class="cp-slot">
-            <div class="cp-swatch" id="sw-ac1"><input type="color" id="inp-ac1" oninput="onColorPick('ac1',this.value)"></div>
-            <input class="cp-hex" id="hex-ac1" maxlength="7" oninput="onHexType('ac1',this.value)">
-            <span class="cp-name">Primary</span>
-            <span class="cp-reset" onclick="resetColor('ac1')">Reset</span>
+            <div class="cp-swatch" id="sw-hd"><input type="color" id="inp-hd" oninput="onColorPick('hd',this.value)"></div>
+            <input class="cp-hex" id="hex-hd" maxlength="7" oninput="onHexType('hd',this.value)">
+            <span class="cp-name">Headings</span>
+            <span class="cp-reset" onclick="resetColor('hd')">Reset</span>
           </div>
           <div class="cp-slot">
-            <div class="cp-swatch" id="sw-ac2"><input type="color" id="inp-ac2" oninput="onColorPick('ac2',this.value)"></div>
-            <input class="cp-hex" id="hex-ac2" maxlength="7" oninput="onHexType('ac2',this.value)">
-            <span class="cp-name">Secondary</span>
-            <span class="cp-reset" onclick="resetColor('ac2')">Reset</span>
+            <div class="cp-swatch" id="sw-ac1"><input type="color" id="inp-ac1" oninput="onColorPick('ac1',this.value)"></div>
+            <input class="cp-hex" id="hex-ac1" maxlength="7" oninput="onHexType('ac1',this.value)">
+            <span class="cp-name">Accent</span>
+            <span class="cp-reset" onclick="resetColor('ac1')">Reset</span>
           </div>
         </div>
       </div>
@@ -385,7 +395,8 @@
       </div>
 
       <!-- Quick pairings -->
-      <div class="font-pairings-label">Quick pairings</div>
+      <div class="font-pairings-label" style="margin-bottom:0">Mood</div>
+      <div class="font-mood-tabs" id="font-mood-tabs"></div>
       <div class="font-quick-grid" id="font-quick-grid"></div>
 
       <!-- Custom pickers -->
@@ -665,117 +676,117 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const SUPABASE_BUCKET = 'Client Sites';
 
 // ── PALETTES — 100 total, 5 tabs × 20 ────────────────────────────────────────
-const PAL_TABS = ['dark','light','tinted','earth','vivid'];
+const PAL_TABS = ['neutral','earth','deep','bold','pastel'];
 const PALS = {
-  dark:[
-    {id:'dark-studio',  name:'Dark Studio',    bg:'#0A0A0A',tx:'#E8E0D0',ac:'#D8E46A'},
-    {id:'midnight',     name:'Midnight',       bg:'#05050A',tx:'#E8E8F5',ac:'#8B5CF6'},
-    {id:'noir',         name:'Noir',           bg:'#0A0A0A',tx:'#F5F5F5',ac:'#EF4444'},
-    {id:'carbon',       name:'Carbon',         bg:'#111111',tx:'#CCCCCC',ac:'#F97316'},
-    {id:'obsidian',     name:'Obsidian',       bg:'#0D0D14',tx:'#E0E0F5',ac:'#06B6D4'},
-    {id:'onyx',         name:'Onyx',           bg:'#0F0F0F',tx:'#EDE8E0',ac:'#F59E0B'},
-    {id:'pitch',        name:'Pitch',          bg:'#090909',tx:'#F0F0F0',ac:'#EC4899'},
-    {id:'coal',         name:'Coal',           bg:'#141414',tx:'#DDDDD5',ac:'#10B981'},
-    {id:'void',         name:'Void',           bg:'#060610',tx:'#E4E0FF',ac:'#818CF8'},
-    {id:'shadow',       name:'Shadow',         bg:'#080F08',tx:'#E0EEE0',ac:'#86EFAC'},
-    {id:'deep-navy',    name:'Deep Navy',      bg:'#070810',tx:'#E0E2F0',ac:'#4FC3F7'},
-    {id:'volcanic',     name:'Volcanic',       bg:'#0F0A06',tx:'#EEE4DC',ac:'#FF8A65'},
-    {id:'dark-amethyst',name:'Amethyst',       bg:'#0C0810',tx:'#EAE2F0',ac:'#CE93D8'},
-    {id:'blackout',     name:'Blackout',       bg:'#020202',tx:'#FFFFFF', ac:'#FFFFFF'},
-    {id:'night-sky',    name:'Night Sky',      bg:'#08080F',tx:'#E8E8F8',ac:'#90CAF9'},
-    {id:'dark-maroon',  name:'Dark Maroon',    bg:'#100806',tx:'#F0E6E2',ac:'#EF9A9A'},
-    {id:'espresso',     name:'Espresso',       bg:'#120E0A',tx:'#EEE8E0',ac:'#D4A96E'},
-    {id:'gunmetal',     name:'Gunmetal',       bg:'#0E1218',tx:'#D8E0E8',ac:'#7098B8'},
-    {id:'dark-plum',    name:'Dark Plum',      bg:'#0E0810',tx:'#EAE0F0',ac:'#B090D0'},
-    {id:'charcoal',     name:'Charcoal',       bg:'#181818',tx:'#E0E0E0',ac:'#AAAAAA'},
-  ],
-  light:[
-    {id:'clean-white',  name:'Clean White',    bg:'#FAFAFA',tx:'#0F0F0F',ac:'#2563EB'},
-    {id:'ivory',        name:'Ivory',          bg:'#FAF8F4',tx:'#1A1410',ac:'#B45309'},
-    {id:'paper',        name:'Paper',          bg:'#F5F5F0',tx:'#111111',ac:'#059669'},
-    {id:'snow',         name:'Snow',           bg:'#FFFFFF',tx:'#0A0A0A',ac:'#DC2626'},
-    {id:'linen',        name:'Linen',          bg:'#F4EFE8',tx:'#2A1F14',ac:'#9333EA'},
-    {id:'chalk',        name:'Chalk',          bg:'#F8F8F8',tx:'#1A1A1A',ac:'#0EA5E9'},
-    {id:'cream',        name:'Cream',          bg:'#FFF8F0',tx:'#1C1008',ac:'#EA580C'},
-    {id:'pearl',        name:'Pearl',          bg:'#F6F6F8',tx:'#12121A',ac:'#6366F1'},
-    {id:'milk',         name:'Milk',           bg:'#FDFDF9',tx:'#1A1A10',ac:'#65A30D'},
-    {id:'birch',        name:'Birch',          bg:'#F2EDE6',tx:'#201A14',ac:'#E11D48'},
-    {id:'mint-white',   name:'Mint White',     bg:'#F0FAF6',tx:'#102018',ac:'#2DB37D'},
-    {id:'lavender-wh',  name:'Lavender',       bg:'#F4F0FA',tx:'#1A1028',ac:'#8B5CF6'},
-    {id:'peach',        name:'Peach',          bg:'#FAF0EC',tx:'#281810',ac:'#E06050'},
-    {id:'sky-white',    name:'Sky White',      bg:'#EFF8FC',tx:'#081824',ac:'#0EA5E9'},
-    {id:'rose-white',   name:'Rose White',     bg:'#FAF0F2',tx:'#280C12',ac:'#E07090'},
-    {id:'sage-white',   name:'Sage White',     bg:'#F0F5F0',tx:'#101A12',ac:'#558B6E'},
-    {id:'butter',       name:'Butter',         bg:'#FAF8E8',tx:'#201C08',ac:'#D4A017'},
-    {id:'blush',        name:'Blush',          bg:'#FDF0F0',tx:'#240E0E',ac:'#C0505A'},
-    {id:'cloud',        name:'Cloud',          bg:'#F8F8FC',tx:'#10101C',ac:'#7C6FCD'},
-    {id:'seashell',     name:'Seashell',       bg:'#FEF6F0',tx:'#1E1208',ac:'#E8956A'},
-  ],
-  tinted:[
-    {id:'ocean',        name:'Ocean',          bg:'#0D1B2A',tx:'#DFF0FD',ac:'#38BDF8'},
-    {id:'forest',       name:'Forest',         bg:'#0F1F14',tx:'#E2F5E4',ac:'#4ADE80'},
-    {id:'slate',        name:'Slate',          bg:'#1E293B',tx:'#F1F5F9',ac:'#F59E0B'},
-    {id:'wine',         name:'Wine',           bg:'#1A0A0F',tx:'#F5E8EC',ac:'#FB7185'},
-    {id:'cobalt',       name:'Cobalt',         bg:'#0A1628',tx:'#EDF4FF',ac:'#3B82F6'},
-    {id:'sage-dk',      name:'Sage',           bg:'#151F15',tx:'#E8F0E8',ac:'#86EFAC'},
-    {id:'plum',         name:'Plum',           bg:'#180A1F',tx:'#F3E8FF',ac:'#C084FC'},
-    {id:'dusk',         name:'Dusk',           bg:'#1A1528',tx:'#E8E4F8',ac:'#A78BFA'},
-    {id:'smoke',        name:'Smoke',          bg:'#1C1C20',tx:'#E8E8EE',ac:'#94A3B8'},
-    {id:'ember',        name:'Ember',          bg:'#1C1008',tx:'#F5ECD4',ac:'#FB923C'},
-    {id:'deep-teal',    name:'Deep Teal',      bg:'#0A2020',tx:'#D8F0EE',ac:'#4CC8B8'},
-    {id:'midnight-bl',  name:'Midnight Blue',  bg:'#080E20',tx:'#D8E0F0',ac:'#5080E0'},
-    {id:'dark-jade',    name:'Dark Jade',      bg:'#081808',tx:'#D8F0DC',ac:'#40C860'},
-    {id:'burgundy-dk',  name:'Burgundy',       bg:'#200808',tx:'#F0D8D8',ac:'#E03048'},
-    {id:'peacock',      name:'Peacock',        bg:'#082030',tx:'#D8EEF8',ac:'#40A8D8'},
-    {id:'aubergine',    name:'Aubergine',      bg:'#18082C',tx:'#EDD8F8',ac:'#A04CD0'},
-    {id:'merlot',       name:'Merlot',         bg:'#200810',tx:'#F0D8E0',ac:'#D04060'},
-    {id:'dark-amber',   name:'Dark Amber',     bg:'#1C1004',tx:'#F5ECD4',ac:'#E8A840'},
-    {id:'hunter',       name:'Hunter',         bg:'#0A1A08',tx:'#DCF0D8',ac:'#4CAF50'},
-    {id:'indigo-night', name:'Indigo Night',   bg:'#10102A',tx:'#E0E0F8',ac:'#6060E0'},
+  neutral:[
+    {id:'studio-white', name:'Studio White',   bg:'#FAFAFA',su:'#F2F2F2',tx:'#1F1F1F',hd:'#0A0A0A',ac:'#2563EB'},
+    {id:'warm-canvas',  name:'Warm Canvas',    bg:'#FAF8F4',su:'#F0EBE2',tx:'#1E1810',hd:'#0F0B06',ac:'#B45309'},
+    {id:'fog',          name:'Fog',            bg:'#F5F6F8',su:'#EAECF0',tx:'#1A1E24',hd:'#0C1018',ac:'#3B82F6'},
+    {id:'ivory',        name:'Ivory',          bg:'#FFFCF5',su:'#F5EEE0',tx:'#1C1608',hd:'#0F0C04',ac:'#D97706'},
+    {id:'pearl',        name:'Pearl',          bg:'#F6F6F8',su:'#EBEBF0',tx:'#14141E',hd:'#080814',ac:'#6366F1'},
+    {id:'bone',         name:'Bone',           bg:'#F4F0E8',su:'#EAE5D8',tx:'#1E1A12',hd:'#100E08',ac:'#92400E'},
+    {id:'parchment',    name:'Parchment',      bg:'#F5EFD8',su:'#EDE7C8',tx:'#1C1608',hd:'#100C04',ac:'#A16207'},
+    {id:'greige',       name:'Greige',         bg:'#EDE8E0',su:'#E2DDD4',tx:'#1C1814',hd:'#0E0C08',ac:'#78716C'},
+    {id:'mist',         name:'Mist',           bg:'#EFF3F6',su:'#E4EAF2',tx:'#141E28',hd:'#0A1420',ac:'#0EA5E9'},
+    {id:'rose-smoke',   name:'Rose Smoke',     bg:'#FAF4F4',su:'#F2E8E8',tx:'#241010',hd:'#180808',ac:'#E11D48'},
+    {id:'sage-mist',    name:'Sage Mist',      bg:'#F2F6F2',su:'#E6EEE6',tx:'#101810',hd:'#081008',ac:'#16A34A'},
+    {id:'cloud',        name:'Cloud',          bg:'#F8F8FC',su:'#EDEDF5',tx:'#10101C',hd:'#080814',ac:'#7C6FCD'},
+    {id:'cream',        name:'Cream',          bg:'#FFF8F0',su:'#F5E8DE',tx:'#1C1008',hd:'#100804',ac:'#EA580C'},
+    {id:'chalk',        name:'Chalk',          bg:'#F8F8F8',su:'#EEEEEE',tx:'#181818',hd:'#0A0A0A',ac:'#059669'},
+    {id:'snow',         name:'Snow',           bg:'#FFFFFF',su:'#F5F5F5',tx:'#111111',hd:'#000000',ac:'#DC2626'},
+    {id:'warm-white',   name:'Warm White',     bg:'#FDF9F0',su:'#F5EDE0',tx:'#1A1608',hd:'#0E0C04',ac:'#CA8A04'},
+    {id:'slate-white',  name:'Slate White',    bg:'#F0F4F8',su:'#E4EBF2',tx:'#0E1824',hd:'#061018',ac:'#0284C7'},
+    {id:'linen',        name:'Linen',          bg:'#F4EFE8',su:'#EAE4DC',tx:'#201810',hd:'#140C06',ac:'#9333EA'},
+    {id:'silver',       name:'Silver',         bg:'#F2F3F5',su:'#E6E8EC',tx:'#181C22',hd:'#0C1018',ac:'#475569'},
+    {id:'graphite-lt',  name:'Graphite',       bg:'#EBEBEB',su:'#E0E0E0',tx:'#141414',hd:'#080808',ac:'#64748B'},
   ],
   earth:[
-    {id:'warm-earth',   name:'Warm Earth',     bg:'#F0EBE0',tx:'#2A1F14',ac:'#C0714A'},
-    {id:'rust',         name:'Rust',           bg:'#F5EBE0',tx:'#2A1008',ac:'#B45309'},
-    {id:'terra',        name:'Terra',          bg:'#EDE8E0',tx:'#1E1510',ac:'#92400E'},
-    {id:'dune',         name:'Dune',           bg:'#F0EDEA',tx:'#1A1614',ac:'#78716C'},
-    {id:'clay',         name:'Clay',           bg:'#EEE6DD',tx:'#241810',ac:'#A16207'},
-    {id:'moss',         name:'Moss',           bg:'#E8EDE2',tx:'#141C10',ac:'#4D7C0F'},
-    {id:'ash',          name:'Ash',            bg:'#ECEAE8',tx:'#1A1816',ac:'#6B7280'},
-    {id:'stone',        name:'Stone',          bg:'#E8E4E0',tx:'#1C1814',ac:'#57534E'},
-    {id:'bone-pal',     name:'Bone',           bg:'#F2EEE6',tx:'#1E1A14',ac:'#C2A96A'},
-    {id:'mink',         name:'Mink',           bg:'#EDE8E4',tx:'#241E1A',ac:'#9C7A6A'},
-    {id:'desert',       name:'Desert Sand',    bg:'#F5EDDC',tx:'#30200C',ac:'#D4903C'},
-    {id:'adobe',        name:'Adobe',          bg:'#F2E8DC',tx:'#281808',ac:'#B8704A'},
-    {id:'oatmeal',      name:'Oatmeal',        bg:'#F5F2EA',tx:'#1C1A12',ac:'#9C8C5C'},
-    {id:'latte',        name:'Latte',          bg:'#F4EDE2',tx:'#201A10',ac:'#B89068'},
-    {id:'hazel',        name:'Hazel',          bg:'#EDE6D8',tx:'#1E1810',ac:'#8C7050'},
-    {id:'khaki',        name:'Khaki',          bg:'#EEEADE',tx:'#1C1A10',ac:'#8C8450'},
-    {id:'wheat',        name:'Wheat',          bg:'#F8F2E0',tx:'#201C0C',ac:'#C0A04A'},
-    {id:'parchment',    name:'Parchment',      bg:'#F4EED8',tx:'#1C180A',ac:'#A08840'},
-    {id:'hemp',         name:'Hemp',           bg:'#F0EAD8',tx:'#1A160A',ac:'#8C7840'},
-    {id:'flax',         name:'Flax',           bg:'#F2ECD6',tx:'#1E1A0A',ac:'#B8A848'},
+    {id:'terracotta',   name:'Terracotta',     bg:'#F2E8E0',su:'#E6D8CC',tx:'#2A1A0E',hd:'#1A0E06',ac:'#C0714A'},
+    {id:'rust',         name:'Rust',           bg:'#F5EBE0',su:'#E8DDD0',tx:'#2A1008',hd:'#180A04',ac:'#B45309'},
+    {id:'adobe',        name:'Adobe',          bg:'#F2E8DC',su:'#E6DCD0',tx:'#281808',hd:'#180E04',ac:'#B8704A'},
+    {id:'mesa',         name:'Mesa',           bg:'#EEE4DC',su:'#E2D8CE',tx:'#241810',hd:'#160E06',ac:'#A0522D'},
+    {id:'dune',         name:'Dune',           bg:'#F0EDEA',su:'#E4E0DC',tx:'#1A1614',hd:'#100E0C',ac:'#78716C'},
+    {id:'desert-sand',  name:'Desert Sand',    bg:'#F5EDDC',su:'#ECE2D0',tx:'#30200C',hd:'#201408',ac:'#D4903C'},
+    {id:'oatmeal',      name:'Oatmeal',        bg:'#F5F2EA',su:'#EDE8DC',tx:'#1C1A12',hd:'#100E08',ac:'#9C8C5C'},
+    {id:'moss',         name:'Moss',           bg:'#E8EDE2',su:'#DDE6D6',tx:'#141C10',hd:'#0C1208',ac:'#4D7C0F'},
+    {id:'sage-earth',   name:'Sage',           bg:'#EAF0E8',su:'#DEE8DA',tx:'#141C12',hd:'#0C1408',ac:'#558B6E'},
+    {id:'olive',        name:'Olive',          bg:'#ECEADC',su:'#E2E0D2',tx:'#1C1A0C',hd:'#101008',ac:'#8C8450'},
+    {id:'clay',         name:'Clay',           bg:'#EEE6DD',su:'#E6DDD2',tx:'#241810',hd:'#160E06',ac:'#A16207'},
+    {id:'hazel',        name:'Hazel',          bg:'#EDE6D8',su:'#E2DDD0',tx:'#1E1810',hd:'#120C06',ac:'#8C7050'},
+    {id:'wheat',        name:'Wheat',          bg:'#F8F2E0',su:'#EEE8D4',tx:'#201C0C',hd:'#140E04',ac:'#C0A04A'},
+    {id:'hemp',         name:'Hemp',           bg:'#F0EAD8',su:'#E6E0D0',tx:'#1A160A',hd:'#100C04',ac:'#8C7840'},
+    {id:'tawny',        name:'Tawny',          bg:'#EEE4D6',su:'#E4DAC8',tx:'#221608',hd:'#160E04',ac:'#9C6020'},
+    {id:'ochre',        name:'Ochre',          bg:'#F0E8D4',su:'#E8DEC8',tx:'#201808',hd:'#140E04',ac:'#C4882A'},
+    {id:'bark',         name:'Bark',           bg:'#EAE0D0',su:'#E0D4C0',tx:'#1C1408',hd:'#100A04',ac:'#8B5E3C'},
+    {id:'ash',          name:'Ash',            bg:'#ECEAE8',su:'#E2E0DC',tx:'#1A1816',hd:'#0E0C0A',ac:'#6B7280'},
+    {id:'stone',        name:'Stone',          bg:'#E8E4E0',su:'#DEDAD6',tx:'#1C1814',hd:'#100E0A',ac:'#57534E'},
+    {id:'flint',        name:'Flint',          bg:'#E4E0DA',su:'#DAD6CE',tx:'#181410',hd:'#0C0A08',ac:'#6B5E52'},
   ],
-  vivid:[
-    {id:'neon-noir',    name:'Neon Noir',      bg:'#0A0A0A',tx:'#FFFFFF',ac:'#00FF88'},
-    {id:'electric',     name:'Electric Night', bg:'#050514',tx:'#E8E8FF',ac:'#00BFFF'},
-    {id:'hot-noir',     name:'Hot Noir',       bg:'#0A0006',tx:'#FFE0E8',ac:'#FF0066'},
-    {id:'cyber',        name:'Cyber',          bg:'#0A0F0A',tx:'#E0FFE0',ac:'#39FF14'},
-    {id:'lava',         name:'Lava',           bg:'#150500',tx:'#FFE8E0',ac:'#FF4400'},
-    {id:'ultraviolet',  name:'Ultraviolet',    bg:'#0A000F',tx:'#F0E0FF',ac:'#9900FF'},
-    {id:'solar',        name:'Solar',          bg:'#0F0F00',tx:'#FFFFF0',ac:'#FFD700'},
-    {id:'azure-wave',   name:'Azure Wave',     bg:'#00050F',tx:'#E0EEFF',ac:'#0066FF'},
-    {id:'acid',         name:'Acid',           bg:'#050F00',tx:'#E8FFE0',ac:'#AAFF00'},
-    {id:'coral-reef',   name:'Coral Reef',     bg:'#0F0500',tx:'#FFE8E0',ac:'#FF6B35'},
-    {id:'magenta-wave', name:'Magenta Wave',   bg:'#0F000F',tx:'#FFE0FF',ac:'#FF00CC'},
-    {id:'cyan-storm',   name:'Cyan Storm',     bg:'#000F0F',tx:'#E0FFFF',ac:'#00FFEE'},
-    {id:'ruby',         name:'Ruby Red',       bg:'#0F0000',tx:'#FFE0E0',ac:'#FF1744'},
-    {id:'poison',       name:'Poison',         bg:'#0A0F02',tx:'#EAFFE0',ac:'#76FF03'},
-    {id:'aurora',       name:'Aurora',         bg:'#060614',tx:'#E8F0FF',ac:'#7C4DFF'},
-    {id:'sunset',       name:'Sunset',         bg:'#140600',tx:'#FFE8D8',ac:'#FF6D00'},
-    {id:'plasma',       name:'Plasma',         bg:'#0A000A',tx:'#F0E0FF',ac:'#D500F9'},
-    {id:'glacier',      name:'Glacier',        bg:'#000A10',tx:'#E0F4FF',ac:'#00B0FF'},
-    {id:'volcano',      name:'Volcano',        bg:'#140200',tx:'#FFECE0',ac:'#FF3D00'},
-    {id:'matrix',       name:'Matrix',         bg:'#000A00',tx:'#E0FFE8',ac:'#00E676'},
+  deep:[
+    {id:'midnight-navy',name:'Midnight Navy',  bg:'#070810',su:'#0E1020',tx:'#D8DCF0',hd:'#EEEEFF',ac:'#4FC3F7'},
+    {id:'forest-night', name:'Forest Night',   bg:'#0A1A0A',su:'#101C10',tx:'#C8EAD0',hd:'#EEFFEE',ac:'#4ADE80'},
+    {id:'obsidian',     name:'Obsidian',       bg:'#0A0A0A',su:'#141414',tx:'#CCCCCC',hd:'#F0F0F0',ac:'#D8E46A'},
+    {id:'deep-plum',    name:'Deep Plum',      bg:'#120818',su:'#1C1028',tx:'#E0D4F0',hd:'#F4E8FF',ac:'#C084FC'},
+    {id:'charcoal',     name:'Charcoal',       bg:'#181614',su:'#221E1A',tx:'#DEDAD6',hd:'#F0EDE8',ac:'#E8A840'},
+    {id:'slate-deep',   name:'Slate',          bg:'#1E293B',su:'#263344',tx:'#CBD5E1',hd:'#F1F5F9',ac:'#38BDF8'},
+    {id:'burgundy',     name:'Burgundy',       bg:'#1A0810',su:'#241018',tx:'#ECD8E0',hd:'#FFE8F0',ac:'#FB7185'},
+    {id:'deep-teal',    name:'Deep Teal',      bg:'#0A1E1E',su:'#102828',tx:'#C8E8E4',hd:'#E8FFFC',ac:'#2DD4BF'},
+    {id:'espresso',     name:'Espresso',       bg:'#120E0A',su:'#1C1610',tx:'#E4DED6',hd:'#FFF8F0',ac:'#D4A96E'},
+    {id:'gunmetal',     name:'Gunmetal',       bg:'#0E1218',su:'#161C24',tx:'#C8D4E0',hd:'#EAF0F8',ac:'#7098B8'},
+    {id:'ink',          name:'Ink',            bg:'#08080F',su:'#10101A',tx:'#D4D4F0',hd:'#EEEEFF',ac:'#818CF8'},
+    {id:'volcanic',     name:'Volcanic',       bg:'#0F0A06',su:'#181208',tx:'#E4D8CC',hd:'#FFF0E4',ac:'#FF8A65'},
+    {id:'abyss',        name:'Abyss',          bg:'#050508',su:'#0C0C14',tx:'#DCDCE8',hd:'#F0F0FF',ac:'#A78BFA'},
+    {id:'merlot',       name:'Merlot',         bg:'#200810',su:'#2C1018',tx:'#EAD0D8',hd:'#FFE8F0',ac:'#D04060'},
+    {id:'dark-jade',    name:'Dark Jade',      bg:'#081A0A',su:'#0E2010',tx:'#C8ECD0',hd:'#E8FFEC',ac:'#40C860'},
+    {id:'cobalt-night', name:'Cobalt Night',   bg:'#0A1628',su:'#102030',tx:'#D8E8F8',hd:'#F8FCFF',ac:'#3B82F6'},
+    {id:'aubergine',    name:'Aubergine',      bg:'#18082C',su:'#201040',tx:'#E4CCF4',hd:'#F8E8FF',ac:'#A04CD0'},
+    {id:'carbon',       name:'Carbon',         bg:'#111111',su:'#1A1A1A',tx:'#CCCCCC',hd:'#F0F0F0',ac:'#F97316'},
+    {id:'caviar',       name:'Caviar',         bg:'#080808',su:'#101010',tx:'#CCB8A8',hd:'#F0E4D8',ac:'#C8A86A'},
+    {id:'storm',        name:'Storm',          bg:'#141C24',su:'#1C2830',tx:'#C8D8E8',hd:'#ECF4FF',ac:'#60A0D0'},
+  ],
+  bold:[
+    {id:'crimson',      name:'Crimson',        bg:'#C0182A',su:'#A81020',tx:'#FFE8EC',hd:'#FFFFFF',ac:'#FFD700'},
+    {id:'cobalt-bold',  name:'Cobalt',         bg:'#1A3A8A',su:'#142E7A',tx:'#D8E8FF',hd:'#FFFFFF',ac:'#FFD700'},
+    {id:'emerald-bold', name:'Emerald',        bg:'#006B48',su:'#005838',tx:'#D0F5E8',hd:'#FFFFFF',ac:'#FFD700'},
+    {id:'saffron',      name:'Saffron',        bg:'#F59E0B',su:'#E08A00',tx:'#1C1000',hd:'#0A0800',ac:'#1A1A1A'},
+    {id:'violet-bold',  name:'Violet',         bg:'#5B21B6',su:'#4A18A0',tx:'#EEE4FF',hd:'#FFFFFF',ac:'#FCD34D'},
+    {id:'tangerine',    name:'Tangerine',      bg:'#E8500A',su:'#D04000',tx:'#FFF4EE',hd:'#FFFFFF',ac:'#0A0A0A'},
+    {id:'electric',     name:'Electric',       bg:'#050514',su:'#0A0A24',tx:'#D8D8FF',hd:'#FFFFFF',ac:'#00BFFF'},
+    {id:'viva-magenta', name:'Viva Magenta',   bg:'#B5004A',su:'#9A003C',tx:'#FFE0EC',hd:'#FFFFFF',ac:'#FFD700'},
+    {id:'acid-noir',    name:'Acid Noir',      bg:'#0A0A0A',su:'#141414',tx:'#E8E8E8',hd:'#FFFFFF',ac:'#CCFF00'},
+    {id:'living-coral', name:'Living Coral',   bg:'#FF6B55',su:'#E85A44',tx:'#1A0808',hd:'#0A0404',ac:'#1A1A1A'},
+    {id:'royal',        name:'Royal',          bg:'#1C2FA0',su:'#162490',tx:'#D8E0FF',hd:'#FFFFFF',ac:'#FFD700'},
+    {id:'noir-lime',    name:'Noir Lime',      bg:'#0A0A0A',su:'#141414',tx:'#E8E8E8',hd:'#FFFFFF',ac:'#F5FF00'},
+    {id:'raspberry',    name:'Raspberry',      bg:'#C0184A',su:'#A81040',tx:'#FFE4F0',hd:'#FFFFFF',ac:'#FFD700'},
+    {id:'neon-noir',    name:'Neon Noir',      bg:'#080808',su:'#121212',tx:'#DADADA',hd:'#FFFFFF',ac:'#00FF88'},
+    {id:'fiesta',       name:'Fiesta',         bg:'#DD3022',su:'#C82818',tx:'#FFF0EE',hd:'#FFFFFF',ac:'#FFD700'},
+    {id:'ultramarine',  name:'Ultramarine',    bg:'#1A0878',su:'#140662',tx:'#D8D8FF',hd:'#FFFFFF',ac:'#00D4FF'},
+    {id:'pomegranate',  name:'Pomegranate',    bg:'#9B1A2A',su:'#861420',tx:'#FFE4E8',hd:'#FFFFFF',ac:'#FFD700'},
+    {id:'noir-green',   name:'Noir Green',     bg:'#0A0A0A',su:'#141414',tx:'#DADADA',hd:'#FFFFFF',ac:'#39FF14'},
+    {id:'indigo-bold',  name:'Indigo',         bg:'#3730A3',su:'#2D2694',tx:'#E4E6FF',hd:'#FFFFFF',ac:'#FCD34D'},
+    {id:'punch',        name:'Punch',          bg:'#E01060',su:'#C80050',tx:'#FFE8F4',hd:'#FFFFFF',ac:'#FFD700'},
+  ],
+  pastel:[
+    {id:'blush-rose',   name:'Blush Rose',     bg:'#FDF0F2',su:'#F5E4E8',tx:'#2A1218',hd:'#1A080E',ac:'#E07090'},
+    {id:'serenity',     name:'Serenity',       bg:'#F0F4FC',su:'#E4ECF8',tx:'#0E1428',hd:'#080E1E',ac:'#6B8EC8'},
+    {id:'mint-pastel',  name:'Mint',           bg:'#F0FCF8',su:'#E4F5EE',tx:'#0E2018',hd:'#081410',ac:'#2DB37D'},
+    {id:'lavender',     name:'Lavender',       bg:'#F4F0FC',su:'#EAE4F5',tx:'#1A1028',hd:'#100818',ac:'#8B5CF6'},
+    {id:'butter',       name:'Butter',         bg:'#FFF8E8',su:'#F5EED8',tx:'#1C1804',hd:'#100E00',ac:'#D4A017'},
+    {id:'peach-fuzz',   name:'Peach Fuzz',     bg:'#FFF4EC',su:'#F8E8DC',tx:'#281408',hd:'#1A0C04',ac:'#E8906A'},
+    {id:'powder-blue',  name:'Powder Blue',    bg:'#EEF4FC',su:'#E2ECF8',tx:'#0E1828',hd:'#080E1E',ac:'#4A90D0'},
+    {id:'baby-lilac',   name:'Baby Lilac',     bg:'#F8F0FC',su:'#F0E4F8',tx:'#1A0C24',hd:'#100818',ac:'#9B6ED4'},
+    {id:'melon',        name:'Melon',          bg:'#FFF0EC',su:'#F8E4DF',tx:'#280C08',hd:'#1A0804',ac:'#E07060'},
+    {id:'sage-pastel',  name:'Sage',           bg:'#EEF5EE',su:'#E2EEE2',tx:'#101C10',hd:'#081408',ac:'#5A9A72'},
+    {id:'sky-pastel',   name:'Sky',            bg:'#EDF8FD',su:'#DFF0F8',tx:'#081A24',hd:'#041018',ac:'#0BA5D4'},
+    {id:'cotton-candy', name:'Cotton Candy',   bg:'#FDF4F8',su:'#F5E8F0',tx:'#240C18',hd:'#180810',ac:'#D060A0'},
+    {id:'honeydew',     name:'Honeydew',       bg:'#F4FBF4',su:'#E8F5E8',tx:'#0C1C0C',hd:'#081408',ac:'#3A8A52'},
+    {id:'soft-lemon',   name:'Soft Lemon',     bg:'#FFFEF0',su:'#F8F8E0',tx:'#1A1A04',hd:'#0C0C00',ac:'#C0A000'},
+    {id:'petal',        name:'Petal',          bg:'#FDF2F8',su:'#F5E4F0',tx:'#220C1A',hd:'#180810',ac:'#C060A0'},
+    {id:'mocha-mousse', name:'Mocha Mousse',   bg:'#F5EDE8',su:'#EDE4DC',tx:'#241410',hd:'#160C08',ac:'#A47764'},
+    {id:'seafoam',      name:'Seafoam',        bg:'#EEF8F5',su:'#E2F2EE',tx:'#0C1E18',hd:'#081410',ac:'#2A9E82'},
+    {id:'lilac-fog',    name:'Lilac Fog',      bg:'#F5F0F8',su:'#EDE4F5',tx:'#180E24',hd:'#100818',ac:'#9070C0'},
+    {id:'bluebell',     name:'Bluebell',       bg:'#F0F2FC',su:'#E4E8F8',tx:'#0E1230',hd:'#080C20',ac:'#5868C0'},
+    {id:'champagne',    name:'Champagne',      bg:'#FAF5EC',su:'#F2EAD8',tx:'#201A0C',hd:'#141008',ac:'#B89850'},
   ],
 };
 
@@ -1006,29 +1017,53 @@ const BODY_FONTS = [
   ]},
 ];
 
-const QUICK_PAIRINGS = [
-  {id:'reikna',     name:'Reikna',      hf:'Reikna',               bf:'Inter'},
-  {id:'whisper',    name:'Whisper',     hf:'Cormorant Garamond',   bf:'EB Garamond'},
-  {id:'terminal',   name:'Terminal',    hf:'Space Mono',           bf:'Space Mono'},
-  {id:'press',      name:'Press',       hf:'Abril Fatface',        bf:'Lora'},
-  {id:'broadsheet', name:'Broadsheet',  hf:'Playfair Display',     bf:'Libre Baskerville'},
-  {id:'street',     name:'Street',      hf:'Bebas Neue',           bf:'Barlow Condensed'},
-  {id:'orbital',    name:'Orbital',     hf:'Orbitron',             bf:'Share Tech Mono'},
-  {id:'handmade',   name:'Handmade',    hf:'Caveat',               bf:'Lato'},
-  {id:'romance',    name:'Romance',     hf:'Great Vibes',          bf:'EB Garamond'},
-  {id:'deco',       name:'Deco',        hf:'Poiret One',           bf:'Josefin Sans'},
-  {id:'studio',     name:'Studio',      hf:'DM Serif Display',     bf:'DM Sans'},
-  {id:'debug',      name:'Debug',       hf:'Syne',                 bf:'IBM Plex Mono'},
-  {id:'bounce',     name:'Bounce',      hf:'Fredoka One',          bf:'Nunito'},
-  {id:'retro',      name:'Retro',       hf:'Righteous',            bf:'Source Sans 3'},
-  {id:'couture',    name:'Couture',     hf:'Cinzel',               bf:'Raleway'},
-  {id:'athletic',   name:'Athletic',    hf:'Big Shoulders Display',bf:'Barlow'},
-  {id:'academia',   name:'Academia',    hf:'IM Fell English',      bf:'Crimson Text'},
-  {id:'craft',      name:'Craft',       hf:'Lobster',              bf:'Merriweather'},
-  {id:'zero',       name:'Zero',        hf:'Outfit',               bf:'Outfit'},
-  {id:'industrial', name:'Industrial',  hf:'Oswald',               bf:'Courier Prime'},
-  {id:'signal',     name:'Signal',      hf:'Fjalla One',           bf:'Cabin'},
-];
+// ── FONT PAIRINGS — 6 moods × 5 pairings ─────────────────────────────────────
+const FONT_MOODS = ['professional','luxury','bold','warm','editorial','creative'];
+const FONT_PAIRINGS = {
+  professional:[
+    {id:'sharp-pro',    name:'Sharp',       hf:'Montserrat',           bf:'Lato',           desc:'Clean authority'},
+    {id:'tech-pro',     name:'Tech',        hf:'Space Grotesk',        bf:'DM Sans',        desc:'Modern agency'},
+    {id:'structured',   name:'Structured',  hf:'Raleway',              bf:'Mulish',         desc:'Polished & precise'},
+    {id:'command',      name:'Command',     hf:'Oswald',               bf:'Barlow',         desc:'Confident, direct'},
+    {id:'clarity',      name:'Clarity',     hf:'Inter',                bf:'Source Sans 3',  desc:'Frictionless trust'},
+  ],
+  luxury:[
+    {id:'timeless',     name:'Timeless',    hf:'Cormorant Garamond',   bf:'EB Garamond',    desc:'Old-world elegance'},
+    {id:'prestige',     name:'Prestige',    hf:'Playfair Display',     bf:'Raleway',        desc:'Classic high-end'},
+    {id:'ceremonial',   name:'Ceremonial',  hf:'Cinzel',               bf:'Raleway',        desc:'Refined ceremony'},
+    {id:'modern-lux',   name:'Modern Lux',  hf:'DM Serif Display',     bf:'DM Sans',        desc:'Contemporary luxury'},
+    {id:'opulent',      name:'Opulent',     hf:'Fraunces',             bf:'Libre Baskerville', desc:'Literary richness'},
+  ],
+  bold:[
+    {id:'street',       name:'Street',      hf:'Bebas Neue',           bf:'Barlow Condensed',desc:'Raw energy'},
+    {id:'athletic',     name:'Athletic',    hf:'Big Shoulders Display',bf:'Barlow',         desc:'Power & motion'},
+    {id:'industrial',   name:'Industrial',  hf:'Oswald',               bf:'Courier Prime',  desc:'Built tough'},
+    {id:'signal',       name:'Signal',      hf:'Fjalla One',           bf:'Cabin',          desc:'Direct, no fuss'},
+    {id:'tactical',     name:'Tactical',    hf:'Black Ops One',        bf:'Rajdhani',       desc:'Commanding presence'},
+  ],
+  warm:[
+    {id:'neighbourly',  name:'Neighbourly', hf:'Nunito',               bf:'Lato',           desc:'Round & welcoming'},
+    {id:'handmade',     name:'Handmade',    hf:'Lobster',              bf:'Merriweather',   desc:'Crafted with care'},
+    {id:'friendly',     name:'Friendly',    hf:'Fredoka One',          bf:'Nunito',         desc:'Playful warmth'},
+    {id:'local',        name:'Local',       hf:'Cabin',                bf:'Open Sans',      desc:'Approachable service'},
+    {id:'personal',     name:'Personal',    hf:'Caveat',               bf:'Lato',           desc:'Handwritten touch'},
+  ],
+  editorial:[
+    {id:'broadsheet',   name:'Broadsheet',  hf:'Playfair Display',     bf:'Libre Baskerville',desc:'Print authority'},
+    {id:'academia',     name:'Academia',    hf:'IM Fell English',      bf:'Crimson Text',   desc:'Classical intellect'},
+    {id:'dispatch',     name:'Dispatch',    hf:'Syne',                 bf:'IBM Plex Mono',  desc:'Tech editorial'},
+    {id:'deco',         name:'Deco',        hf:'Poiret One',           bf:'Josefin Sans',   desc:'Art deco press'},
+    {id:'magazine',     name:'Magazine',    hf:'Abril Fatface',        bf:'Lora',           desc:'Bold cover story'},
+  ],
+  creative:[
+    {id:'reikna',       name:'Signature',   hf:'Reikna',               bf:'Inter',          desc:'Custom brand energy'},
+    {id:'retro',        name:'Retro',       hf:'Righteous',            bf:'Source Sans 3',  desc:'Vintage revival'},
+    {id:'orbital',      name:'Orbital',     hf:'Orbitron',             bf:'Share Tech Mono',desc:'Future forward'},
+    {id:'studio',       name:'Studio',      hf:'Syne',                 bf:'Outfit',         desc:'Design studio'},
+    {id:'zero',         name:'Zero',        hf:'Outfit',               bf:'Outfit',         desc:'One font, pure form'},
+  ],
+};
+const QUICK_PAIRINGS = Object.values(FONT_PAIRINGS).flat();
 
 const VIBES = [
   {id:'minimal',   name:'Minimal',   desc:'Generous space, quiet confidence'},
@@ -1108,18 +1143,21 @@ const ALL_FONTS = (() => {
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 const S = {
-  palTab:   'dark',
-  palette:  PALS.dark[0],
-  bg:       PALS.dark[0].bg,
-  tx:       PALS.dark[0].tx,
-  ac1:      PALS.dark[0].ac,
-  ac2:      deriveAc2(PALS.dark[0]),
+  palTab:   'neutral',
+  palette:  PALS.neutral[0],
+  bg:       PALS.neutral[0].bg,
+  su:       PALS.neutral[0].su,
+  tx:       PALS.neutral[0].tx,
+  hd:       PALS.neutral[0].hd,
+  ac1:      PALS.neutral[0].ac,
+  ac2:      deriveAc2(PALS.neutral[0]),
   hFont:    'Reikna',
   bFont:    'Inter',
   nFont:    'Reikna',
   logo:     null,
   customFontName: '',
   quickId:  'reikna',
+  moodTab:  'creative',
   vibe:     VIBES[3],
   corner:   CORNERS[0],
   btn:      BTNS[0],
@@ -1151,7 +1189,7 @@ function switchPalTab(tab) { S.palTab=tab; renderPalTabs(); renderPalGrid(); }
 function renderPalGrid() {
   document.getElementById('palette-grid').innerHTML = PALS[S.palTab].map(p=>
     `<div class="pal-tile${p.id===S.palette.id?' active':''}" onclick="pickPal('${p.id}')">
-      <div class="pal-bar"><div class="pal-bg-s" style="background:${p.bg}"></div><div class="pal-ac-s" style="background:${p.ac}"></div></div>
+      <div class="pal-bar"><div class="pal-bg-s" style="background:${p.bg}"></div><div class="pal-su-s" style="background:${p.su}"></div><div class="pal-ac-s" style="background:${p.ac}"></div></div>
       <span class="pal-name">${p.name}</span>
     </div>`
   ).join('');
@@ -1159,13 +1197,13 @@ function renderPalGrid() {
 function pickPal(id) {
   const all=[...Object.values(PALS).flat()];
   S.palette=all.find(p=>p.id===id);
-  S.bg=S.palette.bg; S.tx=S.palette.tx; S.ac1=S.palette.ac; S.ac2=deriveAc2(S.palette);
+  S.bg=S.palette.bg; S.su=S.palette.su; S.tx=S.palette.tx; S.hd=S.palette.hd; S.ac1=S.palette.ac; S.ac2=deriveAc2(S.palette);
   syncColorInputs();
   renderPalGrid(); renderQuickPairings(); renderVibes(); renderHeaders(); renderDetails(); applyPreview();
 }
 
 function syncColorInputs(){
-  const slots={bg:S.bg,tx:S.tx,ac1:S.ac1,ac2:S.ac2};
+  const slots={bg:S.bg,su:S.su,tx:S.tx,hd:S.hd,ac1:S.ac1};
   for(const[k,v] of Object.entries(slots)){
     const sw=document.getElementById('sw-'+k);
     const inp=document.getElementById('inp-'+k);
@@ -1177,7 +1215,7 @@ function syncColorInputs(){
 }
 
 function onColorPick(slot,val){
-  S[slot==='ac1'?'ac1':slot==='ac2'?'ac2':slot]=val;
+  S[slot]=val;
   document.getElementById('sw-'+slot).style.background=val;
   document.getElementById('hex-'+slot).value=val;
   renderVibes(); renderHeaders(); applyPreview();
@@ -1192,18 +1230,22 @@ function onHexType(slot,val){
 }
 
 function resetColor(slot){
-  const map={bg:S.palette.bg,tx:S.palette.tx,ac1:S.palette.ac,ac2:deriveAc2(S.palette)};
+  const map={bg:S.palette.bg,su:S.palette.su,tx:S.palette.tx,hd:S.palette.hd,ac1:S.palette.ac};
   S[slot]=map[slot];
   syncColorInputs();
   renderVibes(); renderHeaders(); applyPreview();
 }
 
 // ── RENDER QUICK PAIRINGS ─────────────────────────────────────────────────────
+function switchMoodTab(mood){ S.moodTab=mood; renderQuickPairings(); }
 function renderQuickPairings() {
-  document.getElementById('font-quick-grid').innerHTML = QUICK_PAIRINGS.map(p=>
+  document.getElementById('font-mood-tabs').innerHTML = FONT_MOODS.map(m=>
+    `<div class="fq-tab${m===S.moodTab?' active':''}" onclick="switchMoodTab('${m}')">${m.charAt(0).toUpperCase()+m.slice(1)}</div>`
+  ).join('');
+  document.getElementById('font-quick-grid').innerHTML = FONT_PAIRINGS[S.moodTab].map(p=>
     `<div class="fq-tile${p.id===S.quickId?' active':''}" onclick="pickQuickPairing('${p.id}')">
       <span class="fq-heading" style="font-family:'${p.hf}',serif">${p.name}</span>
-      <span class="fq-body" style="font-family:'${p.bf}',sans-serif">Body sample text</span>
+      <span class="fq-body" style="font-family:'${p.bf}',sans-serif">${p.desc}</span>
       <span class="fq-name">${p.hf.split(' ')[0]} / ${p.bf.split(' ')[0]}</span>
     </div>`
   ).join('');
@@ -1412,7 +1454,7 @@ function applyPreview() {
   const mLogo=document.getElementById('m-logo'), mBrand=document.getElementById('m-brand');
   if(S.logo){ mLogo.src=S.logo; mLogo.style.display='block'; mBrand.style.display='none'; }
   else{ mLogo.style.display='none'; mBrand.style.display=''; }
-  document.querySelectorAll('.m-h1,.m-cta-h,.m-card-h').forEach(el=>el.style.color=S.tx);
+  document.querySelectorAll('.m-h1,.m-cta-h,.m-card-h').forEach(el=>el.style.color=S.hd);
   document.querySelectorAll('.m-btn').forEach(el=>{
     el.style.background=S.ac1; el.style.color=S.bg; el.style.border='none';
     el.style.borderRadius=c.r; el.style.textDecoration='none';
@@ -1421,7 +1463,7 @@ function applyPreview() {
     if(btn.id==='ghost'){   el.style.background='transparent'; el.style.border='none'; el.style.color=S.ac1; el.style.textDecoration='underline'; el.style.textUnderlineOffset='3px'; el.style.paddingLeft='0'; el.style.paddingRight='0'; }
     if(btn.id==='pill'){    el.style.borderRadius='999px'; }
   });
-  document.querySelectorAll('.m-card').forEach(el=>{ el.style.background=cd; el.style.borderRadius=c.r; });
+  document.querySelectorAll('.m-card').forEach(el=>{ el.style.background=S.su; el.style.borderRadius=c.r; });
   document.querySelectorAll('.m-nav,.m-services,.m-cta,.m-footer').forEach(el=>el.style.borderColor='rgba(128,128,128,.1)');
 
   const mHero = document.querySelector('.m-hero');
@@ -1458,7 +1500,7 @@ function applyVibe() {
   const cta    = document.querySelector('.m-cta');
 
   // ── Reset all vibe overrides so switching is clean ────────────────────────
-  if(h1)      { h1.style.fontSize='1.7rem'; h1.style.letterSpacing='.02em'; h1.style.color=S.tx; }
+  if(h1)      { h1.style.fontSize='1.7rem'; h1.style.letterSpacing='.02em'; h1.style.color=S.hd; }
   if(hero)    { hero.style.background=''; }
   if(sub)     { sub.style.color=''; sub.style.opacity='.5'; }
   if(eyebrow) { eyebrow.style.fontSize='.4rem'; eyebrow.style.letterSpacing='.22em'; eyebrow.style.color=S.ac2; eyebrow.style.opacity='1'; }
@@ -1556,9 +1598,8 @@ function fmBtn(label){
 }
 function fmCard(h,p){
   const isDark=hexToRgb(S.bg).reduce((s,v)=>s+v,0)/3<128;
-  const surf=isDark?'rgba(255,255,255,.05)':'rgba(0,0,0,.04)';
-  return `<div class="fm-card" style="background:${surf};border-radius:${S.corner.r}">
-    <span class="fm-card-h" style="font-family:'${S.hFont}',serif;color:${S.tx}">${h}</span>
+  return `<div class="fm-card" style="background:${S.su};border-radius:${S.corner.r}">
+    <span class="fm-card-h" style="font-family:'${S.hFont}',serif;color:${S.hd}">${h}</span>
     <span class="fm-card-p" style="color:${S.tx}">${p}</span>
   </div>`;
 }
@@ -1589,14 +1630,14 @@ function renderFullMock(){
   const heroBg=S.photos[0]?`background-image:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(${S.photos[0].url});background-size:cover;background-position:center`:'';
   html+=`<div class="fm-section" style="${heroBg};${heroAlign}">
     <span class="fm-eyebrow" style="color:${S.photos[0]?'rgba(255,255,255,.6)':S.ac2}">${document.getElementById('f-industry').value||'Premium Service'}</span>
-    <span class="fm-h1" style="font-family:${hf};color:${S.tx}">${brand}</span>
+    <span class="fm-h1" style="font-family:${hf};color:${S.hd}">${brand}</span>
     <span class="fm-p" style="color:${S.tx};${subMax}">A short, sharp description of what you do and who you serve — the one sentence that makes them stay.</span>
     ${fmBtn('Get Started')}${S.header.id!=='center'?'&nbsp;&nbsp;'+fmBtn('Learn More').replace(S.ac1,S.ac2).replace(`color:${S.bg}`,'color:'+S.tx):''}
   </div>`;
 
   // Stats
   if(secs.has('stats')){
-    html+=`<div class="fm-stats" style="background:${mixHex(S.bg,S.tx,.06)};border-top:1px solid rgba(128,128,128,.1);border-bottom:1px solid rgba(128,128,128,.1)">
+    html+=`<div class="fm-stats" style="background:${S.su};border-top:1px solid rgba(128,128,128,.1);border-bottom:1px solid rgba(128,128,128,.1)">
       ${['200+','4.9★','Same Day','100%'].map((n,i)=>
         `<div class="fm-stat"><span class="fm-stat-n" style="font-family:${hf};color:${S.ac1}">${n}</span><span class="fm-stat-l" style="color:${S.tx}">${['Jobs Done','Rating','Booking','Satisfaction'][i]}</span></div>`
       ).join('')}
@@ -1607,7 +1648,7 @@ function renderFullMock(){
   if(secs.has('services')){
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">What We Do</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Services Built Around You</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">Services Built Around You</span>
       <div class="fm-cards">
         ${fmCard('Service One','A brief description of what makes this offering valuable to your customers.')}
         ${fmCard('Service Two','A brief description of what makes this offering valuable to your customers.')}
@@ -1624,7 +1665,7 @@ function renderFullMock(){
       <div class="fm-grid-2">
         <div>
           <span class="fm-eyebrow" style="color:${S.ac2}">About Us</span>
-          <span class="fm-h2" style="font-family:${hf};color:${S.tx}">The Story Behind the Work</span>
+          <span class="fm-h2" style="font-family:${hf};color:${S.hd}">The Story Behind the Work</span>
           <span class="fm-p" style="color:${S.tx}">We started this business because we cared about doing it right. Every job, every client, every detail — that standard hasn't changed since day one.</span>
           ${fmBtn('Learn More')}
         </div>
@@ -1639,7 +1680,7 @@ function renderFullMock(){
     const surf=isDark?'rgba(255,255,255,.04)':'rgba(0,0,0,.04)';
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">Reviews</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">What Clients Say</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">What Clients Say</span>
       <div class="fm-reviews">
         ${['Amazing work — exceeded expectations.','Professional, fast, and affordable. Highly recommend.','Best service we\'ve found in the area.','Incredible attention to detail.'].map((t,i)=>
           `<div class="fm-review" style="background:${surf};border-radius:${S.corner.r}">
@@ -1659,7 +1700,7 @@ function renderFullMock(){
       : [...Array(8)].map((_,i)=>`<div style="aspect-ratio:1;background:${mixHex(S.bg,S.ac1,(.05+i*.04))};border-radius:${S.corner.r}"></div>`).join('');
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">Gallery</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Our Work</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">Our Work</span>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1.5rem">
         ${galleryItems}
       </div>
@@ -1670,7 +1711,7 @@ function renderFullMock(){
   if(secs.has('before-after')){
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">Before & After</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">The Difference We Make</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">The Difference We Make</span>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem">
         <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.tx,.1)};border-radius:${S.corner.r};display:flex;align-items:center;justify-content:center;font-size:.65rem;opacity:.35;letter-spacing:.1em;text-transform:uppercase">Before</div>
         <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.ac1,.2)};border-radius:${S.corner.r};display:flex;align-items:center;justify-content:center;font-size:.65rem;opacity:.5;letter-spacing:.1em;text-transform:uppercase;color:${S.ac1}">After</div>
@@ -1685,7 +1726,7 @@ function renderFullMock(){
     const surfHi=mixHex(S.bg,S.ac1,.12);
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">Pricing</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Simple, Transparent Pricing</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">Simple, Transparent Pricing</span>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem">
         ${[['Basic','$99','Core features included'],['Standard','$199','Most popular option'],['Premium','$349','Everything included']].map(([n,p,d],i)=>
           `<div style="background:${i===1?surfHi:surf};padding:2rem;border-radius:${S.corner.r};border:1px solid ${i===1?S.ac1:'transparent'};text-align:center">
@@ -1703,7 +1744,7 @@ function renderFullMock(){
   if(secs.has('faq')){
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">FAQ</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Common Questions</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">Common Questions</span>
       <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:.5rem">
         ${['How do I get started?','What areas do you service?','How long does it take?','Do you offer guarantees?'].map(q=>
           `<div style="border:1px solid rgba(128,128,128,.12);padding:1rem 1.25rem;border-radius:${S.corner.r}">
@@ -1718,7 +1759,7 @@ function renderFullMock(){
   if(secs.has('contact')){
     html+=`<div class="fm-section" style="text-align:center;background:${mixHex(S.bg,S.ac1,.1)}">
       <span class="fm-eyebrow" style="color:${S.ac2}">Get Started</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.tx};font-size:2.25rem">Ready to Work Together?</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.hd};font-size:2.25rem">Ready to Work Together?</span>
       <span class="fm-p" style="color:${S.tx};margin:0 auto 2rem">Don't wait — reach out today and we'll get you booked in.</span>
       ${fmBtn('Contact Us')}
     </div>`;
@@ -1728,7 +1769,7 @@ function renderFullMock(){
   if(secs.has('map')){
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">Location</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Find Us</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">Find Us</span>
       <div style="margin-top:1.25rem;height:180px;background:${mixHex(S.bg,S.tx,.08)};border-radius:${S.corner.r};display:flex;align-items:center;justify-content:center;opacity:.4;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">Map Placeholder</div>
     </div>`;
   }
