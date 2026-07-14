@@ -25,6 +25,7 @@
   <meta name="twitter:image" content="https://snsbuild.com/og-image.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.fontshare.com">
   <!-- Pre-load only fonts used in quick pairings + UI -->
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Oswald:wght@400;700&family=DM+Sans:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&family=Montserrat:wght@400;600;700&family=Raleway:wght@300;400;600&family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;600&family=Abril+Fatface&family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;600&family=Roboto:wght@300;400;500;700&family=Josefin+Sans:wght@300;400;600&family=Syne:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
@@ -793,6 +794,11 @@ const PALS = {
 // ── FONTS ─────────────────────────────────────────────────────────────────────
 const HEADING_FONTS = [
   { group:'Custom', fonts:['Reikna'] },
+  { group:'Fontshare Creative', fonts:[
+    'Clash Display','Melodrama','Tanker','Zodiak','Boska','Britney','Panchang',
+    'Stardom','Technor','Expose','Boxing','Gambetta','Gambarino','Nippo','Supreme',
+    'Striper','Aktura','Telma','RX100','Sentient','New Title','Clash Grotesk',
+  ]},
   { group:'Display & Impact', fonts:[
     'Bebas Neue','Oswald','Anton','Righteous','Black Ops One','Racing Sans One','Russo One',
     'Staatliches','Big Shoulders Display','Teko','Squada One','Fjalla One','Graduate',
@@ -1169,12 +1175,32 @@ const S = {
 
 const loadedFonts = new Set(['Reikna','Bebas Neue','Inter','Playfair Display','Merriweather','Oswald','DM Sans','Space Grotesk','Montserrat','Raleway','IBM Plex Mono','IBM Plex Sans','Abril Fatface','Lato','Cormorant Garamond','Roboto','Josefin Sans','Syne','Source Sans 3']);
 
+const FONTSHARE_SLUGS = {
+  'Clash Display':'clash-display','Clash Grotesk':'clash-grotesk',
+  'Melodrama':'melodrama','Tanker':'tanker','Satoshi':'satoshi',
+  'Zodiak':'zodiak','Boska':'boska','Cabinet Grotesk':'cabinet-grotesk',
+  'General Sans':'general-sans','Switzer':'switzer','Technor':'technor',
+  'Britney':'britney','Synonym':'synonym','Stardom':'stardom',
+  'Panchang':'panchang','Nippo':'nippo','Supreme':'supreme',
+  'Gambetta':'gambetta','Expose':'expose','Boxing':'boxing',
+  'Striper':'striper','Aktura':'aktura','Telma':'telma',
+  'RX100':'rx-100','Gambarino':'gambarino','Sentient':'sentient',
+  'Erode':'erode','Author':'author','Chillax':'chillax',
+  'Chubbo':'chubbo','Bonny':'bonny','Pally':'pally',
+  'Roundo':'roundo','Excon':'excon','New Title':'new-title',
+};
+
 function loadFont(name) {
   if(loadedFonts.has(name)) return;
   loadedFonts.add(name);
   const l=document.createElement('link');
   l.rel='stylesheet';
-  l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(name).replace(/%20/g,'+')}:wght@400;700&display=swap`;
+  const slug=FONTSHARE_SLUGS[name];
+  if(slug) {
+    l.href=`https://api.fontshare.com/v2/css?f[]=${slug}@400,700&display=swap`;
+  } else {
+    l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(name).replace(/%20/g,'+')}:wght@400;700&display=swap`;
+  }
   document.head.appendChild(l);
 }
 
@@ -1905,8 +1931,11 @@ function generateClientSite() {
   const bf  = S.bFont === 'CustomFont' ? 'Georgia' : S.bFont;
   const nf  = S.nFont === 'CustomFont' ? hf : S.nFont;
 
-  const gFonts = [...new Set([hf, bf, nf])].filter(f => f !== 'Reikna');
-  const gLink  = gFonts.length ? `<link href="https://fonts.googleapis.com/css2?${gFonts.map(f=>`family=${f.replace(/ /g,'+')}:wght@300;400;600;700`).join('&')}&display=swap" rel="stylesheet">` : '';
+  const allExportFonts = [...new Set([hf, bf, nf])].filter(f => f !== 'Reikna');
+  const gFonts  = allExportFonts.filter(f => !FONTSHARE_SLUGS[f]);
+  const fsFonts = allExportFonts.filter(f =>  FONTSHARE_SLUGS[f]);
+  const gLink   = gFonts.length ? `<link href="https://fonts.googleapis.com/css2?${gFonts.map(f=>`family=${f.replace(/ /g,'+')}:wght@300;400;600;700`).join('&')}&display=swap" rel="stylesheet">` : '';
+  const fsLinks = fsFonts.map(f=>`<link href="https://api.fontshare.com/v2/css?f[]=${FONTSHARE_SLUGS[f]}@300,400,600,700&display=swap" rel="stylesheet">`).join('\n  ');
   const reiknaFace = [hf,bf,nf].includes('Reikna') ? `@font-face{font-family:'Reikna';src:url('Reikna.ttf') format('truetype');font-display:swap}` : '';
 
   const btnR   = S.btn.id === 'pill' ? '999px' : r;
@@ -2078,7 +2107,9 @@ function generateClientSite() {
   <meta name="description" content="${C.heroSub||biz+' — '+ind}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.fontshare.com">
   ${gLink}
+  ${fsLinks}
   <style>
     ${reiknaFace}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
