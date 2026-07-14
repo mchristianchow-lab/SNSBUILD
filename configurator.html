@@ -1024,8 +1024,15 @@ const BODY_FONTS = [
 ];
 
 // ── FONT PAIRINGS — 6 moods × 5 pairings ─────────────────────────────────────
-const FONT_MOODS = ['professional','luxury','bold','warm','editorial','creative'];
+const FONT_MOODS = ['tech','professional','luxury','bold','warm','editorial','creative'];
 const FONT_PAIRINGS = {
+  tech:[
+    {id:'michroma',     name:'Michroma',    hf:'Michroma',             bf:'Michroma',       desc:'Pure precision'},
+    {id:'circuit',      name:'Circuit',     hf:'Orbitron',             bf:'Share Tech Mono',desc:'Space-age clarity'},
+    {id:'terminal',     name:'Terminal',    hf:'Courier Prime',        bf:'IBM Plex Mono',  desc:'Dev aesthetic'},
+    {id:'syntax',       name:'Syntax',      hf:'Space Grotesk',        bf:'JetBrains Mono', desc:'Code-forward'},
+    {id:'grid',         name:'Grid',        hf:'Technor',              bf:'Satoshi',        desc:'System design'},
+  ],
   professional:[
     {id:'sharp-pro',    name:'Sharp',       hf:'Montserrat',           bf:'Lato',           desc:'Clean authority'},
     {id:'tech-pro',     name:'Tech',        hf:'Space Grotesk',        bf:'DM Sans',        desc:'Modern agency'},
@@ -1163,7 +1170,7 @@ const S = {
   logo:     null,
   customFontName: '',
   quickId:  'reikna',
-  moodTab:  'creative',
+  moodTab:  'tech',
   vibe:     VIBES[3],
   corner:   CORNERS[0],
   btn:      BTNS[0],
