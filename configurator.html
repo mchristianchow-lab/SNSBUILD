@@ -132,6 +132,19 @@
     .fm-nav-brand{font-size:1.2rem;letter-spacing:.12em;font-weight:700}
     .fm-nav-links{display:flex;align-items:center;gap:2rem}
     .fm-nav-link{font-size:.72rem;font-weight:600;color:var(--muted);opacity:1;transition:color .15s}.fm-nav-link:hover{color:var(--text)}
+    /* ── WEIGHT SLIDERS ── */
+    .weight-section{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+    .weight-section-label{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:.875rem}
+    .weight-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .weight-ctrl{display:flex;flex-direction:column;gap:.3rem}
+    .weight-label{font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+    .weight-val{font-size:.62rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+    .weight-name{font-size:.5rem;color:var(--muted);margin-top:.1rem;text-align:right}
+    input[type=range].weight-slider{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--border-mid,#2A2A2A);border-radius:2px;outline:none;cursor:pointer}
+    input[type=range].weight-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
+    input[type=range].weight-slider::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
+    .weight-marks{display:flex;justify-content:space-between;margin-top:.2rem}
+    .weight-mark{font-size:.42rem;color:var(--muted);opacity:.55}
 
     /* ── FEATURED + SHUFFLE ── */
     .featured-row{display:flex;align-items:stretch;gap:.75rem;margin-bottom:1.5rem}
@@ -473,6 +486,29 @@
           <input class="fp-search" placeholder="Search nav fonts…" oninput="filterPicker('nav',this.value)">
           <div class="fp-list" id="fp-nav" style="height:200px"></div>
           <div class="fp-selected-name"><div class="fp-selected-dot"></div><span id="fp-nav-sel">Reikna</span></div>
+        </div>
+      </div>
+
+      <!-- Font weight -->
+      <div class="weight-section">
+        <div class="weight-section-label">Font weight</div>
+        <div class="weight-row">
+          <div class="weight-ctrl">
+            <div class="weight-label">
+              Heading
+              <span><span class="weight-val" id="hw-val">700</span> <span class="weight-name" id="hw-name">Bold</span></span>
+            </div>
+            <input type="range" class="weight-slider" id="hw-slider" min="100" max="900" step="100" value="700" oninput="setWeight('h',this.value)">
+            <div class="weight-marks"><span class="weight-mark">Thin</span><span class="weight-mark">Regular</span><span class="weight-mark">Bold</span><span class="weight-mark">Black</span></div>
+          </div>
+          <div class="weight-ctrl">
+            <div class="weight-label">
+              Body
+              <span><span class="weight-val" id="bw-val">400</span> <span class="weight-name" id="bw-name">Regular</span></span>
+            </div>
+            <input type="range" class="weight-slider" id="bw-slider" min="100" max="900" step="100" value="400" oninput="setWeight('b',this.value)">
+            <div class="weight-marks"><span class="weight-mark">Thin</span><span class="weight-mark">Regular</span><span class="weight-mark">Bold</span><span class="weight-mark">Black</span></div>
+          </div>
         </div>
       </div>
 
@@ -1272,6 +1308,8 @@ const S = {
   corner:   CORNERS[0],
   btn:      BTNS[0],
   spacing:  SPACINGS[1],
+  hWeight:  700,
+  bWeight:  400,
   header:   HEADERS[0],
   sections: new Set(['hero','services','about','contact']),
   photos:   [],
@@ -1301,9 +1339,9 @@ function loadFont(name) {
   l.rel='stylesheet';
   const slug=FONTSHARE_SLUGS[name];
   if(slug) {
-    l.href=`https://api.fontshare.com/v2/css?f[]=${slug}@400,700&display=swap`;
+    l.href=`https://api.fontshare.com/v2/css?f[]=${slug}@100,300,400,500,600,700,800,900&display=swap`;
   } else {
-    l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(name).replace(/%20/g,'+')}:wght@400;700&display=swap`;
+    l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(name).replace(/%20/g,'+')}:wght@100;300;400;500;600;700;800;900&display=swap`;
   }
   document.head.appendChild(l);
 }
@@ -1523,6 +1561,7 @@ function pickVibe(id) { S.vibe=VIBES.find(v=>v.id===id); renderVibes(); applyPre
 
 // ── RENDER DETAILS ────────────────────────────────────────────────────────────
 function renderDetails() {
+  syncWeightSliders();
   const ac=S.palette.ac;
   document.getElementById('corner-row').innerHTML=CORNERS.map(c=>
     `<div class="detail-tile${c.id===S.corner.id?' active':''}" onclick="pickCorner('${c.id}')">
@@ -1555,6 +1594,19 @@ function renderHeaders() {
 }
 function pickHeader(id){ S.header=HEADERS.find(h=>h.id===id); renderHeaders(); applyPreview(); }
 
+const WEIGHT_NAMES={100:'Thin',200:'ExtraLight',300:'Light',400:'Regular',500:'Medium',600:'SemiBold',700:'Bold',800:'ExtraBold',900:'Black'};
+function setWeight(type,val){
+  const w=parseInt(val);
+  if(type==='h'){S.hWeight=w;document.getElementById('hw-val').textContent=w;document.getElementById('hw-name').textContent=WEIGHT_NAMES[w]||'';}
+  else{S.bWeight=w;document.getElementById('bw-val').textContent=w;document.getElementById('bw-name').textContent=WEIGHT_NAMES[w]||'';}
+  applyPreview();
+}
+function syncWeightSliders(){
+  const hs=document.getElementById('hw-slider'),bs=document.getElementById('bw-slider');
+  if(hs){hs.value=S.hWeight;document.getElementById('hw-val').textContent=S.hWeight;document.getElementById('hw-name').textContent=WEIGHT_NAMES[S.hWeight]||'';}
+  if(bs){bs.value=S.bWeight;document.getElementById('bw-val').textContent=S.bWeight;document.getElementById('bw-name').textContent=WEIGHT_NAMES[S.bWeight]||'';}
+}
+
 // ── RENDER SECTIONS ───────────────────────────────────────────────────────────
 function renderSections() {
   document.getElementById('sections-grid').innerHTML = SECTIONS.map(sec=>{
@@ -1577,8 +1629,10 @@ function applyPreview() {
   mock.style.color=S.tx;
   mock.style.fontFamily=`'${S.bFont}',sans-serif`;
 
-  document.querySelectorAll('.m-h1,.m-cta-h,.m-card-h').forEach(el=>el.style.fontFamily=`'${S.hFont}',serif`);
+  document.querySelectorAll('.m-h1,.m-cta-h,.m-card-h').forEach(el=>{ el.style.fontFamily=`'${S.hFont}',serif`; el.style.fontWeight=S.hWeight; });
   document.querySelector('.m-nav-brand').style.fontFamily=`'${S.nFont}',serif`;
+  document.querySelector('.m-nav-brand').style.fontWeight=S.hWeight;
+  mock.style.fontWeight=S.bWeight;
   document.querySelectorAll('.m-eyebrow,.m-sec-label').forEach(el=>el.style.color=S.ac2);
   document.querySelectorAll('.m-nav-brand,.m-footer-b').forEach(el=>el.style.color=S.ac1);
   const mLogo=document.getElementById('m-logo'), mBrand=document.getElementById('m-brand');
@@ -2038,8 +2092,11 @@ function generateClientSite() {
   const allExportFonts = [...new Set([hf, bf, nf])].filter(f => f !== 'Reikna');
   const gFonts  = allExportFonts.filter(f => !FONTSHARE_SLUGS[f]);
   const fsFonts = allExportFonts.filter(f =>  FONTSHARE_SLUGS[f]);
-  const gLink   = gFonts.length ? `<link href="https://fonts.googleapis.com/css2?${gFonts.map(f=>`family=${f.replace(/ /g,'+')}:wght@300;400;600;700`).join('&')}&display=swap" rel="stylesheet">` : '';
-  const fsLinks = fsFonts.map(f=>`<link href="https://api.fontshare.com/v2/css?f[]=${FONTSHARE_SLUGS[f]}@300,400,600,700&display=swap" rel="stylesheet">`).join('\n  ');
+  const hw=S.hWeight,bw=S.bWeight;
+  const wSet=[...new Set([100,300,400,hw,bw,700,900])].sort((a,b)=>a-b).join(';');
+  const gLink   = gFonts.length ? `<link href="https://fonts.googleapis.com/css2?${gFonts.map(f=>`family=${f.replace(/ /g,'+')}:wght@${wSet}`).join('&')}&display=swap" rel="stylesheet">` : '';
+  const fsWSet=[...new Set([100,300,400,hw,bw,700,900])].sort((a,b)=>a-b).join(',');
+  const fsLinks = fsFonts.map(f=>`<link href="https://api.fontshare.com/v2/css?f[]=${FONTSHARE_SLUGS[f]}@${fsWSet}&display=swap" rel="stylesheet">`).join('\n  ');
   const reiknaFace = [hf,bf,nf].includes('Reikna') ? `@font-face{font-family:'Reikna';src:url('Reikna.ttf') format('truetype');font-display:swap}` : '';
 
   const btnR   = S.btn.id === 'pill' ? '999px' : r;
@@ -2218,7 +2275,7 @@ function generateClientSite() {
     ${reiknaFace}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{background:${S.bg};color:${S.tx};font-family:'${bf}',sans-serif;-webkit-font-smoothing:antialiased}
+    body{background:${S.bg};color:${S.tx};font-family:'${bf}',sans-serif;font-weight:${S.bWeight};-webkit-font-smoothing:antialiased}
     img{max-width:100%;display:block}
     a{color:inherit}
     input,textarea,button{font-family:inherit}
