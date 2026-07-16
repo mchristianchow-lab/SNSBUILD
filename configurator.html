@@ -2171,7 +2171,7 @@ async function handleSubmit() {
       ...(uploadDebug ? [`UPLOAD ERROR: ${uploadDebug}`] : []),
     ].join('\n');
 
-    await fetch('https://api.web3forms.com/submit', {
+    const w3res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({
@@ -2180,6 +2180,10 @@ async function handleSubmit() {
         name, email, message: brief,
       })
     });
+    const w3data = await w3res.json().catch(() => ({}));
+    if (!w3res.ok || !w3data.success) {
+      throw new Error('Web3Forms: ' + (w3data.message || w3res.status));
+    }
 
     document.getElementById('success').classList.add('show');
     btn.textContent = 'Sent ✓';
