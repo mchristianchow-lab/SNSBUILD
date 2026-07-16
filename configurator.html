@@ -2349,7 +2349,22 @@ async function handleSubmit() {
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     downloadFile(html, `${slug}-site.html`);
 
-    // 2. Send brief via Web3Forms first — always reliable, no spam risk
+    // 2. Upload to Supabase to get file link for Nash
+    btn.textContent = 'Uploading…';
+    const fileName = `${slug}-${Date.now()}.html`;
+    let siteUrl = 'Upload failed — request file from client';
+    try {
+      const up = await fetch(`${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(SUPABASE_BUCKET)}/${fileName}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'text/html' },
+        body: html,
+      });
+      if (up.ok) {
+        siteUrl = `${SUPABASE_URL}/storage/v1/object/public/${encodeURIComponent(SUPABASE_BUCKET)}/${fileName}`;
+      }
+    } catch(e) { console.error('Supabase upload exception:', e); }
+
+    // 3. Send brief + file link via Web3Forms
     btn.textContent = 'Sending brief…';
     const brief = [
       `Business: ${name}`,
@@ -2364,7 +2379,7 @@ async function handleSubmit() {
       `Sections: ${[...S.sections].join(', ')}`,
       `Logo: ${S.logo ? 'Yes' : 'No'} · Photos: ${S.photos.length}`,
       ``,
-      `SITE FILE: Customer has the downloaded file — request from client if needed`,
+      `SITE FILE: ${siteUrl}`,
     ].join('\n');
 
     const w3res = await fetch('https://api.web3forms.com/submit', {
@@ -2380,14 +2395,6 @@ async function handleSubmit() {
     if (!w3res.ok || !w3data.success) {
       throw new Error('Web3Forms: ' + (w3data.message || w3res.status));
     }
-
-    // 3. Upload to Supabase in background — non-blocking bonus copy
-    const fileName = `${slug}-${Date.now()}.html`;
-    fetch(`${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(SUPABASE_BUCKET)}/${fileName}`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'text/html' },
-      body: html,
-    }).catch(() => {});
 
     document.getElementById('success').classList.add('show');
     btn.textContent = 'Sent ✓';
