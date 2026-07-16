@@ -25,9 +25,8 @@
   <meta name="twitter:image" content="https://snsbuild.com/og-image.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://api.fontshare.com">
   <!-- Pre-load only fonts used in quick pairings + UI -->
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Oswald:wght@400;700&family=DM+Sans:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&family=Montserrat:wght@400;600;700&family=Raleway:wght@300;400;600&family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;600&family=Abril+Fatface&family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;600&family=Roboto:wght@300;400;500;700&family=Josefin+Sans:wght@300;400;600&family=Syne:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Oswald:wght@400;700&family=DM+Sans:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&family=Montserrat:wght@400;600;700&family=Raleway:wght@300;400;600&family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;600&family=Abril+Fatface&family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;600&family=Roboto:wght@300;400;500;700&family=Josefin+Sans:wght@300;400;600&family=Syne:wght@400;700&family=Source+Sans+3:wght@300;400;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&family=Epilogue:wght@300;400;700&family=Young+Serif&family=Archivo:wght@300;400;700&family=League+Gothic&family=Onest:wght@300;400;700&family=Newsreader:ital,wght@0,300;0,400;1,300&family=Literata:ital,wght@0,300;0,400;1,300&family=Bricolage+Grotesque:wght@300;400;700&family=Instrument+Sans:wght@300;400;700&family=Marcellus+SC&family=Questrial&family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;700&family=Piazzolla:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     @font-face{font-family:'SaintCarell';src:url('SaintCarellClean.otf') format('opentype');font-weight:400 900;font-style:normal;font-display:swap}
     @font-face{font-family:'Reikna';src:url('Reikna.ttf') format('truetype');font-weight:400 900;font-style:normal;font-display:swap}
@@ -70,14 +69,13 @@
 
     .config-col{padding:3.5rem 5%;border-right:1px solid var(--border)}
     .step-block{margin-bottom:3rem}
-    .step-label{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:var(--muted);margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem}
+    .step-label{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:var(--dim);margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem}
     .step-label::after{content:'';flex:1;height:1px;background:var(--border)}
     .step-label span{color:var(--accent)}
 
     /* PALETTE TABS */
-    .step-label span:first-child{color:var(--accent)}
     .pal-tabs{display:flex;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1px}
-    .pal-tab{flex:1;padding:.6rem .4rem;text-align:center;cursor:pointer;font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);background:var(--mid);border-bottom:2px solid transparent;transition:all .15s;user-select:none}
+    .pal-tab{flex:1;padding:.6rem .4rem;text-align:center;cursor:pointer;font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);background:var(--mid);border-bottom:2px solid transparent;transition:all .15s;user-select:none}
     .pal-tab:hover{background:var(--dark-card);color:var(--muted)}
     .pal-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--black)}
 
@@ -87,22 +85,22 @@
     .pal-tile:hover{filter:brightness(1.2)}
     .pal-tile.active{border-color:var(--accent)}
     .pal-bar{display:flex;height:30px}
-    .pal-bg-s{flex:2}.pal-su-s{flex:1}.pal-ac-s{flex:1}
-    .pal-name{font-size:.48rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);display:block;padding:.3rem .4rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pal-bg-s{flex:2}.pal-ac-s{flex:1}
+    .pal-name{font-size:.48rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);display:block;padding:.3rem .4rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .pal-tile.active .pal-name{color:var(--accent)}
 
     /* COLOR FINE-TUNE */
     .color-fine{margin-top:1px;border:1px solid var(--border);border-top:none;padding:1rem;background:var(--mid)}
-    .color-fine-label{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:.75rem}
-    .cp-row{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem}
+    .color-fine-label{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--dim);margin-bottom:.75rem;opacity:.6}
+    .cp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
     .cp-slot{display:flex;flex-direction:column;gap:.4rem}
     .cp-swatch{position:relative;width:100%;aspect-ratio:1;cursor:pointer;border:1px solid rgba(255,255,255,.08);transition:border-color .15s}
     .cp-swatch:hover{border-color:rgba(255,255,255,.3)}
     .cp-swatch input[type=color]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:none;padding:0}
     .cp-hex{width:100%;background:transparent;border:1px solid var(--border-mid);color:var(--muted);padding:.3rem .4rem;font-family:'IBM Plex Mono',monospace;font-size:.58rem;outline:none;text-align:center;transition:border-color .15s;border-radius:0}
     .cp-hex:focus{border-color:var(--accent);color:var(--bone)}
-    .cp-name{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:center}
-    .cp-reset{font-size:.5rem;color:var(--muted);text-align:center;cursor:pointer;text-decoration:underline;text-underline-offset:2px;opacity:.8;margin-top:.2rem}
+    .cp-name{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);text-align:center}
+    .cp-reset{font-size:.5rem;color:var(--dim);text-align:center;cursor:pointer;text-decoration:underline;text-underline-offset:2px;opacity:.5;margin-top:.2rem}
     .cp-reset:hover{opacity:1;color:var(--accent)}
 
     /* FULLSCREEN OVERLAY */
@@ -131,35 +129,7 @@
     .fm-nav{display:flex;align-items:center;justify-content:space-between;padding:.9rem 2rem;border-bottom:1px solid rgba(255,255,255,.07)}
     .fm-nav-brand{font-size:1.2rem;letter-spacing:.12em;font-weight:700}
     .fm-nav-links{display:flex;align-items:center;gap:2rem}
-    .fm-nav-link{font-size:.72rem;font-weight:600;color:var(--muted);opacity:1;transition:color .15s}.fm-nav-link:hover{color:var(--text)}
-    /* ── WEIGHT SLIDERS ── */
-    .weight-section{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
-    .weight-section-label{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:.875rem}
-    .weight-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-    .weight-ctrl{display:flex;flex-direction:column;gap:.3rem}
-    .weight-label{font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
-    .weight-val{font-size:.62rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
-    .weight-name{font-size:.5rem;color:var(--muted);margin-top:.1rem;text-align:right}
-    input[type=range].weight-slider{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--border-mid,#2A2A2A);border-radius:2px;outline:none;cursor:pointer}
-    input[type=range].weight-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
-    input[type=range].weight-slider::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
-    .weight-marks{display:flex;justify-content:space-between;margin-top:.2rem}
-    .weight-mark{font-size:.42rem;color:var(--muted);opacity:.55}
-
-    /* ── FEATURED + SHUFFLE ── */
-    .featured-row{display:flex;align-items:stretch;gap:.75rem;margin-bottom:1.5rem}
-    .featured-card{flex:1;display:flex;align-items:center;gap:.875rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
-    .featured-card:hover{border-color:var(--accent);background:var(--surface2)}
-    .featured-badge{position:absolute;top:.45rem;left:.75rem;font-size:.46rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);opacity:.9}
-    .featured-thumb{width:78px;height:56px;flex-shrink:0;border-radius:4px;overflow:hidden;margin-top:.85rem}
-    .featured-info{display:flex;flex-direction:column;gap:.2rem;margin-top:.75rem}
-    .featured-name{font-size:.72rem;font-weight:700;color:var(--text);letter-spacing:.03em}
-    .featured-desc{font-size:.52rem;color:var(--muted);letter-spacing:.04em}
-    .featured-cta{font-size:.48rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-top:.2rem}
-    .shuffle-btn{display:flex;align-items:center;justify-content:center;gap:.4rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0 1.25rem;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text);cursor:pointer;transition:border-color .2s,color .2s,background .2s;white-space:nowrap;flex-shrink:0;min-width:100px}
-    .shuffle-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--surface2)}
-    .shuffle-btn svg{width:13px;height:13px;transition:transform .5s}
-    .shuffle-btn.spinning svg{transform:rotate(360deg)}
+    .fm-nav-link{font-size:.72rem;opacity:.45}
     .fm-nav-btn{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1.1rem}
     .fm-section{padding:4rem 2rem}
     .fm-section.alt{padding:3rem 2rem}
@@ -187,11 +157,7 @@
     .fm-footer-link{font-size:.65rem;opacity:.25}
 
     /* FONT SECTION */
-    .font-pairings-label{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:.6rem}
-    .font-mood-tabs{display:flex;border:1px solid var(--border);border-bottom:none;margin-top:.75rem}
-    .fq-tab{flex:1;padding:.5rem .3rem;text-align:center;cursor:pointer;font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);background:var(--mid);border-bottom:2px solid transparent;transition:all .15s;user-select:none}
-    .fq-tab:hover{background:var(--dark-card);color:var(--muted)}
-    .fq-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--black)}
+    .font-pairings-label{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--dim);margin-bottom:.6rem;opacity:.6}
     .font-quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem}
     .fq-tile{background:var(--mid);padding:.75rem .75rem .6rem;cursor:pointer;border:2px solid transparent;transition:all .15s;user-select:none}
     .fq-tile:hover{background:var(--dark-card)}
@@ -213,7 +179,7 @@
 
     /* CUSTOM FONT PICKERS */
     .fp-cols{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-    .fp-col-label{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:.4rem}
+    .fp-col-label{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);margin-bottom:.4rem}
     .fp-wrap{border:1px solid var(--border-mid)}
     .fp-search{width:100%;background:var(--mid);border:none;border-bottom:1px solid var(--border-mid);color:var(--bone);padding:.6rem .75rem;font-family:var(--font);font-size:.72rem;outline:none;display:block}
     .fp-search::placeholder{color:var(--dim)}
@@ -261,7 +227,7 @@
     .detail-tile.active{border-color:var(--accent);background:var(--black)}
     .detail-icon{display:flex;align-items:center;justify-content:center;margin-bottom:.4rem;height:22px}
     .detail-icon svg{width:22px;height:22px}
-    .detail-name{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);transition:color .15s}
+    .detail-name{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);transition:color .15s}
     .detail-tile.active .detail-name{color:var(--accent)}
 
     /* HEADER */
@@ -270,7 +236,7 @@
     .header-tile:hover{background:var(--dark-card)}
     .header-tile.active{border-color:var(--accent);background:var(--black)}
     .header-thumb{height:52px;background:var(--dark-card);margin-bottom:.65rem;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:8px}
-    .header-name{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:block;transition:color .15s}
+    .header-name{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);display:block;transition:color .15s}
     .header-tile.active .header-name{color:var(--accent)}
 
     /* SECTIONS */
@@ -280,7 +246,7 @@
     .sec-check.locked{opacity:.5;cursor:default}
     .check-box{width:14px;height:14px;border:1.5px solid var(--dim);flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;font-weight:900}
     .sec-check.active .check-box,.sec-check.locked .check-box{border-color:var(--accent);background:var(--accent);color:var(--black)}
-    .sec-label{font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);transition:color .15s}
+    .sec-label{font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);transition:color .15s}
     .sec-check.active .sec-label{color:var(--off-white)}
 
     /* FORM */
@@ -367,35 +333,6 @@
 <div class="builder-wrap">
   <div class="config-col">
 
-    <!-- FEATURED DESIGN + SHUFFLE -->
-    <div class="featured-row">
-      <div class="featured-card" onclick="loadPreset(PRESETS[0])">
-        <div class="featured-badge">✦ Design of the Month</div>
-        <div class="featured-thumb">
-          <div style="background:#F5EFD8;width:100%;height:100%;padding:6px 7px;box-sizing:border-box;display:flex;flex-direction:column;gap:3px">
-            <div style="width:55%;height:5px;background:#100C04;border-radius:1px"></div>
-            <div style="width:38%;height:3px;background:#1C1608;opacity:.35;border-radius:1px;margin-bottom:3px"></div>
-            <div style="display:flex;gap:3px">
-              <div style="flex:1;height:13px;background:#EDE7C8;border-radius:1px"></div>
-              <div style="flex:1;height:13px;background:#EDE7C8;border-radius:1px"></div>
-            </div>
-            <div style="width:36px;height:8px;border:1px solid #8C7440;border-radius:0;margin-top:2px"></div>
-          </div>
-        </div>
-        <div class="featured-info">
-          <div class="featured-name">The Atelier</div>
-          <div class="featured-desc">Parchment · Cabinet Grotesk · Refined</div>
-          <div class="featured-cta">Click to load &amp; edit →</div>
-        </div>
-      </div>
-      <button class="shuffle-btn" onclick="shuffleDesign()">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M1 4h9.5a3.5 3.5 0 013.5 3.5v0A3.5 3.5 0 0110.5 11H5"/><path d="M3 2L1 4l2 2"/><path d="M3 9H1.5A3.5 3.5 0 005 12.5h0"/><path d="M12 9l2 2-2 2"/>
-        </svg>
-        Shuffle
-      </button>
-    </div>
-
     <!-- 01: PALETTE -->
     <div class="step-block">
       <div class="step-label"><span>01</span> Colour palette — <span style="color:var(--dim);font-size:.5rem;letter-spacing:.1em">100 options</span></div>
@@ -411,28 +348,22 @@
             <span class="cp-reset" onclick="resetColor('bg')">Reset</span>
           </div>
           <div class="cp-slot">
-            <div class="cp-swatch" id="sw-su"><input type="color" id="inp-su" oninput="onColorPick('su',this.value)"></div>
-            <input class="cp-hex" id="hex-su" maxlength="7" oninput="onHexType('su',this.value)">
-            <span class="cp-name">Surface</span>
-            <span class="cp-reset" onclick="resetColor('su')">Reset</span>
-          </div>
-          <div class="cp-slot">
             <div class="cp-swatch" id="sw-tx"><input type="color" id="inp-tx" oninput="onColorPick('tx',this.value)"></div>
             <input class="cp-hex" id="hex-tx" maxlength="7" oninput="onHexType('tx',this.value)">
             <span class="cp-name">Text</span>
             <span class="cp-reset" onclick="resetColor('tx')">Reset</span>
           </div>
           <div class="cp-slot">
-            <div class="cp-swatch" id="sw-hd"><input type="color" id="inp-hd" oninput="onColorPick('hd',this.value)"></div>
-            <input class="cp-hex" id="hex-hd" maxlength="7" oninput="onHexType('hd',this.value)">
-            <span class="cp-name">Headings</span>
-            <span class="cp-reset" onclick="resetColor('hd')">Reset</span>
-          </div>
-          <div class="cp-slot">
             <div class="cp-swatch" id="sw-ac1"><input type="color" id="inp-ac1" oninput="onColorPick('ac1',this.value)"></div>
             <input class="cp-hex" id="hex-ac1" maxlength="7" oninput="onHexType('ac1',this.value)">
-            <span class="cp-name">Accent</span>
+            <span class="cp-name">Primary</span>
             <span class="cp-reset" onclick="resetColor('ac1')">Reset</span>
+          </div>
+          <div class="cp-slot">
+            <div class="cp-swatch" id="sw-ac2"><input type="color" id="inp-ac2" oninput="onColorPick('ac2',this.value)"></div>
+            <input class="cp-hex" id="hex-ac2" maxlength="7" oninput="onHexType('ac2',this.value)">
+            <span class="cp-name">Secondary</span>
+            <span class="cp-reset" onclick="resetColor('ac2')">Reset</span>
           </div>
         </div>
       </div>
@@ -454,8 +385,7 @@
       </div>
 
       <!-- Quick pairings -->
-      <div class="font-pairings-label" style="margin-bottom:0">Mood</div>
-      <div class="font-mood-tabs" id="font-mood-tabs"></div>
+      <div class="font-pairings-label">Quick pairings</div>
       <div class="font-quick-grid" id="font-quick-grid"></div>
 
       <!-- Custom pickers -->
@@ -486,29 +416,6 @@
           <input class="fp-search" placeholder="Search nav fonts…" oninput="filterPicker('nav',this.value)">
           <div class="fp-list" id="fp-nav" style="height:200px"></div>
           <div class="fp-selected-name"><div class="fp-selected-dot"></div><span id="fp-nav-sel">Reikna</span></div>
-        </div>
-      </div>
-
-      <!-- Font weight -->
-      <div class="weight-section">
-        <div class="weight-section-label">Font weight</div>
-        <div class="weight-row">
-          <div class="weight-ctrl">
-            <div class="weight-label">
-              Heading
-              <span><span class="weight-val" id="hw-val">700</span> <span class="weight-name" id="hw-name">Bold</span></span>
-            </div>
-            <input type="range" class="weight-slider" id="hw-slider" min="100" max="900" step="100" value="700" oninput="setWeight('h',this.value)">
-            <div class="weight-marks"><span class="weight-mark">Thin</span><span class="weight-mark">Regular</span><span class="weight-mark">Bold</span><span class="weight-mark">Black</span></div>
-          </div>
-          <div class="weight-ctrl">
-            <div class="weight-label">
-              Body
-              <span><span class="weight-val" id="bw-val">400</span> <span class="weight-name" id="bw-name">Regular</span></span>
-            </div>
-            <input type="range" class="weight-slider" id="bw-slider" min="100" max="900" step="100" value="400" oninput="setWeight('b',this.value)">
-            <div class="weight-marks"><span class="weight-mark">Thin</span><span class="weight-mark">Regular</span><span class="weight-mark">Bold</span><span class="weight-mark">Black</span></div>
-          </div>
         </div>
       </div>
 
@@ -757,129 +664,124 @@ const SUPABASE_URL = 'https://pxwydcmgkyoledfsxdio.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4d3lkY21na3lvbGVkZnN4ZGlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzE2NjAsImV4cCI6MjA5NzIwNzY2MH0.qdtHCNV3m0LDNNpcX0fXXDVBNro6JD0ZMeI3ftDi5fU';
 const SUPABASE_BUCKET = 'Client Sites';
 
-// ── PALETTES — 100 total, 5 tabs × 20 ────────────────────────────────────────
-const PAL_TABS = ['neutral','earth','deep','bold','pastel'];
+// ── PALETTES — 100 total, 5 Pantone-inspired tabs × 20 ───────────────────────
+const PAL_TABS = ['classic','seasons','fashion','nature','electric'];
 const PALS = {
-  neutral:[
-    {id:'studio-white', name:'Studio White',   bg:'#FAFAFA',su:'#F2F2F2',tx:'#1F1F1F',hd:'#0A0A0A',ac:'#6B8FB5'},
-    {id:'warm-canvas',  name:'Warm Canvas',    bg:'#FAF8F4',su:'#F0EBE2',tx:'#1E1810',hd:'#0F0B06',ac:'#8C6B40'},
-    {id:'fog',          name:'Fog',            bg:'#F5F6F8',su:'#EAECF0',tx:'#1A1E24',hd:'#0C1018',ac:'#6B8FB5'},
-    {id:'ivory',        name:'Ivory',          bg:'#FFFCF5',su:'#F5EEE0',tx:'#1C1608',hd:'#0F0C04',ac:'#A8844E'},
-    {id:'pearl',        name:'Pearl',          bg:'#F6F6F8',su:'#EBEBF0',tx:'#14141E',hd:'#080814',ac:'#7B78B8'},
-    {id:'bone',         name:'Bone',           bg:'#F4F0E8',su:'#EAE5D8',tx:'#1E1A12',hd:'#100E08',ac:'#7A5C38'},
-    {id:'parchment',    name:'Parchment',      bg:'#F5EFD8',su:'#EDE7C8',tx:'#1C1608',hd:'#100C04',ac:'#8C7440'},
-    {id:'greige',       name:'Greige',         bg:'#EDE8E0',su:'#E2DDD4',tx:'#1C1814',hd:'#0E0C08',ac:'#7A716A'},
-    {id:'mist',         name:'Mist',           bg:'#EFF3F6',su:'#E4EAF2',tx:'#141E28',hd:'#0A1420',ac:'#6090A8'},
-    {id:'rose-smoke',   name:'Rose Smoke',     bg:'#FAF4F4',su:'#F2E8E8',tx:'#241010',hd:'#180808',ac:'#A87070'},
-    {id:'sage-mist',    name:'Sage Mist',      bg:'#F2F6F2',su:'#E6EEE6',tx:'#101810',hd:'#081008',ac:'#5A8870'},
-    {id:'cloud',        name:'Cloud',          bg:'#F8F8FC',su:'#EDEDF5',tx:'#10101C',hd:'#080814',ac:'#7870A8'},
-    {id:'cream',        name:'Cream',          bg:'#FFF8F0',su:'#F5E8DE',tx:'#1C1008',hd:'#100804',ac:'#A87048'},
-    {id:'chalk',        name:'Chalk',          bg:'#F8F8F8',su:'#EEEEEE',tx:'#181818',hd:'#0A0A0A',ac:'#508870'},
-    {id:'snow',         name:'Snow',           bg:'#FFFFFF',su:'#F5F5F5',tx:'#111111',hd:'#000000',ac:'#A06060'},
-    {id:'warm-white',   name:'Warm White',     bg:'#FDF9F0',su:'#F5EDE0',tx:'#1A1608',hd:'#0E0C04',ac:'#A08840'},
-    {id:'slate-white',  name:'Slate White',    bg:'#F0F4F8',su:'#E4EBF2',tx:'#0E1824',hd:'#061018',ac:'#5880A0'},
-    {id:'linen',        name:'Linen',          bg:'#F4EFE8',su:'#EAE4DC',tx:'#201810',hd:'#140C06',ac:'#7860A8'},
-    {id:'silver',       name:'Silver',         bg:'#F2F3F5',su:'#E6E8EC',tx:'#181C22',hd:'#0C1018',ac:'#5A6878'},
-    {id:'graphite-lt',  name:'Graphite',       bg:'#EBEBEB',su:'#E0E0E0',tx:'#141414',hd:'#080808',ac:'#5A6878'},
+  classic:[
+    {id:'peach-fuzz',   name:'Peach Fuzz',     bg:'#1A1410',tx:'#F5EDE0',ac:'#FFBE98'},
+    {id:'viva-magenta', name:'Viva Magenta',   bg:'#0F0508',tx:'#FAE8EC',ac:'#BB2649'},
+    {id:'very-peri',    name:'Very Peri',      bg:'#08080F',tx:'#E8E8FF',ac:'#6667AB'},
+    {id:'illuminating', name:'Illuminating',   bg:'#1A1A1A',tx:'#F5F5F0',ac:'#F5DF4D'},
+    {id:'classic-blue', name:'Classic Blue',   bg:'#030614',tx:'#E0E8F8',ac:'#0F4C81'},
+    {id:'living-coral', name:'Living Coral',   bg:'#0F0805',tx:'#FFF0E8',ac:'#FF6F61'},
+    {id:'ultraviolet',  name:'Ultra Violet',   bg:'#0A0010',tx:'#EEE0FF',ac:'#5F4B8B'},
+    {id:'greenery',     name:'Greenery',       bg:'#081208',tx:'#E4F0E0',ac:'#88B04B'},
+    {id:'rose-quartz',  name:'Rose Quartz',    bg:'#FAF0F2',tx:'#2A1018',ac:'#C4969A'},
+    {id:'serenity',     name:'Serenity',       bg:'#F0F4FA',tx:'#101828',ac:'#92A8D1'},
+    {id:'fiesta',       name:'Fiesta',         bg:'#0F0504',tx:'#FAE8E4',ac:'#DD4132'},
+    {id:'riverside',    name:'Riverside',      bg:'#050A14',tx:'#E0EAF8',ac:'#3E5F8A'},
+    {id:'flame',        name:'Flame',          bg:'#0F0700',tx:'#FAE8D8',ac:'#F2552C'},
+    {id:'radiant-orch', name:'Radiant Orchid', bg:'#0A0010',tx:'#F0E0FF',ac:'#B163A3'},
+    {id:'turquoise',    name:'Turquoise',      bg:'#040E10',tx:'#D8F5F5',ac:'#45B5AA'},
+    {id:'marsala',      name:'Marsala',        bg:'#100808',tx:'#F5E4E0',ac:'#964F4C'},
+    {id:'pink-yarrow',  name:'Pink Yarrow',    bg:'#0F0408',tx:'#FAD8E8',ac:'#CE3175'},
+    {id:'chili-pepper', name:'Chili Pepper',   bg:'#0F0300',tx:'#FAE0D8',ac:'#9B1B30'},
+    {id:'cerulean',     name:'Cerulean',       bg:'#040C18',tx:'#D8ECF8',ac:'#0073CF'},
+    {id:'minion-yellow',name:'Minion Yellow',  bg:'#FAF8E0',tx:'#1A180A',ac:'#EFC050'},
   ],
-  earth:[
-    {id:'terracotta',   name:'Terracotta',     bg:'#F2E8E0',su:'#E6D8CC',tx:'#2A1A0E',hd:'#1A0E06',ac:'#A06850'},
-    {id:'rust',         name:'Rust',           bg:'#F5EBE0',su:'#E8DDD0',tx:'#2A1008',hd:'#180A04',ac:'#946030'},
-    {id:'adobe',        name:'Adobe',          bg:'#F2E8DC',su:'#E6DCD0',tx:'#281808',hd:'#180E04',ac:'#A06850'},
-    {id:'mesa',         name:'Mesa',           bg:'#EEE4DC',su:'#E2D8CE',tx:'#241810',hd:'#160E06',ac:'#905028'},
-    {id:'dune',         name:'Dune',           bg:'#F0EDEA',su:'#E4E0DC',tx:'#1A1614',hd:'#100E0C',ac:'#78716C'},
-    {id:'desert-sand',  name:'Desert Sand',    bg:'#F5EDDC',su:'#ECE2D0',tx:'#30200C',hd:'#201408',ac:'#B07830'},
-    {id:'oatmeal',      name:'Oatmeal',        bg:'#F5F2EA',su:'#EDE8DC',tx:'#1C1A12',hd:'#100E08',ac:'#887A50'},
-    {id:'moss',         name:'Moss',           bg:'#E8EDE2',su:'#DDE6D6',tx:'#141C10',hd:'#0C1208',ac:'#507830'},
-    {id:'sage-earth',   name:'Sage',           bg:'#EAF0E8',su:'#DEE8DA',tx:'#141C12',hd:'#0C1408',ac:'#508868'},
-    {id:'olive',        name:'Olive',          bg:'#ECEADC',su:'#E2E0D2',tx:'#1C1A0C',hd:'#101008',ac:'#807848'},
-    {id:'clay',         name:'Clay',           bg:'#EEE6DD',su:'#E6DDD2',tx:'#241810',hd:'#160E06',ac:'#8C7030'},
-    {id:'hazel',        name:'Hazel',          bg:'#EDE6D8',su:'#E2DDD0',tx:'#1E1810',hd:'#120C06',ac:'#7A6448'},
-    {id:'wheat',        name:'Wheat',          bg:'#F8F2E0',su:'#EEE8D4',tx:'#201C0C',hd:'#140E04',ac:'#A88840'},
-    {id:'hemp',         name:'Hemp',           bg:'#F0EAD8',su:'#E6E0D0',tx:'#1A160A',hd:'#100C04',ac:'#7A6838'},
-    {id:'tawny',        name:'Tawny',          bg:'#EEE4D6',su:'#E4DAC8',tx:'#221608',hd:'#160E04',ac:'#886020'},
-    {id:'ochre',        name:'Ochre',          bg:'#F0E8D4',su:'#E8DEC8',tx:'#201808',hd:'#140E04',ac:'#A87828'},
-    {id:'bark',         name:'Bark',           bg:'#EAE0D0',su:'#E0D4C0',tx:'#1C1408',hd:'#100A04',ac:'#7A5438'},
-    {id:'ash',          name:'Ash',            bg:'#ECEAE8',su:'#E2E0DC',tx:'#1A1816',hd:'#0E0C0A',ac:'#6B7280'},
-    {id:'stone',        name:'Stone',          bg:'#E8E4E0',su:'#DEDAD6',tx:'#1C1814',hd:'#100E0A',ac:'#57534E'},
-    {id:'flint',        name:'Flint',          bg:'#E4E0DA',su:'#DAD6CE',tx:'#181410',hd:'#0C0A08',ac:'#60544A'},
+  seasons:[
+    {id:'spring-blossom',name:'Spring Blossom',bg:'#FAF0F5',tx:'#1A0A10',ac:'#E8AAC8'},
+    {id:'cherry-blossom',name:'Cherry Blossom',bg:'#FAF0F4',tx:'#1A0A10',ac:'#E890A8'},
+    {id:'summer-peach',  name:'Summer Peach',  bg:'#FAF0E8',tx:'#1A0E08',ac:'#F5A06A'},
+    {id:'honey-gold',    name:'Honey Gold',    bg:'#FAF2D8',tx:'#1A1204',ac:'#D4A018'},
+    {id:'sage-morning',  name:'Sage Morning',  bg:'#F0F5EC',tx:'#10180C',ac:'#7A9A6A'},
+    {id:'citrus-burst',  name:'Citrus Burst',  bg:'#FAF8D0',tx:'#1A1800',ac:'#E8C420'},
+    {id:'midsummer-az',  name:'Midsummer Azure',bg:'#080E1A',tx:'#D8E8FF',ac:'#4080C8'},
+    {id:'autumn-spice',  name:'Autumn Spice',  bg:'#F5E8D8',tx:'#180E04',ac:'#B85A28'},
+    {id:'harvest-amber', name:'Harvest Amber', bg:'#1A1004',tx:'#F5E8C8',ac:'#D4901C'},
+    {id:'burnt-sienna',  name:'Burnt Sienna',  bg:'#1A0A04',tx:'#F5E0D0',ac:'#C06040'},
+    {id:'winter-berry',  name:'Winter Berry',  bg:'#F5E8EE',tx:'#180A10',ac:'#8E2A42'},
+    {id:'deep-winter-pl',name:'Winter Plum',   bg:'#100418',tx:'#EED8F8',ac:'#8040A8'},
+    {id:'cobalt-winter', name:'Cobalt Winter', bg:'#040818',tx:'#D8E4FF',ac:'#3060C0'},
+    {id:'fern-green',    name:'Fern Green',    bg:'#0A1208',tx:'#E0F0DC',ac:'#5A8050'},
+    {id:'dusty-rose',    name:'Dusty Rose',    bg:'#FAF0F0',tx:'#1A1010',ac:'#C09090'},
+    {id:'mauve-shadows', name:'Mauve Shadows', bg:'#18101C',tx:'#F0E4F8',ac:'#9870A8'},
+    {id:'storm-slate',   name:'Storm Slate',   bg:'#10161C',tx:'#E0E8F0',ac:'#6090B0'},
+    {id:'ocean-mist',    name:'Ocean Mist',    bg:'#EEF6FA',tx:'#081018',ac:'#50A0C0'},
+    {id:'twilight-mauve',name:'Twilight Mauve',bg:'#0C0810',tx:'#EED8F8',ac:'#8858A0'},
+    {id:'spring-meadow', name:'Spring Meadow', bg:'#0A1408',tx:'#E0F0D8',ac:'#88C080'},
   ],
-  deep:[
-    {id:'midnight-navy',name:'Midnight Navy',  bg:'#070810',su:'#0E1020',tx:'#D8DCF0',hd:'#EEEEFF',ac:'#78B0D0'},
-    {id:'forest-night', name:'Forest Night',   bg:'#0A1A0A',su:'#101C10',tx:'#C8EAD0',hd:'#EEFFEE',ac:'#60A878'},
-    {id:'obsidian',     name:'Obsidian',       bg:'#0A0A0A',su:'#141414',tx:'#CCCCCC',hd:'#F0F0F0',ac:'#B8C854'},
-    {id:'deep-plum',    name:'Deep Plum',      bg:'#120818',su:'#1C1028',tx:'#E0D4F0',hd:'#F4E8FF',ac:'#9870C0'},
-    {id:'charcoal',     name:'Charcoal',       bg:'#181614',su:'#221E1A',tx:'#DEDAD6',hd:'#F0EDE8',ac:'#C09040'},
-    {id:'slate-deep',   name:'Slate',          bg:'#1E293B',su:'#263344',tx:'#CBD5E1',hd:'#F1F5F9',ac:'#6898B8'},
-    {id:'burgundy',     name:'Burgundy',       bg:'#1A0810',su:'#241018',tx:'#ECD8E0',hd:'#FFE8F0',ac:'#C07080'},
-    {id:'deep-teal',    name:'Deep Teal',      bg:'#0A1E1E',su:'#102828',tx:'#C8E8E4',hd:'#E8FFFC',ac:'#50A898'},
-    {id:'espresso',     name:'Espresso',       bg:'#120E0A',su:'#1C1610',tx:'#E4DED6',hd:'#FFF8F0',ac:'#B08858'},
-    {id:'gunmetal',     name:'Gunmetal',       bg:'#0E1218',su:'#161C24',tx:'#C8D4E0',hd:'#EAF0F8',ac:'#6888A0'},
-    {id:'ink',          name:'Ink',            bg:'#08080F',su:'#10101A',tx:'#D4D4F0',hd:'#EEEEFF',ac:'#7080C0'},
-    {id:'volcanic',     name:'Volcanic',       bg:'#0F0A06',su:'#181208',tx:'#E4D8CC',hd:'#FFF0E4',ac:'#C07858'},
-    {id:'abyss',        name:'Abyss',          bg:'#050508',su:'#0C0C14',tx:'#DCDCE8',hd:'#F0F0FF',ac:'#8878C0'},
-    {id:'merlot',       name:'Merlot',         bg:'#200810',su:'#2C1018',tx:'#EAD0D8',hd:'#FFE8F0',ac:'#A05060'},
-    {id:'dark-jade',    name:'Dark Jade',      bg:'#081A0A',su:'#0E2010',tx:'#C8ECD0',hd:'#E8FFEC',ac:'#50A060'},
-    {id:'cobalt-night', name:'Cobalt Night',   bg:'#0A1628',su:'#102030',tx:'#D8E8F8',hd:'#F8FCFF',ac:'#5878B0'},
-    {id:'aubergine',    name:'Aubergine',      bg:'#18082C',su:'#201040',tx:'#E4CCF4',hd:'#F8E8FF',ac:'#8050A8'},
-    {id:'carbon',       name:'Carbon',         bg:'#111111',su:'#1A1A1A',tx:'#CCCCCC',hd:'#F0F0F0',ac:'#C07040'},
-    {id:'caviar',       name:'Caviar',         bg:'#080808',su:'#101010',tx:'#CCB8A8',hd:'#F0E4D8',ac:'#A08858'},
-    {id:'storm',        name:'Storm',          bg:'#141C24',su:'#1C2830',tx:'#C8D8E8',hd:'#ECF4FF',ac:'#5888A8'},
+  fashion:[
+    {id:'inkwell',      name:'Inkwell',        bg:'#1E2B2F',tx:'#EAE8E0',ac:'#C8B090'},
+    {id:'stargazer',    name:'Stargazer',      bg:'#0A0814',tx:'#E0D8FF',ac:'#7060C0'},
+    {id:'powder-blue',  name:'Powder Blue',    bg:'#D0E4F0',tx:'#081018',ac:'#2060A0'},
+    {id:'inca-gold',    name:'Inca Gold',      bg:'#1A1408',tx:'#EEE4C0',ac:'#D4A430'},
+    {id:'lilac',        name:'Lilac',          bg:'#F4EEF8',tx:'#1A1020',ac:'#A080C0'},
+    {id:'bleached-den', name:'Bleached Denim', bg:'#C8D8E8',tx:'#082028',ac:'#2870A0'},
+    {id:'spiced-apple', name:'Spiced Apple',   bg:'#FAE8D8',tx:'#180804',ac:'#C04830'},
+    {id:'mocha-bisque', name:'Mocha Bisque',   bg:'#FAF0E0',tx:'#1A1008',ac:'#C09050'},
+    {id:'crystal-blue', name:'Crystal Blue',   bg:'#E8F4FA',tx:'#081018',ac:'#3080B0'},
+    {id:'baked-clay',   name:'Baked Clay',     bg:'#F0E0D0',tx:'#180C06',ac:'#A85030'},
+    {id:'dusky-citron', name:'Dusky Citron',   bg:'#F8F4D0',tx:'#1A1800',ac:'#B8A020'},
+    {id:'rose-tan',     name:'Rose Tan',       bg:'#F8ECE0',tx:'#180E08',ac:'#C07050'},
+    {id:'bleached-sand',name:'Bleached Sand',  bg:'#F8F0E0',tx:'#1C1404',ac:'#C0A060'},
+    {id:'desert-dust',  name:'Desert Dust',    bg:'#F0E8D8',tx:'#181208',ac:'#A89060'},
+    {id:'mellow-yellow',name:'Mellow Yellow',  bg:'#FFF8D0',tx:'#1A1800',ac:'#D4C020'},
+    {id:'quiet-green',  name:'Quiet Green',    bg:'#E8F0E0',tx:'#101808',ac:'#508050'},
+    {id:'ash-rose',     name:'Ash Rose',       bg:'#F8EDEB',tx:'#1C0E0C',ac:'#B07060'},
+    {id:'wisteria',     name:'Wisteria',       bg:'#E8E0F5',tx:'#10082A',ac:'#8868B0'},
+    {id:'orchid-mist',  name:'Orchid Mist',    bg:'#F5E8F5',tx:'#1A0A1A',ac:'#A860A0'},
+    {id:'pressed-linen',name:'Pressed Linen',  bg:'#F4F0E6',tx:'#1C1810',ac:'#9A8860'},
   ],
-  bold:[
-    {id:'crimson',      name:'Crimson',        bg:'#C0182A',su:'#A81020',tx:'#FFE8EC',hd:'#FFFFFF',ac:'#FFD700'},
-    {id:'cobalt-bold',  name:'Cobalt',         bg:'#1A3A8A',su:'#142E7A',tx:'#D8E8FF',hd:'#FFFFFF',ac:'#FFD700'},
-    {id:'emerald-bold', name:'Emerald',        bg:'#006B48',su:'#005838',tx:'#D0F5E8',hd:'#FFFFFF',ac:'#FFD700'},
-    {id:'saffron',      name:'Saffron',        bg:'#F59E0B',su:'#E08A00',tx:'#1C1000',hd:'#0A0800',ac:'#1A1A1A'},
-    {id:'violet-bold',  name:'Violet',         bg:'#5B21B6',su:'#4A18A0',tx:'#EEE4FF',hd:'#FFFFFF',ac:'#FCD34D'},
-    {id:'tangerine',    name:'Tangerine',      bg:'#E8500A',su:'#D04000',tx:'#FFF4EE',hd:'#FFFFFF',ac:'#0A0A0A'},
-    {id:'electric',     name:'Electric',       bg:'#050514',su:'#0A0A24',tx:'#D8D8FF',hd:'#FFFFFF',ac:'#00BFFF'},
-    {id:'viva-magenta', name:'Viva Magenta',   bg:'#B5004A',su:'#9A003C',tx:'#FFE0EC',hd:'#FFFFFF',ac:'#FFD700'},
-    {id:'acid-noir',    name:'Acid Noir',      bg:'#0A0A0A',su:'#141414',tx:'#E8E8E8',hd:'#FFFFFF',ac:'#CCFF00'},
-    {id:'living-coral', name:'Living Coral',   bg:'#FF6B55',su:'#E85A44',tx:'#1A0808',hd:'#0A0404',ac:'#1A1A1A'},
-    {id:'royal',        name:'Royal',          bg:'#1C2FA0',su:'#162490',tx:'#D8E0FF',hd:'#FFFFFF',ac:'#FFD700'},
-    {id:'noir-lime',    name:'Noir Lime',      bg:'#0A0A0A',su:'#141414',tx:'#E8E8E8',hd:'#FFFFFF',ac:'#F5FF00'},
-    {id:'raspberry',    name:'Raspberry',      bg:'#C0184A',su:'#A81040',tx:'#FFE4F0',hd:'#FFFFFF',ac:'#FFD700'},
-    {id:'neon-noir',    name:'Neon Noir',      bg:'#080808',su:'#121212',tx:'#DADADA',hd:'#FFFFFF',ac:'#00FF88'},
-    {id:'fiesta',       name:'Fiesta',         bg:'#DD3022',su:'#C82818',tx:'#FFF0EE',hd:'#FFFFFF',ac:'#FFD700'},
-    {id:'ultramarine',  name:'Ultramarine',    bg:'#1A0878',su:'#140662',tx:'#D8D8FF',hd:'#FFFFFF',ac:'#00D4FF'},
-    {id:'pomegranate',  name:'Pomegranate',    bg:'#9B1A2A',su:'#861420',tx:'#FFE4E8',hd:'#FFFFFF',ac:'#FFD700'},
-    {id:'noir-green',   name:'Noir Green',     bg:'#0A0A0A',su:'#141414',tx:'#DADADA',hd:'#FFFFFF',ac:'#39FF14'},
-    {id:'indigo-bold',  name:'Indigo',         bg:'#3730A3',su:'#2D2694',tx:'#E4E6FF',hd:'#FFFFFF',ac:'#FCD34D'},
-    {id:'punch',        name:'Punch',          bg:'#E01060',su:'#C80050',tx:'#FFE8F4',hd:'#FFFFFF',ac:'#FFD700'},
+  nature:[
+    {id:'redwood',      name:'Redwood',        bg:'#F0E0D4',tx:'#180A06',ac:'#A84030'},
+    {id:'lichen',       name:'Lichen',         bg:'#E8EDD8',tx:'#10180A',ac:'#6A7A40'},
+    {id:'driftwood',    name:'Driftwood',      bg:'#F0EAD8',tx:'#1A140C',ac:'#988060'},
+    {id:'balsam',       name:'Balsam',         bg:'#0A1408',tx:'#DCF0D8',ac:'#3A6840'},
+    {id:'pebble',       name:'Pebble',         bg:'#E8E4DC',tx:'#181410',ac:'#887870'},
+    {id:'terracotta-n', name:'Terracotta',     bg:'#F0E4D4',tx:'#180C04',ac:'#B86040'},
+    {id:'kelp',         name:'Kelp',           bg:'#101808',tx:'#D8ECC8',ac:'#4A6830'},
+    {id:'chalky-coral', name:'Chalky Coral',   bg:'#FAE8E0',tx:'#180C08',ac:'#D07860'},
+    {id:'bark-brown',   name:'Bark Brown',     bg:'#F0E8D8',tx:'#1A1004',ac:'#8C6030'},
+    {id:'sea-glass',    name:'Sea Glass',      bg:'#E0F0EC',tx:'#081814',ac:'#40A088'},
+    {id:'silt',         name:'Silt',           bg:'#ECE8E0',tx:'#181410',ac:'#9C9080'},
+    {id:'canyon',       name:'Canyon',         bg:'#F0E4D4',tx:'#180C04',ac:'#C07040'},
+    {id:'agave',        name:'Agave',          bg:'#E8F0E4',tx:'#101804',ac:'#608040'},
+    {id:'iron',         name:'Iron',           bg:'#E4E8EC',tx:'#101418',ac:'#6080A0'},
+    {id:'sandstone',    name:'Sandstone',      bg:'#F0EAD8',tx:'#1A160A',ac:'#B09050'},
+    {id:'birchwood',    name:'Birchwood',      bg:'#F4EEE0',tx:'#1A1608',ac:'#A88848'},
+    {id:'glacier-n',    name:'Glacier',        bg:'#E4EEF8',tx:'#081020',ac:'#50A0D8'},
+    {id:'fog',          name:'Fog',            bg:'#EBEBED',tx:'#14141A',ac:'#8888A0'},
+    {id:'hemp-nat',     name:'Hemp',           bg:'#F0EAD8',tx:'#1A160A',ac:'#8C7840'},
+    {id:'stone-nat',    name:'Stone',          bg:'#E8E4E0',tx:'#1C1814',ac:'#7A7068'},
   ],
-  pastel:[
-    {id:'blush-rose',   name:'Blush Rose',     bg:'#FDF0F2',su:'#F5E4E8',tx:'#2A1218',hd:'#1A080E',ac:'#C08898'},
-    {id:'serenity',     name:'Serenity',       bg:'#F0F4FC',su:'#E4ECF8',tx:'#0E1428',hd:'#080E1E',ac:'#7890B8'},
-    {id:'mint-pastel',  name:'Mint',           bg:'#F0FCF8',su:'#E4F5EE',tx:'#0E2018',hd:'#081410',ac:'#58A080'},
-    {id:'lavender',     name:'Lavender',       bg:'#F4F0FC',su:'#EAE4F5',tx:'#1A1028',hd:'#100818',ac:'#8070C0'},
-    {id:'butter',       name:'Butter',         bg:'#FFF8E8',su:'#F5EED8',tx:'#1C1804',hd:'#100E00',ac:'#A88840'},
-    {id:'peach-fuzz',   name:'Peach Fuzz',     bg:'#FFF4EC',su:'#F8E8DC',tx:'#281408',hd:'#1A0C04',ac:'#C08068'},
-    {id:'powder-blue',  name:'Powder Blue',    bg:'#EEF4FC',su:'#E2ECF8',tx:'#0E1828',hd:'#080E1E',ac:'#6888B0'},
-    {id:'baby-lilac',   name:'Baby Lilac',     bg:'#F8F0FC',su:'#F0E4F8',tx:'#1A0C24',hd:'#100818',ac:'#8870B8'},
-    {id:'melon',        name:'Melon',          bg:'#FFF0EC',su:'#F8E4DF',tx:'#280C08',hd:'#1A0804',ac:'#C07068'},
-    {id:'sage-pastel',  name:'Sage',           bg:'#EEF5EE',su:'#E2EEE2',tx:'#101C10',hd:'#081408',ac:'#608870'},
-    {id:'sky-pastel',   name:'Sky',            bg:'#EDF8FD',su:'#DFF0F8',tx:'#081A24',hd:'#041018',ac:'#5890B0'},
-    {id:'cotton-candy', name:'Cotton Candy',   bg:'#FDF4F8',su:'#F5E8F0',tx:'#240C18',hd:'#180810',ac:'#B07098'},
-    {id:'honeydew',     name:'Honeydew',       bg:'#F4FBF4',su:'#E8F5E8',tx:'#0C1C0C',hd:'#081408',ac:'#508870'},
-    {id:'soft-lemon',   name:'Soft Lemon',     bg:'#FFFEF0',su:'#F8F8E0',tx:'#1A1A04',hd:'#0C0C00',ac:'#A09040'},
-    {id:'petal',        name:'Petal',          bg:'#FDF2F8',su:'#F5E4F0',tx:'#220C1A',hd:'#180810',ac:'#A87098'},
-    {id:'mocha-mousse', name:'Mocha Mousse',   bg:'#F5EDE8',su:'#EDE4DC',tx:'#241410',hd:'#160C08',ac:'#907060'},
-    {id:'seafoam',      name:'Seafoam',        bg:'#EEF8F5',su:'#E2F2EE',tx:'#0C1E18',hd:'#081410',ac:'#508880'},
-    {id:'lilac-fog',    name:'Lilac Fog',      bg:'#F5F0F8',su:'#EDE4F5',tx:'#180E24',hd:'#100818',ac:'#8070B0'},
-    {id:'bluebell',     name:'Bluebell',       bg:'#F0F2FC',su:'#E4E8F8',tx:'#0E1230',hd:'#080C20',ac:'#6070A8'},
-    {id:'champagne',    name:'Champagne',      bg:'#FAF5EC',su:'#F2EAD8',tx:'#201A0C',hd:'#141008',ac:'#A08848'},
+  electric:[
+    {id:'neon-flame',   name:'Neon Flame',     bg:'#090200',tx:'#FFE0D0',ac:'#FF4E00'},
+    {id:'electric-lime',name:'Electric Lime',  bg:'#040A00',tx:'#E4FFD0',ac:'#AAFF00'},
+    {id:'shocking-pink',name:'Shocking Pink',  bg:'#0F0008',tx:'#FFD0F0',ac:'#FF1694'},
+    {id:'hyper-blue',   name:'Hyper Blue',     bg:'#00040F',tx:'#D0E8FF',ac:'#0050FF'},
+    {id:'citrus-zap',   name:'Citrus Zap',     bg:'#0A0A00',tx:'#FFFFE0',ac:'#FFD700'},
+    {id:'techno-violet',name:'Techno Violet',  bg:'#08000F',tx:'#EED0FF',ac:'#AA00FF'},
+    {id:'volt',         name:'Volt',           bg:'#050800',tx:'#EEFFC0',ac:'#80FF00'},
+    {id:'neo-mint',     name:'Neo Mint',       bg:'#001208',tx:'#C0FFE8',ac:'#00FF80'},
+    {id:'hot-tangerine',name:'Hot Tangerine',  bg:'#0F0500',tx:'#FFE8D0',ac:'#FF6500'},
+    {id:'atomic-teal',  name:'Atomic Teal',    bg:'#001818',tx:'#C0FFFF',ac:'#00FFEF'},
+    {id:'plasma-pink',  name:'Plasma Pink',    bg:'#0F0010',tx:'#FFD0FF',ac:'#FF00CC'},
+    {id:'solar-yellow', name:'Solar Yellow',   bg:'#0F0F00',tx:'#FFFFF0',ac:'#FFE000'},
+    {id:'aqua-splash',  name:'Aqua Splash',    bg:'#001018',tx:'#D0F0FF',ac:'#00C8FF'},
+    {id:'radioactive',  name:'Radioactive',    bg:'#020A00',tx:'#E8FFD0',ac:'#60FF00'},
+    {id:'blaze-orange', name:'Blaze Orange',   bg:'#100400',tx:'#FFE8D0',ac:'#FF5500'},
+    {id:'chrome',       name:'Chrome',         bg:'#080808',tx:'#E8E8E8',ac:'#C0C8D8'},
+    {id:'laser-lemon',  name:'Laser Lemon',    bg:'#0A0A00',tx:'#FFFFF0',ac:'#FFFF00'},
+    {id:'vivid-violet', name:'Vivid Violet',   bg:'#060012',tx:'#EED8FF',ac:'#8800FF'},
+    {id:'infrared',     name:'Infrared',       bg:'#100008',tx:'#FFD8E8',ac:'#FF0044'},
+    {id:'hyper-coral',  name:'Hyper Coral',    bg:'#100400',tx:'#FFE4D8',ac:'#FF4040'},
   ],
 };
 
 // ── FONTS ─────────────────────────────────────────────────────────────────────
 const HEADING_FONTS = [
   { group:'Custom', fonts:['Reikna'] },
-  { group:'Fontshare Creative', fonts:[
-    'Clash Display','Melodrama','Tanker','Zodiak','Boska','Britney','Panchang',
-    'Stardom','Technor','Expose','Boxing','Gambetta','Gambarino','Nippo','Supreme',
-    'Striper','Aktura','Telma','RX100','Sentient','New Title','Clash Grotesk',
-  ]},
   { group:'Display & Impact', fonts:[
     'Bebas Neue','Oswald','Anton','Righteous','Black Ops One','Racing Sans One','Russo One',
     'Staatliches','Big Shoulders Display','Teko','Squada One','Fjalla One','Graduate',
@@ -1104,112 +1006,39 @@ const BODY_FONTS = [
   ]},
 ];
 
-// ── FONT PAIRINGS — 6 moods × 5 pairings ─────────────────────────────────────
-const FONT_MOODS = ['tech','professional','luxury','bold','warm','editorial','creative'];
-const FONT_PAIRINGS = {
-  tech:[
-    {id:'michroma',     name:'Michroma',    hf:'Michroma',             bf:'Michroma',       desc:'Pure precision'},
-    {id:'circuit',      name:'Circuit',     hf:'Orbitron',             bf:'Share Tech Mono',desc:'Space-age clarity'},
-    {id:'terminal',     name:'Terminal',    hf:'Courier Prime',        bf:'IBM Plex Mono',  desc:'Dev aesthetic'},
-    {id:'syntax',       name:'Syntax',      hf:'Space Grotesk',        bf:'JetBrains Mono', desc:'Code-forward'},
-    {id:'grid',         name:'Grid',        hf:'Technor',              bf:'Satoshi',        desc:'System design'},
-  ],
-  professional:[
-    {id:'sharp-pro',    name:'Sharp',       hf:'Montserrat',           bf:'Lato',           desc:'Clean authority'},
-    {id:'tech-pro',     name:'Tech',        hf:'Space Grotesk',        bf:'DM Sans',        desc:'Modern agency'},
-    {id:'structured',   name:'Structured',  hf:'Raleway',              bf:'Mulish',         desc:'Polished & precise'},
-    {id:'command',      name:'Command',     hf:'Oswald',               bf:'Barlow',         desc:'Confident, direct'},
-    {id:'clarity',      name:'Clarity',     hf:'Inter',                bf:'Source Sans 3',  desc:'Frictionless trust'},
-  ],
-  luxury:[
-    {id:'timeless',     name:'Timeless',    hf:'Cormorant Garamond',   bf:'EB Garamond',    desc:'Old-world elegance'},
-    {id:'prestige',     name:'Prestige',    hf:'Playfair Display',     bf:'Raleway',        desc:'Classic high-end'},
-    {id:'ceremonial',   name:'Ceremonial',  hf:'Cinzel',               bf:'Raleway',        desc:'Refined ceremony'},
-    {id:'modern-lux',   name:'Modern Lux',  hf:'DM Serif Display',     bf:'DM Sans',        desc:'Contemporary luxury'},
-    {id:'opulent',      name:'Opulent',     hf:'Fraunces',             bf:'Libre Baskerville', desc:'Literary richness'},
-  ],
-  bold:[
-    {id:'street',       name:'Street',      hf:'Bebas Neue',           bf:'Barlow Condensed',desc:'Raw energy'},
-    {id:'athletic',     name:'Athletic',    hf:'Big Shoulders Display',bf:'Barlow',         desc:'Power & motion'},
-    {id:'industrial',   name:'Industrial',  hf:'Oswald',               bf:'Courier Prime',  desc:'Built tough'},
-    {id:'signal',       name:'Signal',      hf:'Fjalla One',           bf:'Cabin',          desc:'Direct, no fuss'},
-    {id:'tactical',     name:'Tactical',    hf:'Black Ops One',        bf:'Rajdhani',       desc:'Commanding presence'},
-  ],
-  warm:[
-    {id:'neighbourly',  name:'Neighbourly', hf:'Nunito',               bf:'Lato',           desc:'Round & welcoming'},
-    {id:'handmade',     name:'Handmade',    hf:'Lobster',              bf:'Merriweather',   desc:'Crafted with care'},
-    {id:'friendly',     name:'Friendly',    hf:'Fredoka One',          bf:'Nunito',         desc:'Playful warmth'},
-    {id:'local',        name:'Local',       hf:'Cabin',                bf:'Open Sans',      desc:'Approachable service'},
-    {id:'personal',     name:'Personal',    hf:'Caveat',               bf:'Lato',           desc:'Handwritten touch'},
-  ],
-  editorial:[
-    {id:'broadsheet',   name:'Broadsheet',  hf:'Playfair Display',     bf:'Libre Baskerville',desc:'Print authority'},
-    {id:'academia',     name:'Academia',    hf:'IM Fell English',      bf:'Crimson Text',   desc:'Classical intellect'},
-    {id:'dispatch',     name:'Dispatch',    hf:'Syne',                 bf:'IBM Plex Mono',  desc:'Tech editorial'},
-    {id:'deco',         name:'Deco',        hf:'Poiret One',           bf:'Josefin Sans',   desc:'Art deco press'},
-    {id:'magazine',     name:'Magazine',    hf:'Abril Fatface',        bf:'Lora',           desc:'Bold cover story'},
-  ],
-  creative:[
-    {id:'reikna',       name:'Signature',   hf:'Reikna',               bf:'Inter',          desc:'Custom brand energy'},
-    {id:'retro',        name:'Retro',       hf:'Righteous',            bf:'Source Sans 3',  desc:'Vintage revival'},
-    {id:'orbital',      name:'Orbital',     hf:'Orbitron',             bf:'Share Tech Mono',desc:'Future forward'},
-    {id:'studio',       name:'Studio',      hf:'Syne',                 bf:'Outfit',         desc:'Design studio'},
-    {id:'zero',         name:'Zero',        hf:'Outfit',               bf:'Outfit',         desc:'One font, pure form'},
-  ],
-};
-const QUICK_PAIRINGS = Object.values(FONT_PAIRINGS).flat();
-
-const PRESETS = [
-  {
-    name:'The Atelier',
-    palette:'parchment', palTab:'neutral',
-    hFont:'Cabinet Grotesk', bFont:'Erode', nFont:'Cabinet Grotesk',
-    btn:'outline', corner:'sharp', spacing:'balanced', header:'split', vibe:'premium',
-  },
+const QUICK_PAIRINGS = [
+  {id:'reikna',     name:'Reikna',      hf:'Reikna',               bf:'Inter'},
+  {id:'whisper',    name:'Whisper',     hf:'Cormorant Garamond',   bf:'EB Garamond'},
+  {id:'terminal',   name:'Terminal',    hf:'Space Mono',           bf:'Space Mono'},
+  {id:'press',      name:'Press',       hf:'Abril Fatface',        bf:'Lora'},
+  {id:'broadsheet', name:'Broadsheet',  hf:'Playfair Display',     bf:'Libre Baskerville'},
+  {id:'street',     name:'Street',      hf:'Bebas Neue',           bf:'Barlow Condensed'},
+  {id:'orbital',    name:'Orbital',     hf:'Orbitron',             bf:'Share Tech Mono'},
+  {id:'handmade',   name:'Handmade',    hf:'Caveat',               bf:'Lato'},
+  {id:'romance',    name:'Romance',     hf:'Great Vibes',          bf:'EB Garamond'},
+  {id:'deco',       name:'Deco',        hf:'Poiret One',           bf:'Josefin Sans'},
+  {id:'studio',     name:'Studio',      hf:'DM Serif Display',     bf:'DM Sans'},
+  {id:'debug',      name:'Debug',       hf:'Syne',                 bf:'IBM Plex Mono'},
+  {id:'bounce',     name:'Bounce',      hf:'Fredoka One',          bf:'Nunito'},
+  {id:'retro',      name:'Retro',       hf:'Righteous',            bf:'Source Sans 3'},
+  {id:'couture',    name:'Couture',     hf:'Cinzel',               bf:'Raleway'},
+  {id:'athletic',   name:'Athletic',    hf:'Big Shoulders Display',bf:'Barlow'},
+  {id:'academia',   name:'Academia',    hf:'IM Fell English',      bf:'Crimson Text'},
+  {id:'craft',      name:'Craft',       hf:'Lobster',              bf:'Merriweather'},
+  {id:'zero',       name:'Zero',        hf:'Outfit',               bf:'Outfit'},
+  {id:'industrial', name:'Industrial',  hf:'Oswald',               bf:'Courier Prime'},
+  {id:'signal',     name:'Signal',      hf:'Fjalla One',           bf:'Cabin'},
+  {id:'folio',      name:'Folio',       hf:'Fraunces',             bf:'Space Grotesk'},
+  {id:'dispatch',   name:'Dispatch',    hf:'Syne',                 bf:'Epilogue'},
+  {id:'revival',    name:'Revival',     hf:'Young Serif',          bf:'Archivo'},
+  {id:'brutalist',  name:'Brutalist',   hf:'League Gothic',        bf:'Onest'},
+  {id:'manuscript', name:'Manuscript',  hf:'Newsreader',           bf:'Literata'},
+  {id:'grotesque',  name:'Grotesque',   hf:'Bricolage Grotesque',  bf:'Instrument Sans'},
+  {id:'nouveau',    name:'Nouveau',     hf:'Marcellus SC',         bf:'Questrial'},
+  {id:'tabletop',   name:'Tabletop',    hf:'DM Serif Display',     bf:'Outfit'},
+  {id:'compound',   name:'Compound',    hf:'Space Grotesk',        bf:'Space Grotesk'},
+  {id:'serif-tech', name:'Serif + Tech',hf:'Piazzolla',            bf:'DM Mono'},
 ];
-
-function loadPreset(preset) {
-  // palette
-  const pal = [...Object.values(PALS).flat()].find(p=>p.id===preset.palette);
-  if(pal){ S.palette=pal; S.bg=pal.bg; S.su=pal.su; S.tx=pal.tx; S.hd=pal.hd; S.ac1=pal.ac; S.ac2=deriveAc2(pal); S.palTab=preset.palTab||'neutral'; syncColorInputs(); }
-  // fonts
-  S.hFont=preset.hFont; S.bFont=preset.bFont; S.nFont=preset.nFont||preset.hFont;
-  loadFont(preset.hFont); loadFont(preset.bFont);
-  // style
-  S.btn     = BTNS.find(b=>b.id===preset.btn)     || BTNS[0];
-  S.corner  = CORNERS.find(c=>c.id===preset.corner)  || CORNERS[0];
-  S.spacing = SPACINGS.find(s=>s.id===preset.spacing) || SPACINGS[1];
-  S.header  = HEADERS.find(h=>h.id===preset.header)  || HEADERS[0];
-  S.vibe    = VIBES.find(v=>v.id===preset.vibe)    || VIBES[0];
-  renderPalTabs(); renderPalGrid(); renderQuickPairings(); renderVibes(); renderHeaders(); renderDetails(); applyPreview();
-  document.querySelector('.config-col').scrollTop=0;
-}
-
-function shuffleDesign() {
-  // random palette
-  const tabs=Object.keys(PALS);
-  const tab=tabs[Math.floor(Math.random()*tabs.length)];
-  const pal=PALS[tab][Math.floor(Math.random()*PALS[tab].length)];
-  S.palette=pal; S.palTab=tab;
-  S.bg=pal.bg; S.su=pal.su; S.tx=pal.tx; S.hd=pal.hd; S.ac1=pal.ac; S.ac2=deriveAc2(pal);
-  syncColorInputs();
-  // random pairing
-  const moods=Object.keys(FONT_PAIRINGS);
-  const mood=moods[Math.floor(Math.random()*moods.length)];
-  const pair=FONT_PAIRINGS[mood][Math.floor(Math.random()*FONT_PAIRINGS[mood].length)];
-  S.hFont=pair.hf; S.bFont=pair.bf; S.nFont=pair.hf; S.quickId=pair.id;
-  loadFont(pair.hf); loadFont(pair.bf);
-  // random style
-  S.btn     = BTNS[Math.floor(Math.random()*BTNS.length)];
-  S.corner  = CORNERS[Math.floor(Math.random()*CORNERS.length)];
-  S.spacing = SPACINGS[Math.floor(Math.random()*SPACINGS.length)];
-  S.header  = HEADERS[Math.floor(Math.random()*HEADERS.length)];
-  S.vibe    = VIBES[Math.floor(Math.random()*VIBES.length)];
-  renderPalTabs(); renderPalGrid(); renderQuickPairings(); renderVibes(); renderHeaders(); renderDetails(); applyPreview();
-  // spin animation
-  const btn=document.querySelector('.shuffle-btn');
-  if(btn){ btn.classList.add('spinning'); setTimeout(()=>btn.classList.remove('spinning'),550); }
-}
 
 const VIBES = [
   {id:'minimal',   name:'Minimal',   desc:'Generous space, quiet confidence'},
@@ -1289,60 +1118,35 @@ const ALL_FONTS = (() => {
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 const S = {
-  palTab:   'neutral',
-  palette:  PALS.neutral[0],
-  bg:       PALS.neutral[0].bg,
-  su:       PALS.neutral[0].su,
-  tx:       PALS.neutral[0].tx,
-  hd:       PALS.neutral[0].hd,
-  ac1:      PALS.neutral[0].ac,
-  ac2:      deriveAc2(PALS.neutral[0]),
+  palTab:   'classic',
+  palette:  PALS.classic[0],
+  bg:       PALS.classic[0].bg,
+  tx:       PALS.classic[0].tx,
+  ac1:      PALS.classic[0].ac,
+  ac2:      deriveAc2(PALS.classic[0]),
   hFont:    'Reikna',
   bFont:    'Inter',
   nFont:    'Reikna',
   logo:     null,
   customFontName: '',
   quickId:  'reikna',
-  moodTab:  'tech',
   vibe:     VIBES[3],
   corner:   CORNERS[0],
   btn:      BTNS[0],
   spacing:  SPACINGS[1],
-  hWeight:  700,
-  bWeight:  400,
   header:   HEADERS[0],
   sections: new Set(['hero','services','about','contact']),
   photos:   [],
 };
 
-const loadedFonts = new Set(['Reikna','Bebas Neue','Inter','Playfair Display','Merriweather','Oswald','DM Sans','Space Grotesk','Montserrat','Raleway','IBM Plex Mono','IBM Plex Sans','Abril Fatface','Lato','Cormorant Garamond','Roboto','Josefin Sans','Syne','Source Sans 3']);
-
-const FONTSHARE_SLUGS = {
-  'Clash Display':'clash-display','Clash Grotesk':'clash-grotesk',
-  'Melodrama':'melodrama','Tanker':'tanker','Satoshi':'satoshi',
-  'Zodiak':'zodiak','Boska':'boska','Cabinet Grotesk':'cabinet-grotesk',
-  'General Sans':'general-sans','Switzer':'switzer','Technor':'technor',
-  'Britney':'britney','Synonym':'synonym','Stardom':'stardom',
-  'Panchang':'panchang','Nippo':'nippo','Supreme':'supreme',
-  'Gambetta':'gambetta','Expose':'expose','Boxing':'boxing',
-  'Striper':'striper','Aktura':'aktura','Telma':'telma',
-  'RX100':'rx-100','Gambarino':'gambarino','Sentient':'sentient',
-  'Erode':'erode','Author':'author','Chillax':'chillax',
-  'Chubbo':'chubbo','Bonny':'bonny','Pally':'pally',
-  'Roundo':'roundo','Excon':'excon','New Title':'new-title',
-};
+const loadedFonts = new Set(['Reikna','Bebas Neue','Inter','Playfair Display','Merriweather','Oswald','DM Sans','Space Grotesk','Montserrat','Raleway','IBM Plex Mono','IBM Plex Sans','Abril Fatface','Lato','Cormorant Garamond','Roboto','Josefin Sans','Syne','Source Sans 3','Fraunces','Epilogue','Young Serif','Archivo','League Gothic','Onest','Newsreader','Literata','Bricolage Grotesque','Instrument Sans','Marcellus SC','Questrial','DM Serif Display','Outfit','Piazzolla','DM Mono']);
 
 function loadFont(name) {
   if(loadedFonts.has(name)) return;
   loadedFonts.add(name);
   const l=document.createElement('link');
   l.rel='stylesheet';
-  const slug=FONTSHARE_SLUGS[name];
-  if(slug) {
-    l.href=`https://api.fontshare.com/v2/css?f[]=${slug}@100,300,400,500,600,700,800,900&display=swap`;
-  } else {
-    l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(name).replace(/%20/g,'+')}:wght@100;300;400;500;600;700;800;900&display=swap`;
-  }
+  l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(name).replace(/%20/g,'+')}:wght@400;700&display=swap`;
   document.head.appendChild(l);
 }
 
@@ -1357,7 +1161,7 @@ function switchPalTab(tab) { S.palTab=tab; renderPalTabs(); renderPalGrid(); }
 function renderPalGrid() {
   document.getElementById('palette-grid').innerHTML = PALS[S.palTab].map(p=>
     `<div class="pal-tile${p.id===S.palette.id?' active':''}" onclick="pickPal('${p.id}')">
-      <div class="pal-bar"><div class="pal-bg-s" style="background:${p.bg}"></div><div class="pal-su-s" style="background:${p.su}"></div><div class="pal-ac-s" style="background:${p.ac}"></div></div>
+      <div class="pal-bar"><div class="pal-bg-s" style="background:${p.bg}"></div><div class="pal-ac-s" style="background:${p.ac}"></div></div>
       <span class="pal-name">${p.name}</span>
     </div>`
   ).join('');
@@ -1365,13 +1169,13 @@ function renderPalGrid() {
 function pickPal(id) {
   const all=[...Object.values(PALS).flat()];
   S.palette=all.find(p=>p.id===id);
-  S.bg=S.palette.bg; S.su=S.palette.su; S.tx=S.palette.tx; S.hd=S.palette.hd; S.ac1=S.palette.ac; S.ac2=deriveAc2(S.palette);
+  S.bg=S.palette.bg; S.tx=S.palette.tx; S.ac1=S.palette.ac; S.ac2=deriveAc2(S.palette);
   syncColorInputs();
   renderPalGrid(); renderQuickPairings(); renderVibes(); renderHeaders(); renderDetails(); applyPreview();
 }
 
 function syncColorInputs(){
-  const slots={bg:S.bg,su:S.su,tx:S.tx,hd:S.hd,ac1:S.ac1};
+  const slots={bg:S.bg,tx:S.tx,ac1:S.ac1,ac2:S.ac2};
   for(const[k,v] of Object.entries(slots)){
     const sw=document.getElementById('sw-'+k);
     const inp=document.getElementById('inp-'+k);
@@ -1383,7 +1187,7 @@ function syncColorInputs(){
 }
 
 function onColorPick(slot,val){
-  S[slot]=val;
+  S[slot==='ac1'?'ac1':slot==='ac2'?'ac2':slot]=val;
   document.getElementById('sw-'+slot).style.background=val;
   document.getElementById('hex-'+slot).value=val;
   renderVibes(); renderHeaders(); applyPreview();
@@ -1398,22 +1202,18 @@ function onHexType(slot,val){
 }
 
 function resetColor(slot){
-  const map={bg:S.palette.bg,su:S.palette.su,tx:S.palette.tx,hd:S.palette.hd,ac1:S.palette.ac};
+  const map={bg:S.palette.bg,tx:S.palette.tx,ac1:S.palette.ac,ac2:deriveAc2(S.palette)};
   S[slot]=map[slot];
   syncColorInputs();
   renderVibes(); renderHeaders(); applyPreview();
 }
 
 // ── RENDER QUICK PAIRINGS ─────────────────────────────────────────────────────
-function switchMoodTab(mood){ S.moodTab=mood; renderQuickPairings(); }
 function renderQuickPairings() {
-  document.getElementById('font-mood-tabs').innerHTML = FONT_MOODS.map(m=>
-    `<div class="fq-tab${m===S.moodTab?' active':''}" onclick="switchMoodTab('${m}')">${m.charAt(0).toUpperCase()+m.slice(1)}</div>`
-  ).join('');
-  document.getElementById('font-quick-grid').innerHTML = FONT_PAIRINGS[S.moodTab].map(p=>
+  document.getElementById('font-quick-grid').innerHTML = QUICK_PAIRINGS.map(p=>
     `<div class="fq-tile${p.id===S.quickId?' active':''}" onclick="pickQuickPairing('${p.id}')">
       <span class="fq-heading" style="font-family:'${p.hf}',serif">${p.name}</span>
-      <span class="fq-body" style="font-family:'${p.bf}',sans-serif">${p.desc}</span>
+      <span class="fq-body" style="font-family:'${p.bf}',sans-serif">Body sample text</span>
       <span class="fq-name">${p.hf.split(' ')[0]} / ${p.bf.split(' ')[0]}</span>
     </div>`
   ).join('');
@@ -1561,7 +1361,6 @@ function pickVibe(id) { S.vibe=VIBES.find(v=>v.id===id); renderVibes(); applyPre
 
 // ── RENDER DETAILS ────────────────────────────────────────────────────────────
 function renderDetails() {
-  syncWeightSliders();
   const ac=S.palette.ac;
   document.getElementById('corner-row').innerHTML=CORNERS.map(c=>
     `<div class="detail-tile${c.id===S.corner.id?' active':''}" onclick="pickCorner('${c.id}')">
@@ -1594,19 +1393,6 @@ function renderHeaders() {
 }
 function pickHeader(id){ S.header=HEADERS.find(h=>h.id===id); renderHeaders(); applyPreview(); }
 
-const WEIGHT_NAMES={100:'Thin',200:'ExtraLight',300:'Light',400:'Regular',500:'Medium',600:'SemiBold',700:'Bold',800:'ExtraBold',900:'Black'};
-function setWeight(type,val){
-  const w=parseInt(val);
-  if(type==='h'){S.hWeight=w;document.getElementById('hw-val').textContent=w;document.getElementById('hw-name').textContent=WEIGHT_NAMES[w]||'';}
-  else{S.bWeight=w;document.getElementById('bw-val').textContent=w;document.getElementById('bw-name').textContent=WEIGHT_NAMES[w]||'';}
-  applyPreview();
-}
-function syncWeightSliders(){
-  const hs=document.getElementById('hw-slider'),bs=document.getElementById('bw-slider');
-  if(hs){hs.value=S.hWeight;document.getElementById('hw-val').textContent=S.hWeight;document.getElementById('hw-name').textContent=WEIGHT_NAMES[S.hWeight]||'';}
-  if(bs){bs.value=S.bWeight;document.getElementById('bw-val').textContent=S.bWeight;document.getElementById('bw-name').textContent=WEIGHT_NAMES[S.bWeight]||'';}
-}
-
 // ── RENDER SECTIONS ───────────────────────────────────────────────────────────
 function renderSections() {
   document.getElementById('sections-grid').innerHTML = SECTIONS.map(sec=>{
@@ -1629,16 +1415,14 @@ function applyPreview() {
   mock.style.color=S.tx;
   mock.style.fontFamily=`'${S.bFont}',sans-serif`;
 
-  document.querySelectorAll('.m-h1,.m-cta-h,.m-card-h').forEach(el=>{ el.style.fontFamily=`'${S.hFont}',serif`; el.style.fontWeight=S.hWeight; });
+  document.querySelectorAll('.m-h1,.m-cta-h,.m-card-h').forEach(el=>el.style.fontFamily=`'${S.hFont}',serif`);
   document.querySelector('.m-nav-brand').style.fontFamily=`'${S.nFont}',serif`;
-  document.querySelector('.m-nav-brand').style.fontWeight=S.hWeight;
-  mock.style.fontWeight=S.bWeight;
   document.querySelectorAll('.m-eyebrow,.m-sec-label').forEach(el=>el.style.color=S.ac2);
   document.querySelectorAll('.m-nav-brand,.m-footer-b').forEach(el=>el.style.color=S.ac1);
   const mLogo=document.getElementById('m-logo'), mBrand=document.getElementById('m-brand');
   if(S.logo){ mLogo.src=S.logo; mLogo.style.display='block'; mBrand.style.display='none'; }
   else{ mLogo.style.display='none'; mBrand.style.display=''; }
-  document.querySelectorAll('.m-h1,.m-cta-h,.m-card-h').forEach(el=>el.style.color=S.hd);
+  document.querySelectorAll('.m-h1,.m-cta-h,.m-card-h').forEach(el=>el.style.color=S.tx);
   document.querySelectorAll('.m-btn').forEach(el=>{
     el.style.background=S.ac1; el.style.color=S.bg; el.style.border='none';
     el.style.borderRadius=c.r; el.style.textDecoration='none';
@@ -1647,7 +1431,7 @@ function applyPreview() {
     if(btn.id==='ghost'){   el.style.background='transparent'; el.style.border='none'; el.style.color=S.ac1; el.style.textDecoration='underline'; el.style.textUnderlineOffset='3px'; el.style.paddingLeft='0'; el.style.paddingRight='0'; }
     if(btn.id==='pill'){    el.style.borderRadius='999px'; }
   });
-  document.querySelectorAll('.m-card').forEach(el=>{ el.style.background=S.su; el.style.borderRadius=c.r; });
+  document.querySelectorAll('.m-card').forEach(el=>{ el.style.background=cd; el.style.borderRadius=c.r; });
   document.querySelectorAll('.m-nav,.m-services,.m-cta,.m-footer').forEach(el=>el.style.borderColor='rgba(128,128,128,.1)');
 
   const mHero = document.querySelector('.m-hero');
@@ -1684,7 +1468,7 @@ function applyVibe() {
   const cta    = document.querySelector('.m-cta');
 
   // ── Reset all vibe overrides so switching is clean ────────────────────────
-  if(h1)      { h1.style.fontSize='1.7rem'; h1.style.letterSpacing='.02em'; h1.style.color=S.hd; }
+  if(h1)      { h1.style.fontSize='1.7rem'; h1.style.letterSpacing='.02em'; h1.style.color=S.tx; }
   if(hero)    { hero.style.background=''; }
   if(sub)     { sub.style.color=''; sub.style.opacity='.5'; }
   if(eyebrow) { eyebrow.style.fontSize='.4rem'; eyebrow.style.letterSpacing='.22em'; eyebrow.style.color=S.ac2; eyebrow.style.opacity='1'; }
@@ -1782,8 +1566,9 @@ function fmBtn(label){
 }
 function fmCard(h,p){
   const isDark=hexToRgb(S.bg).reduce((s,v)=>s+v,0)/3<128;
-  return `<div class="fm-card" style="background:${S.su};border-radius:${S.corner.r}">
-    <span class="fm-card-h" style="font-family:'${S.hFont}',serif;color:${S.hd}">${h}</span>
+  const surf=isDark?'rgba(255,255,255,.05)':'rgba(0,0,0,.04)';
+  return `<div class="fm-card" style="background:${surf};border-radius:${S.corner.r}">
+    <span class="fm-card-h" style="font-family:'${S.hFont}',serif;color:${S.tx}">${h}</span>
     <span class="fm-card-p" style="color:${S.tx}">${p}</span>
   </div>`;
 }
@@ -1814,14 +1599,14 @@ function renderFullMock(){
   const heroBg=S.photos[0]?`background-image:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(${S.photos[0].url});background-size:cover;background-position:center`:'';
   html+=`<div class="fm-section" style="${heroBg};${heroAlign}">
     <span class="fm-eyebrow" style="color:${S.photos[0]?'rgba(255,255,255,.6)':S.ac2}">${document.getElementById('f-industry').value||'Premium Service'}</span>
-    <span class="fm-h1" style="font-family:${hf};color:${S.hd}">${brand}</span>
+    <span class="fm-h1" style="font-family:${hf};color:${S.tx}">${brand}</span>
     <span class="fm-p" style="color:${S.tx};${subMax}">A short, sharp description of what you do and who you serve — the one sentence that makes them stay.</span>
     ${fmBtn('Get Started')}${S.header.id!=='center'?'&nbsp;&nbsp;'+fmBtn('Learn More').replace(S.ac1,S.ac2).replace(`color:${S.bg}`,'color:'+S.tx):''}
   </div>`;
 
   // Stats
   if(secs.has('stats')){
-    html+=`<div class="fm-stats" style="background:${S.su};border-top:1px solid rgba(128,128,128,.1);border-bottom:1px solid rgba(128,128,128,.1)">
+    html+=`<div class="fm-stats" style="background:${mixHex(S.bg,S.tx,.06)};border-top:1px solid rgba(128,128,128,.1);border-bottom:1px solid rgba(128,128,128,.1)">
       ${['200+','4.9★','Same Day','100%'].map((n,i)=>
         `<div class="fm-stat"><span class="fm-stat-n" style="font-family:${hf};color:${S.ac1}">${n}</span><span class="fm-stat-l" style="color:${S.tx}">${['Jobs Done','Rating','Booking','Satisfaction'][i]}</span></div>`
       ).join('')}
@@ -1832,7 +1617,7 @@ function renderFullMock(){
   if(secs.has('services')){
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">What We Do</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">Services Built Around You</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Services Built Around You</span>
       <div class="fm-cards">
         ${fmCard('Service One','A brief description of what makes this offering valuable to your customers.')}
         ${fmCard('Service Two','A brief description of what makes this offering valuable to your customers.')}
@@ -1849,7 +1634,7 @@ function renderFullMock(){
       <div class="fm-grid-2">
         <div>
           <span class="fm-eyebrow" style="color:${S.ac2}">About Us</span>
-          <span class="fm-h2" style="font-family:${hf};color:${S.hd}">The Story Behind the Work</span>
+          <span class="fm-h2" style="font-family:${hf};color:${S.tx}">The Story Behind the Work</span>
           <span class="fm-p" style="color:${S.tx}">We started this business because we cared about doing it right. Every job, every client, every detail — that standard hasn't changed since day one.</span>
           ${fmBtn('Learn More')}
         </div>
@@ -1864,7 +1649,7 @@ function renderFullMock(){
     const surf=isDark?'rgba(255,255,255,.04)':'rgba(0,0,0,.04)';
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">Reviews</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">What Clients Say</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">What Clients Say</span>
       <div class="fm-reviews">
         ${['Amazing work — exceeded expectations.','Professional, fast, and affordable. Highly recommend.','Best service we\'ve found in the area.','Incredible attention to detail.'].map((t,i)=>
           `<div class="fm-review" style="background:${surf};border-radius:${S.corner.r}">
@@ -1884,7 +1669,7 @@ function renderFullMock(){
       : [...Array(8)].map((_,i)=>`<div style="aspect-ratio:1;background:${mixHex(S.bg,S.ac1,(.05+i*.04))};border-radius:${S.corner.r}"></div>`).join('');
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">Gallery</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">Our Work</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Our Work</span>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1.5rem">
         ${galleryItems}
       </div>
@@ -1895,7 +1680,7 @@ function renderFullMock(){
   if(secs.has('before-after')){
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">Before & After</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">The Difference We Make</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">The Difference We Make</span>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem">
         <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.tx,.1)};border-radius:${S.corner.r};display:flex;align-items:center;justify-content:center;font-size:.65rem;opacity:.35;letter-spacing:.1em;text-transform:uppercase">Before</div>
         <div style="aspect-ratio:16/9;background:${mixHex(S.bg,S.ac1,.2)};border-radius:${S.corner.r};display:flex;align-items:center;justify-content:center;font-size:.65rem;opacity:.5;letter-spacing:.1em;text-transform:uppercase;color:${S.ac1}">After</div>
@@ -1910,7 +1695,7 @@ function renderFullMock(){
     const surfHi=mixHex(S.bg,S.ac1,.12);
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">Pricing</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">Simple, Transparent Pricing</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Simple, Transparent Pricing</span>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem">
         ${[['Basic','$99','Core features included'],['Standard','$199','Most popular option'],['Premium','$349','Everything included']].map(([n,p,d],i)=>
           `<div style="background:${i===1?surfHi:surf};padding:2rem;border-radius:${S.corner.r};border:1px solid ${i===1?S.ac1:'transparent'};text-align:center">
@@ -1928,7 +1713,7 @@ function renderFullMock(){
   if(secs.has('faq')){
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">FAQ</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">Common Questions</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Common Questions</span>
       <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:.5rem">
         ${['How do I get started?','What areas do you service?','How long does it take?','Do you offer guarantees?'].map(q=>
           `<div style="border:1px solid rgba(128,128,128,.12);padding:1rem 1.25rem;border-radius:${S.corner.r}">
@@ -1943,7 +1728,7 @@ function renderFullMock(){
   if(secs.has('contact')){
     html+=`<div class="fm-section" style="text-align:center;background:${mixHex(S.bg,S.ac1,.1)}">
       <span class="fm-eyebrow" style="color:${S.ac2}">Get Started</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.hd};font-size:2.25rem">Ready to Work Together?</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx};font-size:2.25rem">Ready to Work Together?</span>
       <span class="fm-p" style="color:${S.tx};margin:0 auto 2rem">Don't wait — reach out today and we'll get you booked in.</span>
       ${fmBtn('Contact Us')}
     </div>`;
@@ -1953,7 +1738,7 @@ function renderFullMock(){
   if(secs.has('map')){
     html+=`<div class="fm-section alt">
       <span class="fm-eyebrow" style="color:${S.ac2}">Location</span>
-      <span class="fm-h2" style="font-family:${hf};color:${S.hd}">Find Us</span>
+      <span class="fm-h2" style="font-family:${hf};color:${S.tx}">Find Us</span>
       <div style="margin-top:1.25rem;height:180px;background:${mixHex(S.bg,S.tx,.08)};border-radius:${S.corner.r};display:flex;align-items:center;justify-content:center;opacity:.4;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">Map Placeholder</div>
     </div>`;
   }
@@ -2089,14 +1874,8 @@ function generateClientSite() {
   const bf  = S.bFont === 'CustomFont' ? 'Georgia' : S.bFont;
   const nf  = S.nFont === 'CustomFont' ? hf : S.nFont;
 
-  const allExportFonts = [...new Set([hf, bf, nf])].filter(f => f !== 'Reikna');
-  const gFonts  = allExportFonts.filter(f => !FONTSHARE_SLUGS[f]);
-  const fsFonts = allExportFonts.filter(f =>  FONTSHARE_SLUGS[f]);
-  const hw=S.hWeight,bw=S.bWeight;
-  const wSet=[...new Set([100,300,400,hw,bw,700,900])].sort((a,b)=>a-b).join(';');
-  const gLink   = gFonts.length ? `<link href="https://fonts.googleapis.com/css2?${gFonts.map(f=>`family=${f.replace(/ /g,'+')}:wght@${wSet}`).join('&')}&display=swap" rel="stylesheet">` : '';
-  const fsWSet=[...new Set([100,300,400,hw,bw,700,900])].sort((a,b)=>a-b).join(',');
-  const fsLinks = fsFonts.map(f=>`<link href="https://api.fontshare.com/v2/css?f[]=${FONTSHARE_SLUGS[f]}@${fsWSet}&display=swap" rel="stylesheet">`).join('\n  ');
+  const gFonts = [...new Set([hf, bf, nf])].filter(f => f !== 'Reikna');
+  const gLink  = gFonts.length ? `<link href="https://fonts.googleapis.com/css2?${gFonts.map(f=>`family=${f.replace(/ /g,'+')}:wght@300;400;600;700`).join('&')}&display=swap" rel="stylesheet">` : '';
   const reiknaFace = [hf,bf,nf].includes('Reikna') ? `@font-face{font-family:'Reikna';src:url('Reikna.ttf') format('truetype');font-display:swap}` : '';
 
   const btnR   = S.btn.id === 'pill' ? '999px' : r;
@@ -2268,14 +2047,12 @@ function generateClientSite() {
   <meta name="description" content="${C.heroSub||biz+' — '+ind}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://api.fontshare.com">
   ${gLink}
-  ${fsLinks}
   <style>
     ${reiknaFace}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{background:${S.bg};color:${S.tx};font-family:'${bf}',sans-serif;font-weight:${S.bWeight};-webkit-font-smoothing:antialiased}
+    body{background:${S.bg};color:${S.tx};font-family:'${bf}',sans-serif;-webkit-font-smoothing:antialiased}
     img{max-width:100%;display:block}
     a{color:inherit}
     input,textarea,button{font-family:inherit}
@@ -2353,6 +2130,7 @@ async function handleSubmit() {
     btn.textContent = 'Uploading…';
     const fileName = `${slug}-${Date.now()}.html`;
     let siteUrl = 'Upload failed — request file from client';
+    let uploadDebug = '';
     try {
       const up = await fetch(`${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(SUPABASE_BUCKET)}/${fileName}`, {
         method: 'POST',
@@ -2366,9 +2144,13 @@ async function handleSubmit() {
         siteUrl = `${SUPABASE_URL}/storage/v1/object/public/${encodeURIComponent(SUPABASE_BUCKET)}/${fileName}`;
       } else {
         const errBody = await up.json().catch(() => ({}));
-        console.error('Supabase upload failed:', up.status, JSON.stringify(errBody));
+        uploadDebug = `HTTP ${up.status}: ${JSON.stringify(errBody)}`;
+        console.error('Supabase upload failed:', uploadDebug);
       }
-    } catch(e) { console.error('Supabase upload exception:', e); }
+    } catch(e) {
+      uploadDebug = `Exception: ${e.message}`;
+      console.error('Supabase upload exception:', e);
+    }
 
     // 3. Send brief + download link via Web3Forms
     btn.textContent = 'Sending brief…';
@@ -2386,6 +2168,7 @@ async function handleSubmit() {
       `Logo: ${S.logo ? 'Yes' : 'No'} · Photos: ${S.photos.length}`,
       ``,
       `SITE FILE: ${siteUrl}`,
+      ...(uploadDebug ? [`UPLOAD ERROR: ${uploadDebug}`] : []),
     ].join('\n');
 
     await fetch('https://api.web3forms.com/submit', {
