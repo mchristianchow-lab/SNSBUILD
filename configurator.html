@@ -2114,6 +2114,7 @@ function generateClientSite() {
   const heroSub = S.photos[0] ? 'rgba(255,255,255,.7)' : `${S.tx}99`;
   const eyeCol  = S.photos[0] ? 'rgba(255,255,255,.55)' : S.ac2;
   const secs    = S.sections;
+  const slot = (val, label, hint='') => val || `<!-- ${label}${hint?': '+hint:''} -->`;
 
   const cardBg  = `${mixHex(S.bg, S.tx, .05)}`;
   const surfBg  = `${mixHex(S.bg, S.tx, .03)}`;
@@ -2133,21 +2134,21 @@ function generateClientSite() {
   // SERVICES
   if(secs.has('services')) body += `
 <section id="services" style="padding:${sp};background:${S.bg};text-align:${hal}">
-  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">${C.svcEyebrow}</p>
-  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1rem;line-height:.95">${C.svcHeadline}</h2>
-  <p style="font-size:.9rem;color:${S.tx};opacity:.5;max-width:560px;margin:0 ${hal==='center'?'auto ':''}2.5rem;line-height:1.8">${C.svcIntro}</p>
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">${slot(C.svcEyebrow, 'Services Eyebrow', 'e.g. What We Offer')}</p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1rem;line-height:.95">${slot(C.svcHeadline, 'Services Headline', 'e.g. Our Services')}</h2>
+  <p style="font-size:.9rem;color:${S.tx};opacity:.5;max-width:560px;margin:0 ${hal==='center'?'auto ':''}2.5rem;line-height:1.8">${slot(C.svcIntro, 'Services Intro', 'brief intro paragraph above the service cards')}</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem">
     <div style="background:${cardBg};padding:2rem;border-radius:${r}">
-      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem">${C.svc1Name}</h3>
-      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${C.svc1Desc}</p>
+      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem">${slot(C.svc1Name, 'Service 1 Name', 'e.g. Window Cleaning')}</h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${slot(C.svc1Desc, 'Service 1 Description', 'short description of this service')}</p>
     </div>
     <div style="background:${cardBg};padding:2rem;border-radius:${r}">
-      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem">${C.svc2Name}</h3>
-      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${C.svc2Desc}</p>
+      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem">${slot(C.svc2Name, 'Service 2 Name', 'e.g. Pressure Washing')}</h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${slot(C.svc2Desc, 'Service 2 Description', 'short description of this service')}</p>
     </div>
     <div style="background:${cardBg};padding:2rem;border-radius:${r}">
-      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem">${C.svc3Name}</h3>
-      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${C.svc3Desc}</p>
+      <h3 style="font-family:'${hf}',serif;font-size:1.25rem;color:${S.tx};margin-bottom:.75rem">${slot(C.svc3Name, 'Service 3 Name', 'e.g. Gutter Cleaning')}</h3>
+      <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${slot(C.svc3Desc, 'Service 3 Description', 'short description of this service')}</p>
     </div>
   </div>
 </section>`;
@@ -2156,7 +2157,7 @@ function generateClientSite() {
   if(secs.has('stats')) body += `
 <section style="padding:2.5rem 5%;background:${mixHex(S.bg,S.tx,.06)};border-top:1px solid rgba(128,128,128,.1);border-bottom:1px solid rgba(128,128,128,.1)">
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center">
-    ${[[C.stat1,C.stat1Label],[C.stat2,C.stat2Label],[C.stat3,C.stat3Label],[C.stat4,C.stat4Label]].map(([val,label])=>`
+    ${[[slot(C.stat1,'Stat 1 Number','e.g. 500+'),C.stat1Label],[slot(C.stat2,'Stat 2 Number','e.g. 4.9'),C.stat2Label],[slot(C.stat3,'Stat 3 Number','e.g. 8'),C.stat3Label],[slot(C.stat4,'Stat 4 Number','e.g. 300+'),C.stat4Label]].map(([val,label])=>`
     <div>
       <span style="font-family:'${hf}',serif;font-size:3rem;color:${S.ac1};display:block;line-height:1;margin-bottom:.5rem">${val}</span>
       <span style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.4">${label}</span>
@@ -2169,10 +2170,10 @@ function generateClientSite() {
 <section id="about" style="padding:${sp};background:${surfBg}">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1100px;margin:0 auto">
     <div>
-      <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">${C.aboutEyebrow}</p>
-      <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1.5rem;line-height:.95">${C.aboutHeadline}</h2>
-      <p style="font-size:.9rem;color:${S.tx};opacity:.5;line-height:1.8;margin-bottom:1.25rem">${C.aboutP1}</p>
-      <p style="font-size:.9rem;color:${S.tx};opacity:.5;line-height:1.8;margin-bottom:2rem">${C.aboutP2}</p>
+      <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">${slot(C.aboutEyebrow, 'About Eyebrow', 'e.g. Our Story')}</p>
+      <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1.5rem;line-height:.95">${slot(C.aboutHeadline, 'About Headline', 'e.g. Local. Trusted. Professional.')}</h2>
+      <p style="font-size:.9rem;color:${S.tx};opacity:.5;line-height:1.8;margin-bottom:1.25rem">${slot(C.aboutP1, 'About Paragraph 1', 'first paragraph — who you are and what you do')}</p>
+      <p style="font-size:.9rem;color:${S.tx};opacity:.5;line-height:1.8;margin-bottom:2rem">${slot(C.aboutP2, 'About Paragraph 2', 'second paragraph — your story or approach')}</p>
       <a href="#contact" style="${btnBase};${btnStyle}">Get In Touch</a>
     </div>
     <div style="aspect-ratio:4/5;overflow:hidden;border-radius:${r};background:${mixHex(S.bg,S.ac1,.15)}">
@@ -2187,7 +2188,12 @@ function generateClientSite() {
   <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">Reviews</p>
   <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2.5rem;line-height:.95">What Clients Say</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem">
-    ${[[C.t1q,C.t1name],[C.t2q,C.t2name],[C.t3q,C.t3name],[C.t4q,C.t4name]].map(([q,name])=>`<div style="background:${cardBg};padding:1.75rem;border-radius:${r}">
+    ${[
+      [slot(C.t1q,'Testimonial 1 Quote','what the customer said'),slot(C.t1name,'Testimonial 1 Name','e.g. Sarah M.')],
+      [slot(C.t2q,'Testimonial 2 Quote','what the customer said'),slot(C.t2name,'Testimonial 2 Name','e.g. John D.')],
+      [slot(C.t3q,'Testimonial 3 Quote','what the customer said'),slot(C.t3name,'Testimonial 3 Name','e.g. Mike R.')],
+      [slot(C.t4q,'Testimonial 4 Quote','what the customer said'),slot(C.t4name,'Testimonial 4 Name','e.g. Lisa K.')],
+    ].map(([q,name])=>`<div style="background:${cardBg};padding:1.75rem;border-radius:${r}">
       <p style="font-size:.85rem;color:${S.tx};opacity:.6;line-height:1.75;font-style:italic;margin-bottom:1rem">"${q}"</p>
       <span style="font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${S.tx};opacity:.3">— ${name}</span>
     </div>`).join('')}
@@ -2224,8 +2230,13 @@ function generateClientSite() {
 <section style="padding:${sp};background:${surfBg}">
   <div style="max-width:720px;margin:0 auto">
     <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">FAQ</p>
-    <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2.5rem;line-height:.95">${C.faqHeadline}</h2>
-    ${[[C.faq1q,C.faq1a],[C.faq2q,C.faq2a],[C.faq3q,C.faq3a],[C.faq4q,C.faq4a]].map(([q,a])=>`<div style="border-bottom:1px solid rgba(128,128,128,.12);padding:1.5rem 0">
+    <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:2.5rem;line-height:.95">${slot(C.faqHeadline, 'FAQ Headline', 'e.g. Common Questions')}</h2>
+    ${[
+      [slot(C.faq1q,'FAQ 1 Question','first frequently asked question'),slot(C.faq1a,'FAQ 1 Answer','answer to the first question')],
+      [slot(C.faq2q,'FAQ 2 Question','second frequently asked question'),slot(C.faq2a,'FAQ 2 Answer','answer to the second question')],
+      [slot(C.faq3q,'FAQ 3 Question','third frequently asked question'),slot(C.faq3a,'FAQ 3 Answer','answer to the third question')],
+      [slot(C.faq4q,'FAQ 4 Question','fourth frequently asked question'),slot(C.faq4a,'FAQ 4 Answer','answer to the fourth question')],
+    ].map(([q,a])=>`<div style="border-bottom:1px solid rgba(128,128,128,.12);padding:1.5rem 0">
       <h3 style="font-size:.9rem;font-weight:600;color:${S.tx};margin-bottom:.65rem">${q}</h3>
       <p style="font-size:.82rem;color:${S.tx};opacity:.5;line-height:1.75">${a}</p>
     </div>`).join('')}
@@ -2235,9 +2246,9 @@ function generateClientSite() {
   // CONTACT
   if(secs.has('contact')) body += `
 <section id="contact" style="padding:${sp};background:${mixHex(S.bg,S.ac1,.06)};text-align:${hal}">
-  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">${C.contactEyebrow}</p>
-  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1rem;line-height:.95">${C.contactHeadline}</h2>
-  <p style="font-size:.9rem;color:${S.tx};opacity:.5;max-width:440px;margin:0 ${hal==='center'?'auto ':''}2rem;line-height:1.8">${C.contactSub}</p>
+  <p style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${S.ac2};margin-bottom:1rem">${slot(C.contactEyebrow, 'Contact Eyebrow', "e.g. Get In Touch")}</p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2rem,5vw,3.5rem);color:${S.tx};margin-bottom:1rem;line-height:.95">${slot(C.contactHeadline, 'Contact Headline', "e.g. Let's Talk")}</h2>
+  <p style="font-size:.9rem;color:${S.tx};opacity:.5;max-width:440px;margin:0 ${hal==='center'?'auto ':''}2rem;line-height:1.8">${slot(C.contactSub, 'Contact Subtext', 'one line below the contact headline')}</p>
   <form action="https://api.web3forms.com/submit" method="POST" style="max-width:480px;margin:${hal==='center'?'0 auto':'0'};display:flex;flex-direction:column;gap:1rem">
     <input type="hidden" name="access_key" value="${C.web3key||'YOUR-WEB3FORMS-KEY'}">
     <input type="hidden" name="subject" value="New enquiry — ${biz}">
@@ -2252,8 +2263,8 @@ function generateClientSite() {
   // CTA BAND
   if(secs.has('cta')) body += `
 <section style="padding:${sp};background:${S.ac1};text-align:center">
-  <h2 style="font-family:'${hf}',serif;font-size:clamp(2.5rem,7vw,5rem);color:${S.bg};margin-bottom:1rem;line-height:.95">${C.ctaHeadline}</h2>
-  <p style="font-size:.95rem;color:${S.bg};opacity:.65;max-width:440px;margin:0 auto 2.5rem;line-height:1.8">${C.ctaSub}</p>
+  <h2 style="font-family:'${hf}',serif;font-size:clamp(2.5rem,7vw,5rem);color:${S.bg};margin-bottom:1rem;line-height:.95">${slot(C.ctaHeadline, 'CTA Headline', 'e.g. Ready to Get Started?')}</h2>
+  <p style="font-size:.95rem;color:${S.bg};opacity:.65;max-width:440px;margin:0 auto 2.5rem;line-height:1.8">${slot(C.ctaSub, 'CTA Subtext', 'supporting line under the headline')}</p>
   <a href="#contact" style="${btnBase};background:${S.bg};color:${S.ac1};border:none;border-radius:${btnR}">${C.ctaBtn}</a>
 </section>`;
 
@@ -2297,9 +2308,9 @@ function generateClientSite() {
 
 <!-- HERO -->
 <header style="padding:${sp};min-height:88vh;display:flex;flex-direction:column;justify-content:flex-end;${heroBg};text-align:${hal}">
-  <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${eyeCol};margin-bottom:1.25rem">${C.heroEyebrow||ind||biz}</p>
-  <h1 style="font-family:'${hf}',serif;font-size:clamp(3.5rem,10vw,9rem);line-height:.9;color:${heroTx};margin-bottom:1.75rem;letter-spacing:.01em;max-width:900px${hal==='center'?';margin-left:auto;margin-right:auto':''}">${C.heroHeadline||biz}</h1>
-  <p style="font-size:1rem;color:${heroSub};line-height:1.8;max-width:480px;margin-bottom:2.5rem${hal==='center'?';margin-left:auto;margin-right:auto':''}">${C.heroSub}</p>
+  <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.22em;color:${eyeCol};margin-bottom:1.25rem">${slot(C.heroEyebrow, 'Hero Eyebrow', `e.g. ${ind||biz}`)}</p>
+  <h1 style="font-family:'${hf}',serif;font-size:clamp(3.5rem,10vw,9rem);line-height:.9;color:${heroTx};margin-bottom:1.75rem;letter-spacing:.01em;max-width:900px${hal==='center'?';margin-left:auto;margin-right:auto':''}">${slot(C.heroHeadline, 'Hero Headline', `main headline — e.g. ${biz}`)}</h1>
+  <p style="font-size:1rem;color:${heroSub};line-height:1.8;max-width:480px;margin-bottom:2.5rem${hal==='center'?';margin-left:auto;margin-right:auto':''}">${slot(C.heroSub, 'Hero Subheadline', 'one sentence — what you do and where')}</p>
   <div style="display:flex;align-items:center;gap:1.75rem;flex-wrap:wrap${hal==='center'?';justify-content:center':''}">
     <a href="#contact" style="${btnBase};${btnStyle}">${C.heroCta}</a>
     ${secs.has('services') ? `<a href="#services" style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:${heroSub};text-decoration:none">Our Services →</a>` : ''}
@@ -2312,8 +2323,8 @@ ${body}
 <footer style="background:${mixHex(S.bg,S.tx,.06)};border-top:1px solid rgba(128,128,128,.1);padding:2.5rem 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem">
   ${logoEl}
   <div style="display:flex;gap:2rem;align-items:center;flex-wrap:wrap">
-    ${C.phone?`<a href="tel:${C.phone}" style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.4;text-decoration:none">${C.phone}</a>`:''}
-    ${C.address?`<span style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.4">${C.address}</span>`:''}
+    <a href="tel:${slot(C.phone,'Phone Number','e.g. (250) 555-1234')}" style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.4;text-decoration:none">${slot(C.phone,'Phone Number','e.g. (250) 555-1234')}</a>
+    <span style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.4">${slot(C.address,'Business Address','e.g. Salmon Arm, BC')}</span>
   </div>
   <p style="font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:${S.tx};opacity:.25">© ${new Date().getFullYear()} ${biz}. All rights reserved.</p>
 </footer>
