@@ -2126,33 +2126,7 @@ async function handleSubmit() {
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     downloadFile(html, `${slug}-site.html`);
 
-    // 2. Upload full HTML to Supabase so Nash gets a copy
-    btn.textContent = 'Uploading…';
-    const fileName = `${slug}-${Date.now()}.html`;
-    let siteUrl = 'Upload failed — request file from client';
-    let uploadDebug = '';
-    try {
-      const up = await fetch(`${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(SUPABASE_BUCKET)}/${fileName}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'text/html',
-        },
-        body: html,
-      });
-      if (up.ok) {
-        siteUrl = `${SUPABASE_URL}/storage/v1/object/public/${encodeURIComponent(SUPABASE_BUCKET)}/${fileName}`;
-      } else {
-        const errBody = await up.json().catch(() => ({}));
-        uploadDebug = `HTTP ${up.status}: ${JSON.stringify(errBody)}`;
-        console.error('Supabase upload failed:', uploadDebug);
-      }
-    } catch(e) {
-      uploadDebug = `Exception: ${e.message}`;
-      console.error('Supabase upload exception:', e);
-    }
-
-    // 3. Send brief + download link via Web3Forms
+    // 2. Send brief via Web3Forms first — always reliable
     btn.textContent = 'Sending brief…';
     const brief = [
       `Business: ${name}`,
@@ -2167,8 +2141,7 @@ async function handleSubmit() {
       `Sections: ${[...S.sections].join(', ')}`,
       `Logo: ${S.logo ? 'Yes' : 'No'} · Photos: ${S.photos.length}`,
       ``,
-      `SITE FILE: ${siteUrl}`,
-      ...(uploadDebug ? [`UPLOAD ERROR: ${uploadDebug}`] : []),
+      `SITE FILE: Customer has the downloaded file — request from client if needed`,
     ].join('\n');
 
     const w3res = await fetch('https://api.web3forms.com/submit', {
@@ -2184,6 +2157,14 @@ async function handleSubmit() {
     if (!w3res.ok || !w3data.success) {
       throw new Error('Web3Forms: ' + (w3data.message || w3res.status));
     }
+
+    // 3. Upload to Supabase in background — bonus copy for Nash, non-blocking
+    const fileName = `${slug}-${Date.now()}.html`;
+    fetch(`${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(SUPABASE_BUCKET)}/${fileName}`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'text/html' },
+      body: html,
+    }).catch(() => {});
 
     document.getElementById('success').classList.add('show');
     btn.textContent = 'Sent ✓';
