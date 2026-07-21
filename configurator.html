@@ -2445,12 +2445,9 @@ async function handleSubmit() {
   btn.disabled = true;
 
   try {
-    // 1. Customer gets a clean rendered site (no editor slots)
-    const html = generateClientSite(false);
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    downloadFile(html, `${slug}-site.html`);
 
-    // 2. Upload EDITOR version (with slots + autofill JSON) to Supabase for Nash
+    // 1. Upload EDITOR version (with slots + autofill JSON) to Supabase for Nash
     btn.textContent = 'Uploading…';
     const editorHtml = generateClientSite(true);
     const fileName = `${slug}-${Date.now()}.html`;
@@ -2466,7 +2463,12 @@ async function handleSubmit() {
       }
     } catch(e) { console.error('Supabase upload exception:', e); }
 
-    // 3. Send brief + file link via Web3Forms
+    // 2. Send brief + file link via Web3Forms — this must complete BEFORE the
+    // customer's local download, because triggering a blob download on some
+    // mobile browsers (iOS Safari in particular) can navigate the page away
+    // from a blob: URL instead of saving in the background, which kills any
+    // async work still in flight. Sending the lead notification first means
+    // Nash gets it regardless of what the download step does afterward.
     btn.textContent = 'Sending brief…';
     const brief = [
       `Business: ${name}`,
@@ -2498,6 +2500,12 @@ async function handleSubmit() {
     if (!w3res.ok || !w3data.success) {
       throw new Error('Web3Forms: ' + (w3data.message || w3res.status));
     }
+
+    // 3. Customer gets a clean rendered site (no editor slots) — last, since
+    // this is the step most likely to disrupt the page on mobile.
+    btn.textContent = 'Preparing your file…';
+    const html = generateClientSite(false);
+    downloadFile(html, `${slug}-site.html`);
 
     document.getElementById('success').classList.add('show');
     btn.textContent = 'Sent ✓';
