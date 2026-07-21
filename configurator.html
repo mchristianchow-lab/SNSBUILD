@@ -324,6 +324,9 @@
     .field input,.field select,.field textarea{width:100%;background:var(--mid);border:1px solid var(--border-mid);color:var(--bone);padding:.75rem 1rem;font-family:var(--font);font-size:.82rem;outline:none;transition:border-color .15s;-webkit-appearance:none;border-radius:0}
     .field input::placeholder,.field textarea::placeholder{color:var(--dim)}
     .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+    .field input.field-error,.field select.field-error,.field textarea.field-error{border-color:#E5786B}
+    .field-error-msg{font-size:.62rem;color:#E5786B;margin-top:.4rem;display:none}
+    .field-error-msg.show{display:block}
     .field select option{background:var(--mid);color:var(--bone)}
     .field textarea{resize:vertical;min-height:80px;line-height:1.6}
     .submit-btn{width:100%;background:var(--accent);color:var(--black);border:none;padding:1rem 2rem;font-family:var(--font);font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;margin-top:.25rem;transition:background .15s}
@@ -628,7 +631,7 @@
     <div class="step-block">
       <div class="step-label"><span>08</span> Your details</div>
       <div class="form-stack">
-        <div class="field"><label>Business Name</label><input type="text" id="f-name" placeholder="e.g. Raven Roofing" oninput="syncBrand();document.getElementById('fpb-input').value=this.value"></div>
+        <div class="field"><label>Business Name</label><input type="text" id="f-name" placeholder="e.g. Raven Roofing" oninput="syncBrand();document.getElementById('fpb-input').value=this.value;clearFieldError('f-name')"><div class="field-error-msg" id="f-name-error">Enter your business name</div></div>
         <div class="field"><label>Industry</label>
           <select id="f-industry" onchange="document.getElementById('f-industry-other-wrap').style.display=this.value==='Other'?'block':'none'">
             <option value="">Select your industry</option>
@@ -642,7 +645,7 @@
         </div>
         <div class="field" id="f-industry-other-wrap" style="display:none"><label>Describe your business</label><input type="text" id="f-industry-other" placeholder="e.g. Drone photography, wedding planning, dog grooming..."></div>
         <div class="field"><label>What should visitors do on your site?</label><textarea id="f-goal" placeholder="e.g. Book a service, call for a quote, shop online..."></textarea></div>
-        <div class="field"><label>Your Email</label><input type="email" id="f-email" placeholder="you@yourbusiness.com"></div>
+        <div class="field"><label>Your Email</label><input type="email" id="f-email" placeholder="you@yourbusiness.com" oninput="clearFieldError('f-email')"><div class="field-error-msg" id="f-email-error">Enter your email</div></div>
         <div class="field"><label>Phone Number</label><input type="tel" id="f-phone" placeholder="(250) 555-1234"></div>
         <div class="field"><label>City / Address</label><input type="text" id="f-address" placeholder="e.g. Salmon Arm, BC"></div>
       </div>
@@ -2408,13 +2411,34 @@ function downloadFile(content, filename) {
 }
 
 // ── SUBMIT ────────────────────────────────────────────────────────────────────
+function clearFieldError(id) {
+  document.getElementById(id).classList.remove('field-error');
+  document.getElementById(id+'-error').classList.remove('show');
+}
+
+function showFieldError(id) {
+  document.getElementById(id).classList.add('field-error');
+  document.getElementById(id+'-error').classList.add('show');
+}
+
 async function handleSubmit() {
   const name  = document.getElementById('f-name').value.trim();
   const indRaw = document.getElementById('f-industry').value;
   const ind   = indRaw === 'Other' ? (document.getElementById('f-industry-other').value.trim() || 'Other') : indRaw;
   const goal  = document.getElementById('f-goal').value.trim();
   const email = document.getElementById('f-email').value.trim();
-  if(!name || !email){ alert('Please enter your business name and email.'); return; }
+
+  clearFieldError('f-name');
+  clearFieldError('f-email');
+  let firstInvalidId = null;
+  if(!name){ showFieldError('f-name'); firstInvalidId = firstInvalidId || 'f-name'; }
+  if(!email){ showFieldError('f-email'); firstInvalidId = firstInvalidId || 'f-email'; }
+  if(firstInvalidId){
+    const el = document.getElementById(firstInvalidId);
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.focus();
+    return;
+  }
 
   const btn = document.querySelector('.submit-btn');
   btn.textContent = 'Generating your site…';
