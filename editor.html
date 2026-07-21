@@ -154,6 +154,18 @@
     .preview-wrap{flex:1;overflow:hidden;display:flex;align-items:stretch;justify-content:center;position:relative}
     iframe{width:100%;height:100%;border:none;transition:width .2s}
     .empty{flex:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--dim)}
+    .fs-btn{font-size:.5rem;font-weight:600;letter-spacing:.04em;color:var(--dim);background:transparent;border:1px solid var(--border);border-radius:3px;padding:.18rem .55rem;cursor:pointer;transition:all .15s}
+    .fs-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* ── FULLSCREEN PREVIEW ── */
+    .fs-preview-overlay{position:fixed;inset:0;background:#000;z-index:300;display:none;flex-direction:column}
+    .fs-preview-overlay.open{display:flex}
+    .fs-preview-bar{padding:.5rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;flex-shrink:0;background:var(--mid)}
+    .fs-preview-label{font-size:.5rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+    .fs-close-btn{margin-left:auto;font-size:.5rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--border);border-radius:3px;padding:.3rem .7rem;cursor:pointer;transition:all .15s}
+    .fs-close-btn:hover{border-color:var(--bone);color:var(--bone)}
+    .fs-preview-body{flex:1;overflow:auto;display:flex;justify-content:center;background:#111}
+    .fs-preview-body iframe{width:100%;height:100%;border:none;background:#fff;flex-shrink:0;transition:width .2s}
 
     /* ── RIGHT PANEL ── */
     .right-panel{
@@ -356,6 +368,7 @@
           <button class="scale-btn active" id="scale-desktop" onclick="setScale('desktop')">Desktop</button>
           <button class="scale-btn" id="scale-mobile" onclick="setScale('mobile')">Mobile</button>
         </div>
+        <button class="fs-btn" id="fs-toggle" onclick="openFullscreenPreview()" title="Fullscreen preview">⛶ Expand</button>
         <button class="ve-btn" id="ve-toggle" onclick="toggleVisualEdit()">✏ Visual Edit</button>
       </div>
       <div class="preview-wrap" id="preview-wrap">
@@ -514,6 +527,20 @@
   </div>
 </div>
 
+<div class="fs-preview-overlay" id="fs-preview-overlay">
+  <div class="fs-preview-bar">
+    <span class="fs-preview-label">Full Preview</span>
+    <div class="preview-scale">
+      <button class="scale-btn active" id="fs-scale-desktop" onclick="setFsScale('desktop')">Desktop</button>
+      <button class="scale-btn" id="fs-scale-mobile" onclick="setFsScale('mobile')">Mobile</button>
+    </div>
+    <button class="fs-close-btn" onclick="closeFullscreenPreview()">✕ Close</button>
+  </div>
+  <div class="fs-preview-body">
+    <iframe id="fs-frame"></iframe>
+  </div>
+</div>
+
 <input type="file" id="file-inp" accept=".html" style="display:none" onchange="loadFile(this.files[0])">
 <div class="toast" id="toast"></div>
 
@@ -660,10 +687,10 @@ function buildVeStyleBlock() {
     let tx = props['--tx'], ty = props['--ty'];
     for (const [k, v] of Object.entries(props)) {
       if (k === '--tx' || k === '--ty') continue;
-      rules.push(`${k}:${v}`);
+      rules.push(`${k}:${v} !important`);
     }
     if (tx !== undefined || ty !== undefined) {
-      rules.push(`transform:translate(${tx||0}px,${ty||0}px)`);
+      rules.push(`transform:translate(${tx||0}px,${ty||0}px) !important`);
     }
     if (rules.length) css += `[data-ve-id="${id}"]{${rules.join(';')}}\n`;
   }
@@ -1004,6 +1031,33 @@ function setScale(mode) {
   document.getElementById('scale-desktop').classList.toggle('active',mode==='desktop');
   document.getElementById('scale-mobile').classList.toggle('active',mode==='mobile');
   if(mode==='mobile'){frame.style.width='390px';frame.style.maxWidth='390px';frame.style.boxShadow='0 0 0 1px rgba(255,255,255,.08)';}
+  else{frame.style.width='100%';frame.style.maxWidth='';frame.style.boxShadow='';}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FULLSCREEN PREVIEW
+// ─────────────────────────────────────────────────────────────────────────────
+function openFullscreenPreview() {
+  const frame=document.getElementById('frame');
+  if(!frame.srcdoc){showToast('Load a template first');return;}
+  document.getElementById('fs-frame').srcdoc=frame.srcdoc;
+  const mode=document.getElementById('scale-mobile').classList.contains('active')?'mobile':'desktop';
+  setFsScale(mode);
+  document.getElementById('fs-preview-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeFullscreenPreview() {
+  document.getElementById('fs-preview-overlay').classList.remove('open');
+  document.getElementById('fs-frame').srcdoc='';
+  document.body.style.overflow='';
+}
+
+function setFsScale(mode) {
+  const frame=document.getElementById('fs-frame');
+  document.getElementById('fs-scale-desktop').classList.toggle('active',mode==='desktop');
+  document.getElementById('fs-scale-mobile').classList.toggle('active',mode==='mobile');
+  if(mode==='mobile'){frame.style.width='390px';frame.style.maxWidth='390px';frame.style.boxShadow='0 0 0 1px rgba(255,255,255,.15)';}
   else{frame.style.width='100%';frame.style.maxWidth='';frame.style.boxShadow='';}
 }
 
@@ -1657,7 +1711,9 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='e'){e.preventDefault();toggleVisualEdit();}
 });
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&visualEditMode){veDeselect();}
+  if(e.key!=='Escape') return;
+  if(document.getElementById('fs-preview-overlay').classList.contains('open')){closeFullscreenPreview();return;}
+  if(visualEditMode){veDeselect();}
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
