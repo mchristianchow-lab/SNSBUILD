@@ -40,8 +40,8 @@
       --accent:#D8E46A;--accent-glow:rgba(216,228,106,.22);
       --font:'Inter',sans-serif;--font-display:'Cormorant Garamond',serif;
     }
-    html{scroll-behavior:smooth}
-    body{background:var(--black);color:var(--bone);font-family:var(--font);-webkit-font-smoothing:antialiased}
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{background:var(--black);color:var(--bone);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
     nav{
       background:rgba(7,7,10,.82);
@@ -50,8 +50,28 @@
       padding:0 5%;display:flex;align-items:center;justify-content:space-between;
       height:64px;position:sticky;top:0;z-index:100
     }
-    .nav-brand{font-family:var(--font-display);font-size:2.2rem;color:var(--accent);letter-spacing:.1em;text-decoration:none}
+    .nav-brand{font-family:var(--font-display);font-size:2.2rem;color:var(--accent);letter-spacing:.1em;text-decoration:none;flex-shrink:0}
     .nav-tag{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:.14em}
+    .nav-links{display:flex;align-items:center;gap:2rem}
+    .nav-link{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);text-decoration:none;transition:color .15s}
+    .nav-link:hover{color:var(--bone)}
+    .nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:32px;height:32px;background:none;border:none;cursor:pointer;padding:0;flex-shrink:0;z-index:101}
+    .nav-toggle-bar{display:block;width:100%;height:2px;background:var(--bone);transition:transform .25s,opacity .2s}
+    .nav-toggle.open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav-toggle.open .nav-toggle-bar:nth-child(2){opacity:0}
+    .nav-toggle.open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    @media(max-width:760px){
+      .nav-toggle{display:flex}
+      .nav-links{
+        position:fixed;top:64px;left:0;right:0;height:calc(100vh - 64px);
+        background:var(--black);flex-direction:column;align-items:flex-start;
+        padding:2.5rem 5%;gap:2rem;
+        transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+        z-index:99;overflow-y:auto
+      }
+      .nav-links.open{transform:translateX(0)}
+      .nav-link{font-size:.9rem}
+    }
 
     .hero{padding:6rem 5% 4.5rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
     .hero::before{content:'';position:absolute;top:-30%;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse at 50% 0%,rgba(216,228,106,.065) 0%,transparent 65%);pointer-events:none}
@@ -350,12 +370,15 @@
 <body>
 
 <nav>
-  <a href="index.html" style="font-family:'SaintCarell',serif;font-size:2.2rem;color:var(--accent);letter-spacing:.1em;text-decoration:none;flex-shrink:0;line-height:1;display:flex;align-items:center;transform:translateY(-6px)">SNS BUILD</a>
-  <div style="display:flex;align-items:center;gap:2rem">
-    <a href="index.html" style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);text-decoration:none;transition:color .15s" onmouseover="this.style.color='var(--bone)'" onmouseout="this.style.color='var(--dim)'">Home</a>
-    <a href="work.html" style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);text-decoration:none;transition:color .15s" onmouseover="this.style.color='var(--bone)'" onmouseout="this.style.color='var(--dim)'">Work</a>
-    <a href="pricing.html" style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);text-decoration:none;transition:color .15s" onmouseover="this.style.color='var(--bone)'" onmouseout="this.style.color='var(--dim)'">Pricing</a>
+  <a href="index.html" class="nav-brand" style="transform:translateY(-6px)">SNS BUILD</a>
+  <div class="nav-links" id="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="work.html" class="nav-link">Work</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
   </div>
+  <button class="nav-toggle" id="nav-toggle" onclick="toggleNav()" aria-label="Menu">
+    <span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span>
+  </button>
 </nav>
 
 <div class="hero">
@@ -2531,6 +2554,12 @@ renderDetails();
 renderHeaders();
 renderSections();
 applyPreview();
+
+function toggleNav(){
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-toggle').classList.toggle('open');
+  document.body.style.overflow = document.getElementById('nav-links').classList.contains('open') ? 'hidden' : '';
+}
 </script>
 </body>
 </html>

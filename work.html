@@ -42,8 +42,8 @@
       --font:'Inter',sans-serif;
       --font-display:'Cormorant Garamond',serif;
     }
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;position:relative}
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden}
     body::after{
       content:'';position:fixed;inset:0;
       background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -65,6 +65,24 @@
     .nav-link.active{color:var(--text)}
     .nav-cta{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#000;background:var(--accent);padding:.5rem 1.2rem;text-decoration:none;transition:background .2s,box-shadow .2s}
     .nav-cta:hover{background:#c8d45a;box-shadow:0 0 18px var(--accent-glow)}
+    .nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:32px;height:32px;background:none;border:none;cursor:pointer;padding:0;flex-shrink:0;z-index:101}
+    .nav-toggle-bar{display:block;width:100%;height:2px;background:var(--text);transition:transform .25s,opacity .2s}
+    .nav-toggle.open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav-toggle.open .nav-toggle-bar:nth-child(2){opacity:0}
+    .nav-toggle.open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    @media(max-width:760px){
+      .nav-toggle{display:flex}
+      .nav-links{
+        position:fixed;top:64px;left:0;right:0;height:calc(100vh - 64px);
+        background:#07070A;flex-direction:column;align-items:flex-start;
+        padding:2.5rem 5%;gap:2rem;
+        transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+        z-index:99;overflow-y:auto
+      }
+      .nav-links.open{transform:translateX(0)}
+      .nav-link{font-size:.9rem}
+      .nav-cta{width:100%;text-align:center;padding:.9rem}
+    }
 
     /* ── HERO ── */
     .hero{
@@ -140,16 +158,16 @@
     }
     .visual-ww .proj-accent{color:#4ADE80}
 
-    /* Wake Detail visual */
-    .visual-wd{background:linear-gradient(145deg,#060D18 0%,#091525 40%,#0D1E32 100%)}
-    .visual-wd .project-name-bg{color:rgba(255,255,255,.9)}
-    .visual-wd::after{
+    /* Scrimbit Concrete visual */
+    .visual-sc{background:linear-gradient(145deg,#1A1A18 0%,#232320 40%,#2C2C27 100%)}
+    .visual-sc .project-name-bg{color:rgba(255,255,255,.9)}
+    .visual-sc::after{
       content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse at 70% 50%,rgba(14,80,150,.25) 0%,transparent 60%),
-                 radial-gradient(ellipse at 20% 30%,rgba(0,100,200,.1) 0%,transparent 50%);
+      background:radial-gradient(ellipse at 70% 50%,rgba(216,228,106,.15) 0%,transparent 60%),
+                 radial-gradient(ellipse at 20% 30%,rgba(216,228,106,.06) 0%,transparent 50%);
       pointer-events:none
     }
-    .visual-wd .proj-accent{color:#60A5FA}
+    .visual-sc .proj-accent{color:#D8E46A}
 
     /* Augst visual */
     .visual-ag{background:#050505}
@@ -316,11 +334,14 @@
 
 <nav>
   <a href="index.html" class="nav-brand">SNS BUILD</a>
-  <div class="nav-links">
+  <div class="nav-links" id="nav-links">
     <a href="work.html" class="nav-link active">Work</a>
     <a href="pricing.html" class="nav-link">Pricing</a>
     <a href="configurator.html" class="nav-cta">Start Building →</a>
   </div>
+  <button class="nav-toggle" id="nav-toggle" onclick="toggleNav()" aria-label="Menu">
+    <span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -358,27 +379,27 @@
     </div>
   </div>
 
-  <!-- WAKE DETAIL -->
+  <!-- SCRIMBIT CONCRETE -->
   <div class="project reverse reveal">
-    <div class="project-visual visual-wd">
+    <div class="project-visual visual-sc">
       <div class="project-visual-inner">
-        <div class="project-name-bg">Wake<br>Detail</div>
+        <div class="project-name-bg">Scrimbit<br>Concrete</div>
       </div>
     </div>
     <div class="project-info">
       <div class="project-category">
-        Mobile Detailing
-        <span class="status-badge status-dev"><span class="status-dot"></span>Staging</span>
+        Concrete Finishing
+        <span class="status-badge status-live"><span class="status-dot"></span>Live</span>
       </div>
-      <div class="project-title">Wake Detail</div>
-      <p class="project-desc">Premium mobile boat and vehicle detailing for Salmon Arm's lake community. Built around an instant quote tool that converts dock interior inquiries — the bread-and-butter service — without a single phone call.</p>
+      <div class="project-title">Scrimbit Concrete</div>
+      <p class="project-desc">A single-page brand site for a Shuswap concrete finishing business — patios, driveways, sidewalks, and polished floors. Built to showcase finish options (broom, exposed aggregate, swirl, stamped) and convert local inquiries fast.</p>
       <div class="project-tags">
-        <span class="tag">Quote tool</span>
-        <span class="tag">Mobile first</span>
-        <span class="tag">Service area map</span>
-        <span class="tag">Premium branding</span>
+        <span class="tag">Single-page</span>
+        <span class="tag">Finish gallery</span>
+        <span class="tag">Service area</span>
+        <span class="tag">Local branding</span>
       </div>
-      <span class="project-cta-disabled">Launching Soon</span>
+      <a href="https://augstgroup.com" target="_blank" rel="noopener" class="project-cta">View Site →</a>
     </div>
   </div>
 
@@ -483,6 +504,12 @@ const ro = new IntersectionObserver(entries => {
   });
 },{threshold:.08,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+function toggleNav(){
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-toggle').classList.toggle('open');
+  document.body.style.overflow = document.getElementById('nav-links').classList.contains('open') ? 'hidden' : '';
+}
 </script>
 
 </body>

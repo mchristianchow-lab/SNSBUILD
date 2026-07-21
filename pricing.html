@@ -44,8 +44,8 @@
       --font:'Inter',sans-serif;
       --font-display:'Cormorant Garamond',serif;
     }
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;position:relative}
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;position:relative;overflow-x:hidden}
     body::after{
       content:'';position:fixed;inset:0;
       background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -67,6 +67,24 @@
     .nav-link.active{color:var(--text)}
     .nav-cta{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#000;background:var(--accent);padding:.5rem 1.2rem;text-decoration:none;transition:background .2s,box-shadow .2s}
     .nav-cta:hover{background:#c8d45a;box-shadow:0 0 18px var(--accent-glow)}
+    .nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:32px;height:32px;background:none;border:none;cursor:pointer;padding:0;flex-shrink:0;z-index:101}
+    .nav-toggle-bar{display:block;width:100%;height:2px;background:var(--text);transition:transform .25s,opacity .2s}
+    .nav-toggle.open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav-toggle.open .nav-toggle-bar:nth-child(2){opacity:0}
+    .nav-toggle.open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    @media(max-width:760px){
+      .nav-toggle{display:flex}
+      .nav-links{
+        position:fixed;top:64px;left:0;right:0;height:calc(100vh - 64px);
+        background:#07070A;flex-direction:column;align-items:flex-start;
+        padding:2.5rem 5%;gap:2rem;
+        transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+        z-index:99;overflow-y:auto
+      }
+      .nav-links.open{transform:translateX(0)}
+      .nav-link{font-size:.9rem}
+      .nav-cta{width:100%;text-align:center;padding:.9rem}
+    }
 
     /* ── HERO ── */
     .hero{
@@ -309,12 +327,15 @@
 
 <nav>
   <a href="index.html" class="nav-brand">SNS BUILD</a>
-  <div class="nav-links">
+  <div class="nav-links" id="nav-links">
     <a href="index.html" class="nav-link">Home</a>
     <a href="work.html" class="nav-link">Work</a>
     <a href="pricing.html" class="nav-link active">Pricing</a>
     <a href="configurator.html" class="nav-cta">Start Building →</a>
   </div>
+  <button class="nav-toggle" id="nav-toggle" onclick="toggleNav()" aria-label="Menu">
+    <span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -492,6 +513,12 @@ const ro = new IntersectionObserver(entries => {
   });
 },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+function toggleNav(){
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-toggle').classList.toggle('open');
+  document.body.style.overflow = document.getElementById('nav-links').classList.contains('open') ? 'hidden' : '';
+}
 </script>
 
 </body>
