@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Client Org — SNS Build</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#07070A;
+    --card:rgba(255,255,255,.028);
+    --card-hover:rgba(255,255,255,.048);
+    --mid:#0F0F12;
+    --border:rgba(255,255,255,.07);
+    --border-strong:rgba(255,255,255,.14);
+    --text:#EDEAE4;
+    --muted:rgba(237,234,228,.48);
+    --dim:rgba(237,234,228,.22);
+    --accent:#D8E46A;
+    --accent-dim:rgba(216,228,106,.1);
+    --accent-glow:rgba(216,228,106,.22);
+    --danger:#E5786B;
+    --font:'Inter',sans-serif;
+    --font-display:'Cormorant Garamond',serif;
+  }
+  html{overflow-x:hidden}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+
+  /* ── NAV ── */
+  nav{
+    background:rgba(7,7,10,.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+    padding:0 5%;display:flex;align-items:center;justify-content:space-between;
+    height:64px;position:sticky;top:0;z-index:100
+  }
+  .nav-brand{font-family:var(--font-display);font-size:1.5rem;color:var(--accent);letter-spacing:.06em;text-decoration:none;flex-shrink:0}
+  .nav-tag{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--dim)}
+  .nav-lock-btn{font-size:.54rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);background:transparent;border:1px solid var(--border);border-radius:3px;padding:.4rem .8rem;cursor:pointer;transition:all .15s}
+  .nav-lock-btn:hover{border-color:var(--border-strong);color:var(--text)}
+
+  /* ── LOCK SCREEN ── */
+  .lock-wrap{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:2rem 5%}
+  .lock-box{width:100%;max-width:380px;text-align:center}
+  .lock-title{font-family:var(--font-display);font-size:2.2rem;margin-bottom:.6rem;letter-spacing:-.01em}
+  .lock-sub{font-size:.78rem;color:var(--muted);line-height:1.7;margin-bottom:2.25rem;font-weight:300}
+  .lock-input{
+    width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:5px;
+    color:var(--text);font-family:var(--font);font-size:.85rem;padding:.75rem .9rem;
+    outline:none;transition:border-color .15s;text-align:center;letter-spacing:.05em
+  }
+  .lock-input:focus{border-color:rgba(216,228,106,.4)}
+  .lock-input-row{margin-bottom:.75rem}
+  .lock-btn{
+    width:100%;margin-top:.5rem;padding:.85rem;background:var(--accent);color:#000;
+    font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;
+    border:none;border-radius:5px;cursor:pointer;transition:background .2s
+  }
+  .lock-btn:hover{background:#c8d45a}
+  .lock-btn:disabled{opacity:.4;cursor:default}
+  .lock-error{font-size:.68rem;color:var(--danger);margin-top:.9rem;min-height:1em}
+  .lock-hint{font-size:.62rem;color:var(--dim);margin-top:1.75rem;line-height:1.7}
+
+  /* ── APP SHELL ── */
+  .app{display:none;padding:2.5rem 5% 5rem;max-width:1000px;margin:0 auto}
+  .app.visible{display:block}
+  .app-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem}
+  .app-title{font-family:var(--font-display);font-size:2rem;letter-spacing:-.01em}
+  .btn-primary{
+    display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.3rem;
+    background:var(--accent);color:#000;font-size:.6rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.12em;border:none;border-radius:4px;cursor:pointer;transition:background .2s
+  }
+  .btn-primary:hover{background:#c8d45a}
+  .btn-ghost{
+    font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);
+    background:transparent;border:1px solid var(--border);border-radius:4px;padding:.55rem 1rem;cursor:pointer;transition:all .15s
+  }
+  .btn-ghost:hover{border-color:var(--border-strong);color:var(--text)}
+  .btn-danger{color:var(--danger);border-color:rgba(229,120,107,.3)}
+  .btn-danger:hover{border-color:var(--danger);background:rgba(229,120,107,.08)}
+
+  /* ── CLIENT LIST ── */
+  .client-grid{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  .client-row{
+    background:var(--bg);padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;
+    cursor:pointer;transition:background .15s
+  }
+  .client-row:hover{background:var(--card)}
+  .client-name{font-size:.92rem;font-weight:500;flex:1}
+  .client-tier{
+    font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+    padding:.25rem .6rem;border-radius:2px;background:var(--accent-dim);color:var(--accent);flex-shrink:0
+  }
+  .client-progress{font-size:.62rem;color:var(--muted);flex-shrink:0;width:70px;text-align:right}
+  .empty-state{padding:4rem 1rem;text-align:center;color:var(--dim);font-size:.8rem;line-height:1.8}
+
+  /* ── CLIENT DETAIL ── */
+  .detail-head{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+  .back-link{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);text-decoration:none;cursor:pointer}
+  .back-link:hover{color:var(--text)}
+  .field-row{display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap}
+  .field{flex:1;min-width:160px}
+  .field label{display:block;font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:.4rem}
+  .field input,.field select{
+    width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px;
+    color:var(--text);font-family:var(--font);font-size:.78rem;padding:.6rem .7rem;outline:none;transition:border-color .15s
+  }
+  .field input:focus,.field select:focus{border-color:rgba(216,228,106,.4)}
+
+  .accounts-section{margin-top:2rem}
+  .accounts-title{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);margin-bottom:.9rem}
+  .account-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.2rem 1.4rem;margin-bottom:.7rem}
+  .account-head{display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem}
+  .account-check{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+  .account-label{font-size:.82rem;font-weight:500;flex:1}
+  .account-remove{font-size:.9rem;color:var(--dim);background:none;border:none;cursor:pointer;padding:.2rem .4rem;line-height:1;transition:color .15s}
+  .account-remove:hover{color:var(--danger)}
+  .pw-row{display:flex;gap:.4rem}
+  .pw-row input{flex:1}
+  .pw-toggle{
+    flex-shrink:0;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px;
+    color:var(--dim);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+    padding:0 .8rem;cursor:pointer;transition:all .15s
+  }
+  .pw-toggle:hover{color:var(--text);border-color:var(--border-strong)}
+  textarea.field-notes{
+    width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px;
+    color:var(--text);font-family:var(--font);font-size:.76rem;padding:.6rem .7rem;outline:none;
+    resize:vertical;min-height:44px;transition:border-color .15s
+  }
+  textarea.field-notes:focus{border-color:rgba(216,228,106,.4)}
+
+  .add-account-row{display:flex;gap:.6rem;align-items:center;margin-top:.5rem}
+  .add-account-row select{flex:1}
+
+  .save-bar{
+    position:sticky;bottom:0;background:rgba(7,7,10,.9);backdrop-filter:blur(12px);
+    border-top:1px solid var(--border);padding:1rem 0;margin-top:2.5rem;
+    display:flex;align-items:center;justify-content:space-between;gap:1rem
+  }
+  .save-status{font-size:.62rem;color:var(--dim)}
+
+  /* ── TOAST ── */
+  .toast{
+    position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(1rem);
+    background:#1a1a1f;border:1px solid var(--border-strong);border-radius:6px;
+    padding:.6rem 1.1rem;font-size:.68rem;color:var(--text);
+    opacity:0;transition:all .2s;pointer-events:none;z-index:200;white-space:nowrap
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.error{border-color:rgba(229,120,107,.4);color:var(--danger)}
+  .toast.success{border-color:rgba(216,228,106,.4);color:var(--accent)}
+
+  @media(max-width:600px){
+    .app{padding:1.75rem 5% 4rem}
+    .client-progress{display:none}
+    .field-row{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">SNS BUILD</span>
+  <span class="nav-tag" id="nav-tag">Client Org</span>
+  <button class="nav-lock-btn" id="lock-btn" style="display:none" onclick="lockApp()">Lock</button>
+</nav>
+
+<!-- LOCK SCREEN -->
+<div class="lock-wrap" id="lock-wrap">
+  <div class="lock-box">
+    <div class="lock-title" id="lock-title">Locked</div>
+    <div class="lock-sub" id="lock-sub">Enter your master passphrase to unlock client records.</div>
+    <div class="lock-input-row"><input type="password" class="lock-input" id="pw1" placeholder="Passphrase" onkeydown="if(event.key==='Enter')handleUnlock()"></div>
+    <div class="lock-input-row" id="pw2-row" style="display:none"><input type="password" class="lock-input" id="pw2" placeholder="Confirm passphrase" onkeydown="if(event.key==='Enter')handleUnlock()"></div>
+    <button class="lock-btn" id="unlock-btn" onclick="handleUnlock()">Unlock</button>
+    <div class="lock-error" id="lock-error"></div>
+    <div class="lock-hint">This passphrase encrypts every stored password. There is no recovery if it's lost — store it in a password manager, not in your head alone.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+
+  <!-- DASHBOARD VIEW -->
+  <div id="view-dashboard">
+    <div class="app-head">
+      <div class="app-title">Clients</div>
+      <button class="btn-primary" onclick="openNewClient()">+ Add Client</button>
+    </div>
+    <div class="client-grid" id="client-grid"></div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div id="view-detail" style="display:none">
+    <div class="detail-head">
+      <span class="back-link" onclick="showDashboard()">← All Clients</span>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Client Name</label>
+        <input type="text" id="d-name" placeholder="e.g. Wagon Windows">
+      </div>
+      <div class="field" style="max-width:180px">
+        <label>Tier</label>
+        <select id="d-tier" onchange="onTierChange()">
+          <option value="basic">Basic</option>
+          <option value="standard">Standard</option>
+          <option value="premium">Premium</option>
+        </select>
+      </div>
+      <div class="field" style="max-width:160px">
+        <label>Status</label>
+        <select id="d-status">
+          <option value="active">Active</option>
+          <option value="paused">Paused</option>
+          <option value="offboarded">Offboarded</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="accounts-section">
+      <div class="accounts-title">Accounts</div>
+      <div id="accounts-list"></div>
+      <div class="add-account-row">
+        <select id="add-account-select"></select>
+        <button class="btn-ghost" onclick="addAccountRow()">+ Add Account</button>
+      </div>
+    </div>
+
+    <div class="save-bar">
+      <button class="btn-ghost btn-danger" onclick="deleteClient()">Delete Client</button>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <span class="save-status" id="save-status"></span>
+        <button class="btn-primary" onclick="saveClient()">Save</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://pxwydcmgkyoledfsxdio.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4d3lkY21na3lvbGVkZnN4ZGlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzE2NjAsImV4cCI6MjA5NzIwNzY2MH0.qdtHCNV3m0LDNNpcX0fXXDVBNro6JD0ZMeI3ftDi5fU';
+const BUCKET = 'client-org';
+const OBJECT_PATH = 'clients-data.json';
+
+const ACCOUNT_LABELS = {
+  cloudflare: 'Cloudflare Pages + DNS',
+  ga4: 'Google Analytics (GA4)',
+  web3forms: 'Web3Forms (contact form)',
+  gsc: 'Google Search Console',
+  gbp: 'Google Business Profile',
+  booking: 'Booking / Calendar Integration',
+  domain: 'Domain Registrar',
+  email: 'Business Email',
+  other: 'Other'
+};
+const TIER_ACCOUNTS = {
+  basic: ['cloudflare','ga4','web3forms'],
+  standard: ['cloudflare','ga4','web3forms','gsc','gbp'],
+  premium: ['cloudflare','ga4','web3forms','gsc','gbp','booking']
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────────────
+let masterKey = null;   // CryptoKey, in-memory only, never persisted
+let DATA = null;        // { salt, canary:{c,iv}, clients:[...] }
+let currentClientId = null;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CRYPTO
+// ─────────────────────────────────────────────────────────────────────────────
+function bytesToBase64(bytes){ return btoa(String.fromCharCode(...bytes)); }
+function base64ToBytes(b64){ return Uint8Array.from(atob(b64), c=>c.charCodeAt(0)); }
+
+async function deriveKey(passphrase, saltB64) {
+  const salt = base64ToBytes(saltB64);
+  const enc = new TextEncoder();
+  const baseKey = await crypto.subtle.importKey('raw', enc.encode(passphrase), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name:'PBKDF2', salt, iterations:250000, hash:'SHA-256' },
+    baseKey,
+    { name:'AES-GCM', length:256 },
+    false,
+    ['encrypt','decrypt']
+  );
+}
+
+async function encryptField(plainText) {
+  if (!plainText) return null;
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const enc = new TextEncoder();
+  const buf = await crypto.subtle.encrypt({name:'AES-GCM', iv}, masterKey, enc.encode(plainText));
+  return { c: bytesToBase64(new Uint8Array(buf)), iv: bytesToBase64(iv) };
+}
+
+async function decryptField(obj) {
+  if (!obj || !obj.c) return '';
+  const dec = new TextDecoder();
+  const buf = await crypto.subtle.decrypt(
+    { name:'AES-GCM', iv: base64ToBytes(obj.iv) },
+    masterKey,
+    base64ToBytes(obj.c)
+  );
+  return dec.decode(buf);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SUPABASE STORAGE
+// ─────────────────────────────────────────────────────────────────────────────
+async function fetchRemoteData() {
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(BUCKET)}/${OBJECT_PATH}`, {
+    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+  });
+  if (res.status === 404 || res.status === 400) return null; // no data yet
+  if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+  return res.json();
+}
+
+async function pushRemoteData() {
+  const body = JSON.stringify(DATA);
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(BUCKET)}/${OBJECT_PATH}`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'x-upsert': 'true' },
+    body
+  });
+  if (!res.ok) throw new Error(`Save failed: ${res.status} ${await res.text()}`);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNLOCK / SETUP FLOW
+// ─────────────────────────────────────────────────────────────────────────────
+async function init() {
+  let remote;
+  try {
+    remote = await fetchRemoteData();
+  } catch (e) {
+    showLockError('Could not reach storage. Check the bucket exists and is configured — see console.');
+    console.error(e);
+    return;
+  }
+
+  if (!remote) {
+    // first run — no data exists yet
+    document.getElementById('lock-title').textContent = 'Set Up';
+    document.getElementById('lock-sub').textContent = 'No client data exists yet. Choose a master passphrase — this encrypts every password you store here.';
+    document.getElementById('pw2-row').style.display = 'block';
+    document.getElementById('unlock-btn').onclick = handleFirstTimeSetup;
+  } else {
+    DATA = remote;
+    document.getElementById('unlock-btn').onclick = handleUnlock;
+  }
+}
+
+async function handleFirstTimeSetup() {
+  const pw1 = document.getElementById('pw1').value;
+  const pw2 = document.getElementById('pw2').value;
+  if (!pw1 || pw1.length < 8) return showLockError('Use at least 8 characters.');
+  if (pw1 !== pw2) return showLockError('Passphrases do not match.');
+
+  setBusy(true);
+  const salt = bytesToBase64(crypto.getRandomValues(new Uint8Array(16)));
+  masterKey = await deriveKey(pw1, salt);
+  const canary = await encryptField('sns-build-client-org-v1');
+  DATA = { salt, canary, clients: [] };
+  try {
+    await pushRemoteData();
+  } catch (e) {
+    setBusy(false);
+    showLockError('Could not save initial data. Check the bucket exists and anon has INSERT/UPDATE policy.');
+    console.error(e);
+    return;
+  }
+  setBusy(false);
+  enterApp();
+}
+
+async function handleUnlock() {
+  const pw = document.getElementById('pw1').value;
+  if (!pw) return showLockError('Enter your passphrase.');
+  setBusy(true);
+  try {
+    masterKey = await deriveKey(pw, DATA.salt);
+    const check = await decryptField(DATA.canary);
+    if (check !== 'sns-build-client-org-v1') throw new Error('bad passphrase');
+  } catch (e) {
+    setBusy(false);
+    masterKey = null;
+    showLockError('Incorrect passphrase.');
+    return;
+  }
+  setBusy(false);
+  enterApp();
+}
+
+function setBusy(b) {
+  document.getElementById('unlock-btn').disabled = b;
+  document.getElementById('unlock-btn').textContent = b ? 'Working…' : 'Unlock';
+}
+function showLockError(msg) { document.getElementById('lock-error').textContent = msg; }
+
+function enterApp() {
+  document.getElementById('lock-wrap').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+  document.getElementById('lock-btn').style.display = 'inline-block';
+  renderDashboard();
+}
+
+function lockApp() {
+  masterKey = null;
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('lock-btn').style.display = 'none';
+  document.getElementById('pw1').value = '';
+  document.getElementById('lock-error').textContent = '';
+  document.getElementById('lock-wrap').style.display = 'flex';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DASHBOARD
+// ─────────────────────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const grid = document.getElementById('client-grid');
+  if (!DATA.clients.length) {
+    grid.innerHTML = '<div class="empty-state">No clients yet. Add one to get started.</div>';
+    return;
+  }
+  grid.innerHTML = DATA.clients.map(c => {
+    const total = c.accounts.length;
+    const done = c.accounts.filter(a => a.done).length;
+    return `<div class="client-row" onclick="openClient('${c.id}')">
+      <span class="client-name">${escapeHtml(c.name || 'Untitled')}</span>
+      <span class="client-tier">${c.tier}</span>
+      <span class="client-progress">${done}/${total} accounts</span>
+    </div>`;
+  }).join('');
+}
+
+function showDashboard() {
+  document.getElementById('view-detail').style.display = 'none';
+  document.getElementById('view-dashboard').style.display = 'block';
+  renderDashboard();
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CLIENT DETAIL
+// ─────────────────────────────────────────────────────────────────────────────
+function openNewClient() {
+  const c = {
+    id: crypto.randomUUID(),
+    name: '',
+    tier: 'basic',
+    status: 'active',
+    created_at: new Date().toISOString().slice(0,10),
+    accounts: TIER_ACCOUNTS.basic.map(svc => blankAccount(svc))
+  };
+  DATA.clients.push(c);
+  openClient(c.id);
+}
+
+function blankAccount(service) {
+  return { service, label: ACCOUNT_LABELS[service] || service, done: false, login_email: '', property_id: '', password_enc: null, notes: '', setup_date: '' };
+}
+
+async function openClient(id) {
+  currentClientId = id;
+  const c = DATA.clients.find(x => x.id === id);
+  document.getElementById('view-dashboard').style.display = 'none';
+  document.getElementById('view-detail').style.display = 'block';
+  document.getElementById('d-name').value = c.name;
+  document.getElementById('d-tier').value = c.tier;
+  document.getElementById('d-status').value = c.status;
+  await renderAccounts(c);
+  populateAddAccountSelect();
+  document.getElementById('save-status').textContent = '';
+}
+
+async function renderAccounts(c) {
+  const list = document.getElementById('accounts-list');
+  const cards = await Promise.all(c.accounts.map(async (a, idx) => {
+    const pw = a.password_enc ? await decryptField(a.password_enc) : '';
+    return `<div class="account-card" data-idx="${idx}">
+      <div class="account-head">
+        <input type="checkbox" class="account-check" ${a.done ? 'checked' : ''} onchange="markDirty()">
+        <span class="account-label">${escapeHtml(a.label)}</span>
+        <button class="account-remove" onclick="removeAccountRow(${idx})" title="Remove">✕</button>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Login Email</label><input type="text" class="f-email" value="${escapeHtml(a.login_email)}" onchange="markDirty()"></div>
+        <div class="field"><label>Property / Zone ID</label><input type="text" class="f-propid" value="${escapeHtml(a.property_id)}" onchange="markDirty()"></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Password</label>
+          <div class="pw-row">
+            <input type="password" class="f-pw" value="${escapeHtml(pw)}" onchange="markDirty()">
+            <button type="button" class="pw-toggle" onclick="togglePw(this)">Show</button>
+          </div>
+        </div>
+        <div class="field" style="max-width:160px"><label>Setup Date</label><input type="date" class="f-date" value="${a.setup_date||''}" onchange="markDirty()"></div>
+      </div>
+      <div class="field" style="margin-top:.6rem">
+        <label>Notes</label>
+        <textarea class="field-notes f-notes" onchange="markDirty()">${escapeHtml(a.notes)}</textarea>
+      </div>
+    </div>`;
+  }));
+  list.innerHTML = cards.join('');
+}
+
+function togglePw(btn) {
+  const input = btn.previousElementSibling;
+  const showing = input.type === 'text';
+  input.type = showing ? 'password' : 'text';
+  btn.textContent = showing ? 'Show' : 'Hide';
+}
+
+function populateAddAccountSelect() {
+  const sel = document.getElementById('add-account-select');
+  sel.innerHTML = Object.entries(ACCOUNT_LABELS).map(([k,v]) => `<option value="${k}">${v}</option>`).join('');
+}
+
+function addAccountRow() {
+  const c = DATA.clients.find(x => x.id === currentClientId);
+  const service = document.getElementById('add-account-select').value;
+  c.accounts.push(blankAccount(service));
+  renderAccounts(c);
+  markDirty();
+}
+
+function removeAccountRow(idx) {
+  const c = DATA.clients.find(x => x.id === currentClientId);
+  c.accounts.splice(idx, 1);
+  renderAccounts(c);
+  markDirty();
+}
+
+function onTierChange() {
+  const c = DATA.clients.find(x => x.id === currentClientId);
+  const newTier = document.getElementById('d-tier').value;
+  const existingServices = new Set(c.accounts.map(a => a.service));
+  const wanted = TIER_ACCOUNTS[newTier] || [];
+  wanted.forEach(svc => { if (!existingServices.has(svc)) c.accounts.push(blankAccount(svc)); });
+  renderAccounts(c);
+  markDirty();
+}
+
+function markDirty() {
+  document.getElementById('save-status').textContent = 'Unsaved changes';
+}
+
+async function collectFormIntoClient() {
+  const c = DATA.clients.find(x => x.id === currentClientId);
+  c.name = document.getElementById('d-name').value.trim();
+  c.tier = document.getElementById('d-tier').value;
+  c.status = document.getElementById('d-status').value;
+
+  const cards = document.querySelectorAll('#accounts-list .account-card');
+  for (const card of cards) {
+    const idx = Number(card.dataset.idx);
+    const a = c.accounts[idx];
+    a.done = card.querySelector('.account-check').checked;
+    a.login_email = card.querySelector('.f-email').value.trim();
+    a.property_id = card.querySelector('.f-propid').value.trim();
+    a.notes = card.querySelector('.f-notes').value;
+    a.setup_date = card.querySelector('.f-date').value;
+    const pwVal = card.querySelector('.f-pw').value;
+    a.password_enc = pwVal ? await encryptField(pwVal) : null;
+  }
+}
+
+async function saveClient() {
+  document.getElementById('save-status').textContent = 'Saving…';
+  try {
+    await collectFormIntoClient();
+    await pushRemoteData();
+    document.getElementById('save-status').textContent = 'Saved';
+    showToast('Saved', 'success');
+  } catch (e) {
+    document.getElementById('save-status').textContent = 'Save failed';
+    showToast('Save failed — check console', 'error');
+    console.error(e);
+  }
+}
+
+async function deleteClient() {
+  if (!confirm('Delete this client and all stored credentials? This cannot be undone.')) return;
+  DATA.clients = DATA.clients.filter(c => c.id !== currentClientId);
+  try {
+    await pushRemoteData();
+    showToast('Client deleted', 'success');
+    showDashboard();
+  } catch (e) {
+    showToast('Delete failed — check console', 'error');
+    console.error(e);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────────────────────────────────────
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.className = 'toast', 2400);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
