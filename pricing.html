@@ -107,7 +107,7 @@
       font-family:var(--font-display);
       font-size:clamp(4rem,10vw,9rem);
       line-height:.88;letter-spacing:-.01em;
-      margin-bottom:2rem;max-width:700px;
+      padding-bottom:.2em;margin-bottom:calc(2rem - .2em);max-width:700px;
       background:linear-gradient(150deg,#EDEAE4 40%,rgba(216,228,106,.65) 100%);
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
       position:relative
@@ -164,9 +164,13 @@
 
     .card-tier{
       font-size:.5rem;font-weight:700;text-transform:uppercase;
-      letter-spacing:.22em;color:var(--dim);margin-bottom:1.75rem
+      letter-spacing:.22em;color:var(--dim);margin-bottom:1.75rem;
+      /* Reserve the "Most Popular" ribbon height on EVERY card so the tier
+         labels and prices sit on one line across the row. Previously this
+         2rem was applied only to .featured, which dropped that card 32px
+         below its neighbours — visible on the live site since launch. */
+      margin-top:2rem
     }
-    .pricing-card.featured .card-tier{margin-top:2rem}
     .card-price{
       font-family:var(--font-display);
       font-size:clamp(3.5rem,6vw,5.5rem);
@@ -212,6 +216,15 @@
     }
 
     .card-timeline{font-size:.52rem;color:var(--dim);text-align:center;margin-top:.85rem;font-weight:300}
+    .path-note{
+      max-width:640px;margin:-1.5rem auto 3rem;text-align:center;
+      font-size:.82rem;line-height:1.85;color:var(--muted);font-weight:300
+    }
+    .path-note strong{color:var(--text);font-weight:500}
+    .custom-note{
+      max-width:620px;margin:3rem auto 0;text-align:center;
+      font-size:.78rem;line-height:1.8;color:var(--dim);font-weight:300
+    }
 
     /* ── COMPARISON TABLE ── */
     .included-section{padding:6rem 5%;border-bottom:1px solid var(--border)}
@@ -235,6 +248,17 @@
     .compare-table .check{color:var(--accent);font-size:.85rem;font-weight:700}
     .compare-table .dash{color:var(--border-strong,rgba(255,255,255,.14));font-size:.9rem}
     .compare-table .feature-name{color:var(--text);font-weight:400}
+
+    @media(max-width:640px){
+      .compare-table{border-collapse:separate;border-spacing:0}
+      .compare-table th{
+        position:sticky;top:64px;z-index:5;
+        background:var(--bg);box-shadow:inset 0 -1px 0 var(--border)
+      }
+      .compare-table th,.compare-table td{padding:.9rem .4rem}
+      .compare-table th:first-child,.compare-table td:first-child{padding-left:0}
+      .compare-table td{font-size:.68rem;border-bottom:1px solid var(--border)}
+    }
 
     /* ── HOW IT WORKS ── */
     .how-section{padding:6rem 5%;border-bottom:1px solid var(--border)}
@@ -345,8 +369,11 @@
   <p class="hero-sub">Flat rates. No hourly billing. No scope creep. Every decision is locked in before we build — so the price you see is the price you pay.</p>
 </div>
 
-<!-- PRICING CARDS -->
+<!-- PRICING CARDS — WEBSITES -->
 <div class="pricing-section">
+  <div class="section-label reveal">Websites</div>
+  <div class="section-title reveal">Built from scratch.<br>Yours to keep.</div>
+  <p class="path-note reveal">Hand-written HTML and CSS on your own domain. <strong>No platform subscription, ever</strong> — host it anywhere, hand it to any developer, and it keeps running whether or not we ever speak again.</p>
   <div class="pricing-grid">
 
     <div class="pricing-card reveal">
@@ -412,10 +439,77 @@
   </div>
 </div>
 
+<!-- PRICING CARDS — ONLINE STORES -->
+<div class="pricing-section">
+  <div class="section-label reveal">Online stores</div>
+  <div class="section-title reveal">When you need<br>to sell.</div>
+  <p class="path-note reveal">Built on Shopify, because taking payments, tracking stock and handling tax is not something to hand-code. <strong>Shopify charges its own subscription — from about $39/month, paid to them, not to us.</strong> We only put you on a platform when selling actually requires one.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <div class="card-tier">Store Setup</div>
+      <div class="card-price">$2,800</div>
+      <div class="card-price-note">One-time · Shopify plan billed by Shopify</div>
+      <ul class="card-features">
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Store configured and themed</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Up to 10 products</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>5 core pages</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Return, terms &amp; shipping policies</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Payments &amp; shipping zones</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Google Analytics</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Google Business Profile</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Structured data</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>SEO content pages</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Brand asset package</li>
+      </ul>
+      <a href="mailto:mikesnsbuild@gmail.com?subject=Shopify%20store%20enquiry" class="card-cta">Enquire</a>
+      <div class="card-timeline">Delivered in 2 weeks</div>
+    </div>
+    <div class="pricing-card featured reveal d1">
+      <div class="card-tier">Store + Growth</div>
+      <div class="card-price">$4,800</div>
+      <div class="card-price-note">One-time · Shopify plan billed by Shopify</div>
+      <ul class="card-features">
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Everything in Store Setup</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Up to 30 products</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Custom page sections</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Google Business Profile</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Structured data &amp; schema</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Titles &amp; meta for every page</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>SEO content pages</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Custom functionality</li>
+        <li class="card-feature"><span class="card-feature-icon"></span>Brand asset package</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Search Console setup</li>
+      </ul>
+      <a href="mailto:mikesnsbuild@gmail.com?subject=Shopify%20store%20enquiry" class="card-cta">Enquire</a>
+      <div class="card-timeline">Delivered in 3 weeks</div>
+    </div>
+    <div class="pricing-card reveal d2">
+      <div class="card-tier">Store Complete</div>
+      <div class="card-price">$7,500</div>
+      <div class="card-price-note">One-time · Shopify plan billed by Shopify</div>
+      <ul class="card-features">
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Everything in Store + Growth</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>SEO content programme</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Location pages &amp; buying guides</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Custom functionality</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Brand asset package</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Logo rebuilt as vector</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Product photography prepared</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Search Console &amp; sitemap</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Full build documentation</li>
+        <li class="card-feature inc"><span class="card-feature-icon">✓</span>Account handover pack</li>
+      </ul>
+      <a href="mailto:mikesnsbuild@gmail.com?subject=Shopify%20store%20enquiry" class="card-cta">Enquire</a>
+      <div class="card-timeline">Delivered in 5–6 weeks</div>
+    </div>
+  </div>
+  <p class="custom-note reveal">Anything beyond this — custom pricing logic, third-party integrations, migrations from another platform — is quoted individually.</p>
+</div>
+
 <!-- FEATURE COMPARISON TABLE -->
 <div class="included-section">
   <div class="section-label reveal">What's included</div>
-  <div class="section-title reveal">Every tier.<br>Every detail.</div>
+  <div class="section-title reveal">Every website tier.<br>Every detail.</div>
   <table class="compare-table reveal">
     <thead>
       <tr>
