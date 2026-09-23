@@ -105,7 +105,7 @@
       font-family:var(--font-display);
       font-size:clamp(4rem,10vw,9rem);
       line-height:.88;letter-spacing:-.01em;
-      margin-bottom:2rem;
+      padding-bottom:.2em;margin-bottom:calc(2rem - .2em);
       background:linear-gradient(150deg,#EDEAE4 40%,rgba(216,228,106,.65) 100%);
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
       position:relative
@@ -158,16 +158,16 @@
     }
     .visual-ww .proj-accent{color:#4ADE80}
 
-    /* Scrimbit Concrete visual */
-    .visual-sc{background:linear-gradient(145deg,#1A1A18 0%,#232320 40%,#2C2C27 100%)}
-    .visual-sc .project-name-bg{color:rgba(255,255,255,.9)}
-    .visual-sc::after{
+    /* Augst Photography visual */
+    .visual-ph{background:linear-gradient(145deg,#07090A 0%,#0C1110 45%,#121A16 100%)}
+    .visual-ph .project-name-bg{color:rgba(255,255,255,.9)}
+    .visual-ph::after{
       content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse at 70% 50%,rgba(216,228,106,.15) 0%,transparent 60%),
-                 radial-gradient(ellipse at 20% 30%,rgba(216,228,106,.06) 0%,transparent 50%);
+      background:radial-gradient(ellipse at 50% 50%,rgba(216,228,106,.14) 0%,transparent 58%),
+                 radial-gradient(ellipse at 80% 25%,rgba(216,228,106,.05) 0%,transparent 50%);
       pointer-events:none
     }
-    .visual-sc .proj-accent{color:#D8E46A}
+    .visual-ph .proj-accent{color:#D8E46A}
 
     /* Augst visual */
     .visual-ag{background:#050505}
@@ -182,6 +182,17 @@
       pointer-events:none
     }
     .visual-ag .proj-accent{color:#D8E46A}
+
+    /* Trinity Valley Greenhouses visual */
+    .visual-tvg{background:linear-gradient(145deg,#1A1006 0%,#241708 40%,#2E2008 100%)}
+    .visual-tvg .project-name-bg{color:rgba(255,255,255,.9)}
+    .visual-tvg::after{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse at 30% 70%,rgba(245,166,35,.22) 0%,transparent 60%),
+                 radial-gradient(ellipse at 80% 20%,rgba(245,166,35,.1) 0%,transparent 50%);
+      pointer-events:none
+    }
+    .visual-tvg .proj-accent{color:#F5A623}
 
     /* Info panel */
     .project-info{
@@ -292,7 +303,7 @@
       font-size:clamp(2.5rem,6vw,5.5rem);
       line-height:.9;color:var(--text);letter-spacing:-.01em;position:relative
     }
-    .cta-right{flex-shrink:0;max-width:380px;position:relative}
+    .cta-right{flex-shrink:0;max-width:min(380px,100%);position:relative}
     .cta-sub{font-size:.82rem;color:var(--muted);line-height:1.85;margin-bottom:2.5rem;font-weight:300}
     .btn-primary{
       display:inline-block;padding:1rem 2.25rem;
@@ -379,25 +390,25 @@
     </div>
   </div>
 
-  <!-- SCRIMBIT CONCRETE -->
+  <!-- AUGST PHOTOGRAPHY -->
   <div class="project reverse reveal">
-    <div class="project-visual visual-sc">
+    <div class="project-visual visual-ph">
       <div class="project-visual-inner">
-        <div class="project-name-bg">Scrimbit<br>Concrete</div>
+        <div class="project-name-bg">Augst<br>Photography</div>
       </div>
     </div>
     <div class="project-info">
       <div class="project-category">
-        Concrete Finishing
+        Photography &amp; Film
         <span class="status-badge status-live"><span class="status-dot"></span>Live</span>
       </div>
-      <div class="project-title">Scrimbit Concrete</div>
-      <p class="project-desc">A single-page brand site for a Shuswap concrete finishing business — patios, driveways, sidewalks, and polished floors. Built to showcase finish options (broom, exposed aggregate, swirl, stamped) and convert local inquiries fast.</p>
+      <div class="project-title">Augst Photography</div>
+      <p class="project-desc">A six-page portfolio site for a Calgary street and travel photographer. Built dark and quiet so the work carries every page — full-bleed image galleries, a dedicated video showcase, and a direct enquiry form.</p>
       <div class="project-tags">
-        <span class="tag">Single-page</span>
-        <span class="tag">Finish gallery</span>
-        <span class="tag">Service area</span>
-        <span class="tag">Local branding</span>
+        <span class="tag">Six pages</span>
+        <span class="tag">Image galleries</span>
+        <span class="tag">Video showcase</span>
+        <span class="tag">Enquiry form</span>
       </div>
       <a href="https://augstgroup.com" target="_blank" rel="noopener" class="project-cta">View Site →</a>
     </div>
@@ -424,6 +435,31 @@
         <span class="tag">Drop system</span>
       </div>
       <span class="project-cta-disabled">Launching Soon</span>
+    </div>
+  </div>
+
+  <!-- TRINITY VALLEY GREENHOUSES -->
+  <div class="project reverse reveal">
+    <div class="project-visual visual-tvg">
+      <div class="project-visual-inner">
+        <div class="project-name-bg">Trinity<br>Valley</div>
+      </div>
+    </div>
+    <div class="project-info">
+      <div class="project-category">
+        Greenhouse Retail
+        <span class="status-badge status-live"><span class="status-dot"></span>Live</span>
+      </div>
+      <div class="project-title">Trinity Valley Greenhouses</div>
+      <p class="project-desc">A full Shopify build for a greenhouse manufacturer in Enderby, BC — two models across four sizes, delivery-zone logic, and monthly payments at checkout. 16 pages of local SEO content, including 8 town pages and 4 buying guides, with GA4, Search Console, and Google Business Profile wired in from day one.</p>
+      <div class="project-tags">
+        <span class="tag">Shopify</span>
+        <span class="tag">16 pages</span>
+        <span class="tag">8 town pages</span>
+        <span class="tag">Delivery zones</span>
+        <span class="tag">4K video</span>
+      </div>
+      <a href="https://trinityvalleygreenhouses.com" target="_blank" rel="noopener" class="project-cta">View Site →</a>
     </div>
   </div>
 
