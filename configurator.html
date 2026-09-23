@@ -31,7 +31,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://api.fontshare.com">
   <!-- Pre-load only fonts used in quick pairings + UI -->
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Oswald:wght@400;700&family=DM+Sans:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&family=Montserrat:wght@400;600;700&family=Raleway:wght@300;400;600&family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;600&family=Abril+Fatface&family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;600&family=Roboto:wght@300;400;500;700&family=Josefin+Sans:wght@300;400;600&family=Syne:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Oswald:wght@400;700&family=DM+Sans:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&family=Montserrat:wght@400;600;700&family=Raleway:wght@300;400;600&family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;600&family=Abril+Fatface&family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;600&family=Tangerine:wght@400;700&family=Roboto:wght@300;400;500;700&family=Josefin+Sans:wght@300;400;600&family=Syne:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     @font-face{font-family:'SaintCarell';src:url('SaintCarellClean.otf') format('opentype');font-weight:400 900;font-style:normal;font-display:swap}
     @font-face{font-family:'Reikna';src:url('Reikna.ttf') format('truetype');font-weight:400 900;font-style:normal;font-display:swap}
@@ -54,7 +54,8 @@
       padding:0 5%;display:flex;align-items:center;justify-content:space-between;
       height:64px;position:sticky;top:0;z-index:100
     }
-    .nav-brand{font-family:'SaintCarell',serif;font-size:1.7rem;color:var(--accent);letter-spacing:.1em;text-decoration:none;flex-shrink:0}
+    .nav-brand{font-family:'SaintCarell',serif;font-size:1.7rem;color:var(--accent);letter-spacing:.1em;text-decoration:none;flex-shrink:0;display:flex;align-items:baseline}
+    .nav-brand-script{font-family:'Tangerine',cursive;font-weight:700;font-size:2em;letter-spacing:0;margin-right:.1em}
     .nav-tag{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:.14em}
     .nav-links{display:flex;align-items:center;gap:2rem}
     .nav-link{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);text-decoration:none;transition:color .15s}
@@ -83,7 +84,7 @@
     .hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--accent);flex-shrink:0}
     .hero h1{
       font-family:var(--font-display);font-size:clamp(3.5rem,9vw,8rem);line-height:.9;letter-spacing:-.01em;
-      margin-bottom:1.5rem;position:relative;
+      padding-bottom:.2em;margin-bottom:calc(1.5rem - .2em);position:relative;
       background:linear-gradient(150deg,#EDEAE4 40%,rgba(216,228,106,.65) 100%);
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
     }
@@ -392,7 +393,7 @@
 <body>
 
 <nav>
-  <a href="index.html" class="nav-brand" style="transform:translateY(-6px)">SNS BUILD</a>
+  <a href="index.html" class="nav-brand" style="transform:translateY(-3px)"><span class="nav-brand-script">SNS</span> BUILD</a>
   <div class="nav-links" id="nav-links">
     <a href="index.html" class="nav-link">Home</a>
     <a href="work.html" class="nav-link">Work</a>
